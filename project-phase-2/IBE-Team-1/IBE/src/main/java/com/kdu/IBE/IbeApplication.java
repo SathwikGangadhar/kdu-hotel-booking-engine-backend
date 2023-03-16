@@ -8,7 +8,6 @@ public class IbeApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(IbeApplication.class, args);
-//		System.out.println("hello");
 	}
 
 }
