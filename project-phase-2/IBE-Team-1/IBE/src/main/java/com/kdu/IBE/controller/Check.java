@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/check")
-public class check {
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
+public class Check {
     @GetMapping("/getCheck")
     ResponseEntity<String> getCheck(){
         return new ResponseEntity<String>("Team01", HttpStatus.OK);
