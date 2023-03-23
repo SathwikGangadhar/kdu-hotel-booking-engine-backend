@@ -15,6 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -25,25 +26,28 @@ public class DateService implements IDateService{
     public GraphQlWebClient graphQlWebClient;
 
     /**
-     * @return
+     * Fetches the minimum room rates for all the date
      */
     @Override
     public ResponseEntity<Map<String, Integer>> getMinDate(){
         Map<String, Integer> minRatesByDate = new HashMap<>();
 
         int skip=0;
-        int take=1000;
-        //all the minimum dates are selected for each date in the hashmap
+        final int take=10000;
+        /**
+         * all the minimum dates are selected for each date in the hashmap
+         * infinite loop because to fetch all the data of the grapfQL api
+         */
         while(true){
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("query","query MyQuery { " +
-                    "listRoomRates(skip: "+Integer.toString(skip)+", take: "+Integer.toString(take)+") { " +
+                    "listRoomRates(skip: "+Integer.toString(skip)+", take: "+Integer.toString(take)+", where: {room_types: {some: {room_type: {property_id: {equals: 1}}}}}) { " +
                     "date " +
                     "basic_nightly_rate " +
                     "} " +
                     "}"
             );
-            skip+=1000;
+            skip+=10000;
             String bodyString;
             try {
                 WebClient.ResponseSpec response = graphQlWebClient.requestBodySpec
@@ -65,20 +69,28 @@ public class DateService implements IDateService{
             if( listRoomRates.length()==0){
                 break;
             }
+            /**
+             * fetches the minimum room rate for all particular date using hashmap
+             */
 
-            for(int listIndex=0;listIndex<listRoomRates.length();listIndex++){
-                JSONObject roomRate = listRoomRates.getJSONObject(listIndex);
-                String date = roomRate.getString("date").substring(0, 10);
-                int rate = roomRate.getInt("basic_nightly_rate");
-
-                if(minRatesByDate.get(date)==null){
-                    minRatesByDate.put(date,rate);
-                }
-                else{
-                    minRatesByDate.put(date,Math.min(minRatesByDate.get(date),rate));
-                }
-            }
-
+            IntStream.range(0, listRoomRates.length())
+                    .forEach(listIndex -> {
+                        JSONObject roomRate = listRoomRates.getJSONObject(listIndex);
+                        String date = roomRate.getString("date");
+                        int rate = roomRate.getInt("basic_nightly_rate");
+                        /**
+                         * if the data is not all ready entered then initialize it with a data
+                         */
+                        if(minRatesByDate.get(date)==null){
+                            minRatesByDate.put(date,rate);
+                        }
+                        /**
+                         * if the data is initialized then get the minimum out of that data and update the hashmap
+                         */
+                        else{
+                            minRatesByDate.put(date,Math.min(minRatesByDate.get(date),rate));
+                        }
+                    });
         }
         return new ResponseEntity<Map<String, Integer>>(minRatesByDate, HttpStatus.OK);
     }
