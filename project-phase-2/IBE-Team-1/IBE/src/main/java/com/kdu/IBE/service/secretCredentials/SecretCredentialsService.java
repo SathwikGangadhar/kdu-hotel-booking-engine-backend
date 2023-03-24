@@ -14,15 +14,18 @@ import javax.annotation.PostConstruct;
 
 @Data
 @Component
-public class SecretCredentialsService {
+public class SecretCredentialsService implements ISecretCredentials {
     private SecretCredentialsModel secretCredentialsModel;
     private Gson gson=new Gson();
     @Value("${aws.profile}")
     private String awsProfileName;
+    @Value("${secret.name}")
+    private String secretName;
+    @Value("${region}")
+    private String region;
     public SecretCredentialsModel getSecretCredentials() {
 
-        String secretName = "team-01-graphQlCredentials";
-        Region region = Region.of("ap-south-1");
+        Region region = Region.of(this.region);
 
         // Create a Secrets Manager client
         SecretsManagerClient client = SecretsManagerClient.builder()
@@ -31,7 +34,7 @@ public class SecretCredentialsService {
                 .build();
 
         GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
-                .secretId(secretName)
+                .secretId(this.secretName)
                 .build();
 
         GetSecretValueResponse getSecretValueResponse;

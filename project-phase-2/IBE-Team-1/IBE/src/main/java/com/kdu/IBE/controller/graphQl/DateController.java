@@ -12,7 +12,7 @@ import java.util.Map;
  *
  */
 @RestController
-@RequestMapping("/api/date")
+@RequestMapping(EndPointConstants.DATE_CONTROLLER_REQUEST_MAPPING)
 public class DateController {
     @Autowired
     public GraphQlWebClient graphQlWebClient;

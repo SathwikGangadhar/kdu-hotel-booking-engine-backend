@@ -24,7 +24,6 @@ import java.util.stream.IntStream;
 public class DateService implements IDateService{
     @Autowired
     public GraphQlWebClient graphQlWebClient;
-
     /**
      * Fetches the minimum room rates for all the date
      */
