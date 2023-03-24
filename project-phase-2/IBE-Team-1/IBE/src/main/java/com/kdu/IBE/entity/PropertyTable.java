@@ -12,8 +12,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="tenant_table")
-public class Tenant {
+@Table(name = "property_table")
+public class PropertyTable {
     @Id
-    private Long tenant_id;
+    private Long property_id;
+    @ManyToOne
+    @JoinColumn(name = "tenant_id")
+    private TenantTable tenantTable;
 }

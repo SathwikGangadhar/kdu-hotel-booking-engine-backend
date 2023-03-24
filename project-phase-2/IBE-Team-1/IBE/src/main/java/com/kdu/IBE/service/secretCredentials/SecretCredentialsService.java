@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 
 @Data
 @Component
-public class SecretCredentialsService implements ISecretCredentials {
+public class SecretCredentialsService implements ISecretCredentials{
     private SecretCredentialsModel secretCredentialsModel;
     private Gson gson=new Gson();
     @Value("${aws.profile}")

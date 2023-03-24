@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class IbeApplicationRunner implements ApplicationRunner {
+    @Autowired
+    public GraphQlWebClient graphQlCheck;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
     }

@@ -15,6 +15,8 @@ import javax.sql.DataSource;
 public class ApplicationConfig {
     @Autowired
     public SecretCredentialsService secretCredentialsService;
+    @Autowired
+    public GraphQlWebClient graphQlWebClient;
     @Bean
     public DataSource dataSource(){
 

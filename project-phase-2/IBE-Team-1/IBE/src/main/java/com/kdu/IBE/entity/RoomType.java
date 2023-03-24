@@ -16,5 +16,5 @@ public class RoomType {
     private Long roomTypeId;
     @ManyToOne
     @JoinColumn(name = "property_table")
-    private Property property;
+    private PropertyTable property;
 }
