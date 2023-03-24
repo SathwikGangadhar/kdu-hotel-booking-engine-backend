@@ -6,12 +6,10 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
-
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 import software.amazon.awssdk.regions.Region;
-
 import javax.annotation.PostConstruct;
 
 @Data
@@ -49,7 +47,6 @@ public class SecretCredentialsService {
         SecretCredentialsModel secretCredentials=gson.fromJson(secret, SecretCredentialsModel.class);
         return secretCredentials;
     }
-
     @PostConstruct
     public void setSecretCredentialsModel(){
         this.secretCredentialsModel = getSecretCredentials();

@@ -12,11 +12,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "check_table")
-public class CheckTable {
+@Table(name="tenant_table")
+public class Tenant {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    private String name;
+    private Long tenant_id;
 }
