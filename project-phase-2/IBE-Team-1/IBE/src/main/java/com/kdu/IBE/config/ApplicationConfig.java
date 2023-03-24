@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import javax.sql.DataSource;
 
 /**
@@ -17,12 +18,13 @@ public class ApplicationConfig {
     public SecretCredentialsService secretCredentialsService;
     @Autowired
     public GraphQlWebClient graphQlWebClient;
+
     @Bean
-    public DataSource dataSource(){
+    public DataSource dataSource() {
 
         return DataSourceBuilder
                 .create()
-                .url("jdbc:postgresql://"+secretCredentialsService.getSecretCredentialsModel().getHost()+"/"+secretCredentialsService.getSecretCredentialsModel().getUsername())
+                .url("jdbc:postgresql://" + secretCredentialsService.getSecretCredentialsModel().getHost() + "/" + secretCredentialsService.getSecretCredentialsModel().getUsername())
                 .username(secretCredentialsService.getSecretCredentialsModel().getUsername())
                 .password(secretCredentialsService.getSecretCredentialsModel().getPassword())
                 .build();

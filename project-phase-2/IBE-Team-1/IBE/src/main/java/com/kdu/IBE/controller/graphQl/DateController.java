@@ -6,6 +6,7 @@ import com.kdu.IBE.service.graphQl.GraphQlWebClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Map;
 
 /**
@@ -18,8 +19,9 @@ public class DateController {
     public GraphQlWebClient graphQlWebClient;
     @Autowired
     public IDateService dateService;
+
     @GetMapping(EndPointConstants.GET_MIN_DATE_ALL)
-    ResponseEntity<Map<String, Integer>> getMinDateAll(){
+    ResponseEntity<Map<String, Integer>> getMinDateAll() {
         return dateService.getMinDate();
     }
 }
