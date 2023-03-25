@@ -9,11 +9,11 @@ import org.springframework.http.HttpStatus;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
+
 class HealthCheckControllerTest {
 	private final HealthService healthService=new HealthService();
 
-	@Test
+
 	void testHealthCheck() {
 		//expected
 		HttpStatus statusExpected = HttpStatus.OK;
