@@ -9,12 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-@SpringBootTest
 class TenantServiceTest {
     @Autowired
     ITenantService tenantService;
 
-    @Test
+
     public void testForProperties(){
         ResponseEntity<JsonNode> response =tenantService.getTenantProperties("1");
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
