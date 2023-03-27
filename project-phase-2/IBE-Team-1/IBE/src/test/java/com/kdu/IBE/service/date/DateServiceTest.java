@@ -15,7 +15,7 @@ class DateServiceTest {
     public void testMinRateForDate(){
         ResponseEntity<Map<String, Integer>> response= dateService.getMinDate();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().get("2023-03-28T00:00:00.000Z")).isEqualTo(50);
+        assertThat(response.getBody().get("2023-03-28")).isEqualTo(50);
     }
 }
 

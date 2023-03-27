@@ -76,7 +76,7 @@ public class DateService implements IDateService{
             IntStream.range(0, listRoomRates.length())
                     .forEach(listIndex -> {
                         JSONObject roomRate = listRoomRates.getJSONObject(listIndex);
-                        String date = roomRate.getString("date");
+                        String date = roomRate.getString("date").substring(0,10);
                         int rate = roomRate.getInt("basic_nightly_rate");
                         /**
                          * if the data is not all ready entered then initialize it with a data
