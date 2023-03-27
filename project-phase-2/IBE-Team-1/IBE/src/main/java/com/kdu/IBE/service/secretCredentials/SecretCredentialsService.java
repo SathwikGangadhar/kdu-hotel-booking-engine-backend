@@ -32,7 +32,7 @@ public class SecretCredentialsService implements ISecretCredentials{
                 .region(region)
                 .credentialsProvider(ProfileCredentialsProvider.create(awsProfileName))
                 .build();
-//        .credentialsProvider(ProfileCredentialsProvider.create(awsProfileName))
+//
 
         GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
                 .secretId(this.secretName)
