@@ -16,10 +16,7 @@ import java.util.Map;
 @RequestMapping(EndPointConstants.DATE_REQUEST_MAPPING)
 public class DateController {
     @Autowired
-    public GraphQlWebClient graphQlWebClient;
-    @Autowired
     public IDateService dateService;
-
     @GetMapping(EndPointConstants.GET_MIN_DATE_ALL)
     ResponseEntity<Map<String, Integer>> getMinDateAll() {
         return dateService.getMinDate();
