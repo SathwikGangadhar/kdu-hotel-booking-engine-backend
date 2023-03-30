@@ -1,6 +1,7 @@
 package com.kdu.IBE.service.date;
 
 import com.kdu.IBE.service.graphQl.GraphQlWebClient;
+import com.kdu.IBE.utils.DateServiceUtils;
 import org.hibernate.ObjectNotFoundException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,6 +26,8 @@ import java.util.stream.IntStream;
 public class DateService implements IDateService{
     @Autowired
     public GraphQlWebClient graphQlWebClient;
+    @Autowired
+    public DateServiceUtils dateServiceUtils;
 
     /**
      * Fetches the minimum room rates for all the date
@@ -41,12 +44,7 @@ public class DateService implements IDateService{
          */
         while(true){
             Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("query","query MyQuery { " +
-                    "listRoomRates(skip: "+Integer.toString(skip)+", take: "+Integer.toString(take)+", where: {room_types: {some: {room_type: {property_id: {equals: 1}}}}}) { " +
-                    "date " +
-                    "basic_nightly_rate " +
-                    "} " +
-                    "}"
+            requestBody.put("query",dateServiceUtils.getMinRatePerDateQuery(skip,take)
             );
             skip+=10000;
             String bodyString;

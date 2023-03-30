@@ -27,4 +27,7 @@ public class GlobalExceptionHandler {
         log.error(exception.getMessage());
         return new ResponseEntity<>("Error",HttpStatus.BAD_REQUEST);
     }
+
+//    @ExceptionHandler(NullPointerException.class)
+//    public Res
 }

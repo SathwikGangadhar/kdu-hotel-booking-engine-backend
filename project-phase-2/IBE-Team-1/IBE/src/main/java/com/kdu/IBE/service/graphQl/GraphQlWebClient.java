@@ -28,14 +28,13 @@ public class GraphQlWebClient {
     private SecretCredentialsService secretCredentialsService;
 
     public JsonNode getGraphQlResponse(Map<String, Object> requestBody){
-        WebClient.ResponseSpec responseProperties = this.requestBodySpec
+        WebClient.ResponseSpec response = this.requestBodySpec
                 .body(BodyInserters.fromValue(requestBody))
                 .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve();
 
-        String bodyString = responseProperties.bodyToMono(String.class).block();
-
+        String bodyString = response.bodyToMono(String.class).block();
         Body body;
         JsonNode jsonNode;
         ObjectMapper objectMapper = new ObjectMapper();

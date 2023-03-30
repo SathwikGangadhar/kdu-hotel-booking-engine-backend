@@ -1,53 +1,105 @@
 package com.kdu.IBE.service.room;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.kdu.IBE.model.AvailableRoomModel;
+import com.kdu.IBE.model.returnDto.AvailableRoomModel;
 import com.kdu.IBE.service.graphQl.GraphQlWebClient;
+import com.kdu.IBE.service.secretCredentials.SecretCredentialsService;
+import com.kdu.IBE.utils.RoomServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 
 @Service
 public class RoomService implements IRoomService{
     @Autowired
     public GraphQlWebClient graphQlWebClient;
+    @Autowired
+    public SecretCredentialsService secretCredentialsService;
 
-    public ResponseEntity<?> getRoomTypes(String propertyId, String startDate, String endDate, String skip, String take) {
+    @Autowired
+    public RoomServiceUtils roomServiceUtils;
+
+    @Override
+    public ResponseEntity<?> getRoomTypes(String propertyId, String startDate, String endDate, String skip, String take ,String minNoOfRooms) {
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("query", "query MyQuery {\n" +
-                "  listRoomTypes(where: {property_id: {equals: " + propertyId + "}, room: {some: {room_available: {some: {booking_id: {equals: 0}, date: {gte: " + startDate + ", lte: " + endDate + "}}}}}}, skip: " + skip + ", take: " + take + ") {\n" +
-                "    room_type_id\n" +
-                "    room_type_name\n" +
-                "    single_bed\n" +
-                "    max_capacity\n" +
-                "    double_bed\n" +
-                "    area_in_square_feet\n" +
-                "  }\n" +
-                "}"
-        );
-        JsonNode jsonNode=graphQlWebClient.getGraphQlResponse(requestBody);
+        List<Integer> roomTypeArray=new ArrayList<>();
+        Integer minNumberOfRooms=Integer.parseInt(minNoOfRooms);
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        LocalDate startDateForCount = LocalDate.parse(startDate.substring(0,10), formatter);
+        LocalDate endDateForCount = LocalDate.parse(endDate.substring(0,10), formatter);
+        long daysBetween = ChronoUnit.DAYS.between(startDateForCount, endDateForCount)+1;
+        HashMap<Integer,Integer> roomsMap=new HashMap<>();//HashMap to find the room if it is available on the full range of date
+        HashMap<Integer,Integer> roomTypesMap=new HashMap<>();//HashMap to find the room if it is available on the full range of date
+        HashMap<Integer,Double> roomTypeRateMap=new HashMap<>();//HashMap to find the room if it is available on the full range of date
+        List<AvailableRoomModel> availableRoomModelList=new ArrayList<>();
+        JsonNode jsonNode;
+        int skipValue=Integer.parseInt(skip);
+        while(true){
+            requestBody.put("query",
+            roomServiceUtils.getAvailableRoomDetailsQuery(startDate ,endDate,propertyId,skipValue)
+            );
 
-        List<AvailableRoomModel> availableRoomModelList = new ArrayList<>();
-        JsonNode responseList = jsonNode.get("data").get("listRoomTypes");
-        for (JsonNode roomTypeDetails : responseList) {
-            Long availableRoomCount = getRoomCount(roomTypeDetails.get("room_type_id").toString());
-            AvailableRoomModel availableRoomModel = new AvailableRoomModel(roomTypeDetails.get("room_type_id").asLong(), roomTypeDetails.get("room_type_name").toString(), roomTypeDetails.get("single_bed").asLong(), roomTypeDetails.get("max_capacity").asLong(), roomTypeDetails.get("double_bed").asLong(), roomTypeDetails.get("area_in_square_feet").asLong(), availableRoomCount);
-           availableRoomModelList.add(availableRoomModel);
+            skipValue+=1000000;
+            jsonNode=graphQlWebClient.getGraphQlResponse(requestBody);
+            JsonNode availableRoomsList=jsonNode.get("data").get("listRoomAvailabilities");
+            if(availableRoomsList.size()==0){
+                break;
+            }
+            /**
+             * map to fetch the room count and to fetch the count of the rooms in room type
+             */
+            roomServiceUtils.roomCountFetcher(availableRoomsList, roomsMap,daysBetween,roomTypesMap);
         }
-        return new ResponseEntity< List<AvailableRoomModel> >(availableRoomModelList, HttpStatus.OK);
-    }
-    public Long getRoomCount(String roomTypeId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("query", "query MyQuery {\n" +
-                "  countRooms(where: {room_type_id: {equals: " + roomTypeId + "}, room_available: {some: {booking_id: {equals: 0}}}})\n" +
-                "}"
+
+        /**
+         * set the array if room types which satisfies the conditions
+         */
+        roomServiceUtils.roomTypeListSetter(roomTypesMap , minNumberOfRooms, roomTypeArray);
+
+        /**
+         * getting the roomrates values from the graphQl api
+         */
+        String roomTypeListString=roomTypeArray.toString();
+        Integer roomTypeArrayLength=roomTypeArray.size();
+        requestBody.put("query", roomServiceUtils.getRoomRatesQuery(startDate ,endDate, roomTypeListString ,roomTypeArrayLength ,daysBetween)
         );
-        JsonNode jsonNode=graphQlWebClient.getGraphQlResponse(requestBody);
-        return jsonNode.get("data").get("countRooms").asLong();
+
+        jsonNode=graphQlWebClient.getGraphQlResponse(requestBody);
+        JsonNode roomRateList=jsonNode.get("data").get("listRoomRateRoomTypeMappings");
+
+        /**
+         * mapping the room rates according to the room type id
+         */
+
+        roomServiceUtils.roomRateMapSetter(roomRateList,roomTypeRateMap );
+        /**
+         * to set the rates to the average
+         */
+       roomServiceUtils.roomTypeRateAverageSetter(roomTypeRateMap,minNumberOfRooms );
+
+        /**
+         * get the room type details
+         */
+
+        requestBody.put("query", roomServiceUtils.getRoomTypeQuery(roomTypeListString,roomTypeArrayLength)
+        );
+        jsonNode=graphQlWebClient.getGraphQlResponse(requestBody);
+        JsonNode roomTypeList=jsonNode.get("data").get("listRoomTypes");
+
+        /**
+         * to set list of the dto made to store the list of the map
+         */
+        roomServiceUtils.roomAvailabilityListSetter( roomTypeList,roomTypesMap,roomTypeRateMap,availableRoomModelList);
+
+        return new ResponseEntity< List<AvailableRoomModel> >(availableRoomModelList, HttpStatus.OK);
     }
 }

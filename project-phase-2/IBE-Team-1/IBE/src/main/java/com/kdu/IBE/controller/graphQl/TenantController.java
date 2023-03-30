@@ -1,6 +1,5 @@
 package com.kdu.IBE.controller.graphQl;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.kdu.IBE.constants.EndPointConstants;
 import com.kdu.IBE.service.room.IRoomService;
 import com.kdu.IBE.service.tenant.ITenantService;
@@ -16,11 +15,12 @@ public class TenantController {
     @Autowired
     public IRoomService roomService;
     @GetMapping(EndPointConstants.GET_TENANT_PROPERTIES)
-    ResponseEntity<JsonNode> getTenantProperties(@RequestParam(name = "tenant_id") String tenantId) {
+    ResponseEntity<?> getTenantProperties(@RequestParam(name = "tenant_id") String tenantId) {
         return tenantService.getTenantProperties(tenantId);
     }
     @GetMapping(EndPointConstants.GET_ROOMS)
-    ResponseEntity<?> getRoomTypes(@RequestParam(name="property_id") String propertyId,@RequestParam(name="start_date") String startDate ,@RequestParam(name="end_date") String endDate, @RequestParam(name="skip")String skip,@RequestParam(name="take")String take){
-        return roomService.getRoomTypes(propertyId, startDate , endDate, skip, take);
+    ResponseEntity<?> getRoomTypes(@RequestParam(name="property_id") String propertyId,@RequestParam(name="start_date") String startDate ,@RequestParam(name="end_date") String endDate, @RequestParam(name="skip")String skip,@RequestParam(name="take")String take ,@RequestParam(name="min_no_of_rooms") String minNoOfRooms){
+        return roomService.getRoomTypes(propertyId, startDate , endDate, skip, take, minNoOfRooms);
     }
+
 }
