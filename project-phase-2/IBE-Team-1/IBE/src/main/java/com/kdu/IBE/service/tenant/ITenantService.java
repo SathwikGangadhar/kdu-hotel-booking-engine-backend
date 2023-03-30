@@ -9,5 +9,5 @@ import java.util.List;
 
 @Service
 public interface ITenantService {
-    public ResponseEntity<List<PropertyReturnModel>> getTenantProperties(String tenantId);
+     ResponseEntity<List<PropertyReturnModel>> getTenantProperties(String tenantId);
 }
