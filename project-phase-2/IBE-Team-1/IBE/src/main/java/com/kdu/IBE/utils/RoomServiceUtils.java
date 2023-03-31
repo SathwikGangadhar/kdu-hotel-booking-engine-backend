@@ -1,7 +1,9 @@
 package com.kdu.IBE.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.kdu.IBE.model.recieveModel.FiltersModel;
 import com.kdu.IBE.model.returnDto.AvailableRoomModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -10,6 +12,8 @@ import java.util.Map;
 
 @Component
 public class RoomServiceUtils {
+    @Autowired
+    public RoomServiceFilters roomServiceFilters;
 
     public String getAvailableRoomDetailsQuery(String startDate ,String endDate, String propertyId,Integer skipValue){
         return "query MyQuery {\n" +
@@ -117,9 +121,29 @@ public class RoomServiceUtils {
 
      }
 
-
-
-
-
-
+    /**
+     *
+     * @param filters
+     * @param availableRoomModelList
+     */
+     public void getFiltersApply(FiltersModel filters,List<AvailableRoomModel> availableRoomModelList){
+         if(filters.getRoomName().getIsNeeded()>0){
+             roomServiceFilters.getRoomNameFilter(availableRoomModelList,filters.getRoomName().getValue());
+         }
+         if(filters.getBedType().getIsNeeded()>0){
+             roomServiceFilters.getBedTypeFilter(availableRoomModelList,filters.getBedType().getValue());
+         }
+         if(filters.getMaxCapacity().getIsNeeded()>0) {
+             roomServiceFilters.getMaxCapacityFilter(availableRoomModelList, filters.getMaxCapacity().getValue());
+         }
+         if(filters.getArea().getIsNeeded()>0){
+             roomServiceFilters.getAreaFilter(availableRoomModelList,filters.getArea().getValue());
+         }
+         if(filters.getRate().getIsNeeded()>0){
+             roomServiceFilters.getRateFilters(availableRoomModelList,filters.getRate().getValue());
+         }
+         if(filters.getBedCounts().getIsNeeded()>0){
+             roomServiceFilters.getBedCountFilters(availableRoomModelList,filters.getBedCounts().getValue());
+         }
+     }
 }

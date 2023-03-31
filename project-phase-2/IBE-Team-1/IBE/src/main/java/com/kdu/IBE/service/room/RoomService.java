@@ -1,14 +1,17 @@
 package com.kdu.IBE.service.room;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.kdu.IBE.model.recieveModel.FiltersModel;
 import com.kdu.IBE.model.returnDto.AvailableRoomModel;
 import com.kdu.IBE.service.graphQl.GraphQlWebClient;
 import com.kdu.IBE.service.secretCredentials.SecretCredentialsService;
 import com.kdu.IBE.utils.RoomServiceUtils;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -29,7 +32,10 @@ public class RoomService implements IRoomService{
     public RoomServiceUtils roomServiceUtils;
 
     @Override
-    public ResponseEntity<?> getRoomTypes(String propertyId, String startDate, String endDate, String skip, String take ,String minNoOfRooms) {
+    public ResponseEntity<?> getRoomTypes(FiltersModel filters, BindingResult result, String propertyId, String startDate, String endDate, String skip, String take , String minNoOfRooms) {
+        if(result.hasErrors()){
+            throw  new ObjectNotFoundException("Request Body passed is invalid","Invalid");
+        }
         Map<String, Object> requestBody = new HashMap<>();
         List<Integer> roomTypeArray=new ArrayList<>();
         Integer minNumberOfRooms=Integer.parseInt(minNoOfRooms);
@@ -99,6 +105,11 @@ public class RoomService implements IRoomService{
          * to set list of the dto made to store the list of the map
          */
         roomServiceUtils.roomAvailabilityListSetter( roomTypeList,roomTypesMap,roomTypeRateMap,availableRoomModelList);
+
+        /**
+         * applying filters
+         */
+        roomServiceUtils.getFiltersApply(filters,availableRoomModelList);
 
         return new ResponseEntity< List<AvailableRoomModel> >(availableRoomModelList, HttpStatus.OK);
     }
