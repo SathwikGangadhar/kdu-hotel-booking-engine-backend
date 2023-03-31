@@ -4,28 +4,43 @@ import com.kdu.IBE.model.returnDto.AvailableRoomModel;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
 public class RoomServiceFilters {
-    public void getRoomNameFilter(List<AvailableRoomModel> availableRoomModelList,String value){
-        List<AvailableRoomModel> filteredList;
-        filteredList=availableRoomModelList.stream().filter(availableRoomModel ->availableRoomModel.roomTypeName.contains(value.toUpperCase())).collect(Collectors.toList());
+    public void getRoomNameFilter(List<AvailableRoomModel> availableRoomModelList,List<String> valueList){
+        List<AvailableRoomModel> filterAllList=new ArrayList<>();
+        for(String value:valueList) {
+            List<AvailableRoomModel> filteredList;
+            filteredList = availableRoomModelList.stream().filter(availableRoomModel -> availableRoomModel.roomTypeName.contains(value.toUpperCase())).collect(Collectors.toList());
+            filterAllList.addAll(filteredList);
+        }
         availableRoomModelList.clear();
-        availableRoomModelList.addAll(filteredList);
+        availableRoomModelList.addAll(filterAllList);
     }
-    public void getBedTypeFilter(List<AvailableRoomModel> availableRoomModelList,String value){
-        if(value.equalsIgnoreCase("king")){
-            List<AvailableRoomModel> filteredList;
-            filteredList=availableRoomModelList.stream().filter(availableRoomModel -> (availableRoomModel.doubleBed>0)).collect(Collectors.toList());
-            availableRoomModelList.clear();
-            availableRoomModelList.addAll(filteredList);
-        } else if (value.equalsIgnoreCase("queen")) {
-            List<AvailableRoomModel> filteredList;
-            filteredList=availableRoomModelList.stream().filter(availableRoomModel -> (availableRoomModel.singleBed>0)).collect(Collectors.toList());
-            availableRoomModelList.clear();
-            availableRoomModelList.addAll(filteredList);
+    public void getBedTypeFilter(List<AvailableRoomModel> availableRoomModelList,List<String> valueList){
+        List<AvailableRoomModel> filterAllList=new ArrayList<>();
+        Map<Long,Integer> availableRoomModelMap=new HashMap<>();
+        for(String value:valueList) {
+            if(value.equalsIgnoreCase("king")){
+                List<AvailableRoomModel> filteredList;
+                filteredList=availableRoomModelList.stream().filter(availableRoomModel -> (availableRoomModel.doubleBed>0) && availableRoomModel.singleBed==0).collect(Collectors.toList());
+                filterAllList.addAll(filteredList);
+            } else if (value.equalsIgnoreCase("queen")) {
+                List<AvailableRoomModel> filteredList;
+                filteredList=availableRoomModelList.stream().filter(availableRoomModel -> (availableRoomModel.singleBed>0 && availableRoomModel.doubleBed==0)).collect(Collectors.toList());
+                filterAllList.addAll(filteredList);
+            }
+        }
+        availableRoomModelList.clear();
+        for(AvailableRoomModel availableRoomModel:filterAllList){
+            if(availableRoomModelMap.get(availableRoomModel.getRoomTypeId())==null){
+                availableRoomModelList.add(availableRoomModel);
+                availableRoomModelMap.put(availableRoomModel.getRoomTypeId(),1);
+            }
         }
     }
 

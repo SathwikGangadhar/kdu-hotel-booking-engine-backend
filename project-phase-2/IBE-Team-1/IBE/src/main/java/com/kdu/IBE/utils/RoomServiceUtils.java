@@ -15,6 +15,9 @@ public class RoomServiceUtils {
     @Autowired
     public RoomServiceFilters roomServiceFilters;
 
+    @Autowired
+    public RoomServiceSort roomServiceSort;
+
     public String getAvailableRoomDetailsQuery(String startDate ,String endDate, String propertyId,Integer skipValue){
         return "query MyQuery {\n" +
                 "  listRoomAvailabilities(where: {AND: {booking_id: {equals: 0}, date: {gte: \""+startDate+"\", lte: \""+endDate+"\"}, property_id: {equals: "+propertyId+"}}},skip: "+Integer.toString(skipValue)+", take: 1000000) {\n" +
@@ -146,4 +149,17 @@ public class RoomServiceUtils {
              roomServiceFilters.getBedCountFilters(availableRoomModelList,filters.getBedCounts().getValue());
          }
      }
-}
+
+     public void getSortApply(Integer sortState,List<AvailableRoomModel> availableRoomModelList){
+         switch(Math.abs(sortState)) {
+             case 1:
+                 roomServiceSort.sortAvailableListOnRate(availableRoomModelList,sortState);
+                 break;
+             case 2:
+                 roomServiceSort.sortAvailableListOnArea(availableRoomModelList,sortState);
+                 break;
+             default:
+                 // code block
+         }
+         }
+     }

@@ -1,10 +1,10 @@
 package com.kdu.IBE.service.room;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.kdu.IBE.model.recieveModel.FilterSort;
 import com.kdu.IBE.model.recieveModel.FiltersModel;
 import com.kdu.IBE.model.returnDto.AvailableRoomModel;
 import com.kdu.IBE.service.graphQl.GraphQlWebClient;
-import com.kdu.IBE.service.secretCredentials.SecretCredentialsService;
 import com.kdu.IBE.utils.RoomServiceUtils;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,19 +19,15 @@ import java.util.List;
 import java.util.Map;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
-
 @Service
 public class RoomService implements IRoomService{
     @Autowired
     public GraphQlWebClient graphQlWebClient;
     @Autowired
-    public SecretCredentialsService secretCredentialsService;
-
-    @Autowired
     public RoomServiceUtils roomServiceUtils;
 
     @Override
-    public ResponseEntity<?> getRoomTypes(FiltersModel filters, BindingResult result, String propertyId, String startDate, String endDate, String skip, String take , String minNoOfRooms) {
+    public ResponseEntity<?> getRoomTypes(FilterSort filterSort, BindingResult result, String propertyId, String startDate, String endDate, String skip, String take , String minNoOfRooms) {
         if(result.hasErrors()){
             throw  new ObjectNotFoundException("Request Body passed is invalid","Invalid");
         }
@@ -109,7 +104,12 @@ public class RoomService implements IRoomService{
         /**
          * applying filters
          */
-        roomServiceUtils.getFiltersApply(filters,availableRoomModelList);
+        roomServiceUtils.getFiltersApply(filterSort.getFiltersModel(),availableRoomModelList);
+
+        /**
+         * applying sort
+         */
+        roomServiceUtils.getSortApply(filterSort.getSortState(),availableRoomModelList);
 
         return new ResponseEntity< List<AvailableRoomModel> >(availableRoomModelList, HttpStatus.OK);
     }

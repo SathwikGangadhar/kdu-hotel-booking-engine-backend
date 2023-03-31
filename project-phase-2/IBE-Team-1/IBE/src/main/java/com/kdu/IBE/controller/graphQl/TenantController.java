@@ -1,6 +1,7 @@
 package com.kdu.IBE.controller.graphQl;
 
 import com.kdu.IBE.constants.EndPointConstants;
+import com.kdu.IBE.model.recieveModel.FilterSort;
 import com.kdu.IBE.model.recieveModel.FiltersModel;
 import com.kdu.IBE.service.room.IRoomService;
 import com.kdu.IBE.service.tenant.ITenantService;
@@ -22,9 +23,9 @@ public class TenantController {
     ResponseEntity<?> getTenantProperties(@RequestParam(name = "tenant_id") String tenantId) {
         return tenantService.getTenantProperties(tenantId);
     }
-    @GetMapping(EndPointConstants.GET_ROOMS)
-    ResponseEntity<?> getRoomTypes(@Valid @RequestBody FiltersModel filters, BindingResult result, @RequestParam(name="property_id") String propertyId, @RequestParam(name="start_date") String startDate , @RequestParam(name="end_date") String endDate, @RequestParam(name="skip")String skip, @RequestParam(name="take")String take , @RequestParam(name="min_no_of_rooms") String minNoOfRooms){
-        return roomService.getRoomTypes(filters,result,propertyId, startDate , endDate, skip, take, minNoOfRooms);
+    @PostMapping(EndPointConstants.GET_ROOMS)
+    ResponseEntity<?> getRoomTypes(@Valid @RequestBody FilterSort filterSort, BindingResult result, @RequestParam(name="property_id") String propertyId, @RequestParam(name="start_date") String startDate , @RequestParam(name="end_date") String endDate, @RequestParam(name="skip")String skip, @RequestParam(name="take")String take , @RequestParam(name="min_no_of_rooms") String minNoOfRooms){
+        return roomService.getRoomTypes(filterSort,result,propertyId, startDate , endDate, skip, take, minNoOfRooms);
     }
 
 
