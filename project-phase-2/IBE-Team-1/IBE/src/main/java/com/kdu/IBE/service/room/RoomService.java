@@ -42,8 +42,11 @@ public class RoomService implements IRoomService{
         HashMap<Integer,Integer> roomTypesMap=new HashMap<>();//HashMap to find the room if it is available on the full range of date
         HashMap<Integer,Double> roomTypeRateMap=new HashMap<>();//HashMap to find the room if it is available on the full range of date
         List<AvailableRoomModel> availableRoomModelList=new ArrayList<>();
+        List<AvailableRoomModel> finalAvailableRoomModelList=new ArrayList<>();
         JsonNode jsonNode;
-        int skipValue=Integer.parseInt(skip);
+        Integer skipValue=Integer.parseInt(skip);
+        Integer startIndex=Integer.parseInt(skip);
+        Integer endIndex=(startIndex+Integer.parseInt(take));
         while(true){
             requestBody.put("query",
             roomServiceUtils.getAvailableRoomDetailsQuery(startDate ,endDate,propertyId,skipValue)
@@ -111,6 +114,15 @@ public class RoomService implements IRoomService{
          */
         roomServiceUtils.getSortApply(filterSort.getSortState(),availableRoomModelList);
 
-        return new ResponseEntity< List<AvailableRoomModel> >(availableRoomModelList, HttpStatus.OK);
+        /**
+         * pagination in backend
+         */
+        System.out.println("end index = "+endIndex);
+        endIndex=Math.min(endIndex,availableRoomModelList.size());
+        for(int index=startIndex;index<endIndex;index++){
+            finalAvailableRoomModelList.add(availableRoomModelList.get(index));
+        }
+
+        return new ResponseEntity< List<AvailableRoomModel> >(finalAvailableRoomModelList, HttpStatus.OK);
     }
 }
