@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.kdu.IBE.model.recieveModel.FilterSort;
 import com.kdu.IBE.model.recieveModel.FiltersModel;
 import com.kdu.IBE.model.returnDto.AvailableRoomModel;
+import com.kdu.IBE.model.returnDto.AvailableRoomModelResponse;
 import com.kdu.IBE.service.graphQl.GraphQlWebClient;
 import com.kdu.IBE.utils.RoomServiceUtils;
 import org.hibernate.ObjectNotFoundException;
@@ -43,10 +44,12 @@ public class RoomService implements IRoomService{
         HashMap<Integer,Double> roomTypeRateMap=new HashMap<>();//HashMap to find the room if it is available on the full range of date
         List<AvailableRoomModel> availableRoomModelList=new ArrayList<>();
         List<AvailableRoomModel> finalAvailableRoomModelList=new ArrayList<>();
+        AvailableRoomModelResponse availableRoomModelResponse=new AvailableRoomModelResponse();
         JsonNode jsonNode;
         Integer skipValue=Integer.parseInt(skip);
         Integer startIndex=Integer.parseInt(skip);
         Integer endIndex=(startIndex+Integer.parseInt(take));
+        Integer availableListCount;
         while(true){
             requestBody.put("query",
             roomServiceUtils.getAvailableRoomDetailsQuery(startDate ,endDate,propertyId,skipValue)
@@ -117,12 +120,14 @@ public class RoomService implements IRoomService{
         /**
          * pagination in backend
          */
-        System.out.println("end index = "+endIndex);
-        endIndex=Math.min(endIndex,availableRoomModelList.size());
+        availableListCount=availableRoomModelList.size();
+        endIndex=Math.min(endIndex,availableListCount);
         for(int index=startIndex;index<endIndex;index++){
             finalAvailableRoomModelList.add(availableRoomModelList.get(index));
         }
+        availableRoomModelResponse.setAvailableRoomModelList(finalAvailableRoomModelList);
+        availableRoomModelResponse.setAvailableResponseCount(availableListCount);
 
-        return new ResponseEntity< List<AvailableRoomModel> >(finalAvailableRoomModelList, HttpStatus.OK);
+        return new ResponseEntity<AvailableRoomModelResponse>(availableRoomModelResponse, HttpStatus.OK);
     }
 }
