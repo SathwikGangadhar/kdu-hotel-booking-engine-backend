@@ -25,13 +25,13 @@ public class RoomServiceFilters {
         List<AvailableRoomModel> filterAllList=new ArrayList<>();
         Map<Long,Integer> availableRoomModelMap=new HashMap<>();
         for(String value:valueList) {
-            if(value.equalsIgnoreCase("king")){
+            if(value.equalsIgnoreCase("King bed")){
                 List<AvailableRoomModel> filteredList;
-                filteredList=availableRoomModelList.stream().filter(availableRoomModel -> (availableRoomModel.doubleBed>0) && availableRoomModel.singleBed==0).collect(Collectors.toList());
+                filteredList=availableRoomModelList.stream().filter(availableRoomModel -> (availableRoomModel.doubleBed>0)).collect(Collectors.toList());
                 filterAllList.addAll(filteredList);
-            } else if (value.equalsIgnoreCase("queen")) {
+            } else if (value.equalsIgnoreCase("Queen bed")) {
                 List<AvailableRoomModel> filteredList;
-                filteredList=availableRoomModelList.stream().filter(availableRoomModel -> (availableRoomModel.singleBed>0 && availableRoomModel.doubleBed==0)).collect(Collectors.toList());
+                filteredList=availableRoomModelList.stream().filter(availableRoomModel -> (availableRoomModel.singleBed>0)).collect(Collectors.toList());
                 filterAllList.addAll(filteredList);
             }
         }

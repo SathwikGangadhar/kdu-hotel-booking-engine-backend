@@ -58,7 +58,7 @@ public class RoomService implements IRoomService{
             skipValue+=1000000;
             jsonNode=graphQlWebClient.getGraphQlResponse(requestBody);
             JsonNode availableRoomsList=jsonNode.get("data").get("listRoomAvailabilities");
-            if(availableRoomsList.size()==0){
+            if(availableRoomsList==null || availableRoomsList.size()==0){
                 break;
             }
             /**
