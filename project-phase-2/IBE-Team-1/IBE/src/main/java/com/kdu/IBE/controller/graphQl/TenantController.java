@@ -24,10 +24,7 @@ public class TenantController {
         return tenantService.getTenantProperties(tenantId);
     }
     @PostMapping(EndPointConstants.GET_ROOMS)
-    ResponseEntity<?> getRoomTypes(@Valid @RequestBody FilterSort filterSort, BindingResult result, @RequestParam(name="property_id") String propertyId, @RequestParam(name="start_date") String startDate , @RequestParam(name="end_date") String endDate, @RequestParam(name="skip")String skip, @RequestParam(name="take")String take , @RequestParam(name="min_no_of_rooms") String minNoOfRooms){
-        return roomService.getRoomTypes(filterSort,result,propertyId, startDate , endDate, skip, take, minNoOfRooms);
+    ResponseEntity<?> getRoomTypes(@Valid @RequestBody FilterSort filterSort, BindingResult result, @RequestParam(name="property_id") String propertyId, @RequestParam(name="start_date") String startDate , @RequestParam(name="end_date") String endDate, @RequestParam(name="skip")String skip, @RequestParam(name="take")String take , @RequestParam(name="min_no_of_rooms") String minNoOfRooms,@RequestParam(name="min_no_of_beds") String minNoOfBeds,@RequestParam(name="max_capacity") String maxCapacity){
+        return roomService.getRoomTypes(filterSort,result,propertyId, startDate , endDate, skip, take, minNoOfRooms,minNoOfBeds,maxCapacity);
     }
-
-
-
 }
