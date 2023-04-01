@@ -32,6 +32,7 @@ public class RoomServiceFilters {
             } else if (value.equalsIgnoreCase("Queen bed")) {
                 List<AvailableRoomModel> filteredList;
                 filteredList=availableRoomModelList.stream().filter(availableRoomModel -> (availableRoomModel.singleBed>0)).collect(Collectors.toList());
+
                 filterAllList.addAll(filteredList);
             }
         }
