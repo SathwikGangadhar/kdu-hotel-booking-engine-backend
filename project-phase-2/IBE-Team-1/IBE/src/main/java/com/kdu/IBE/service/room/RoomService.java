@@ -66,6 +66,7 @@ public class RoomService implements IRoomService{
             jsonNode=graphQlWebClient.getGraphQlResponse(requestBody);
             JsonNode availableRoomsList=jsonNode.get("data").get("listRoomAvailabilities");
             if(availableRoomsList==null || availableRoomsList.size()==0){
+
                 break;
             }
             /**
