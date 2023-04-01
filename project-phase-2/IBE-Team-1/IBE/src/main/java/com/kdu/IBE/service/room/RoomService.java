@@ -6,6 +6,7 @@ import com.kdu.IBE.model.recieveModel.FiltersModel;
 import com.kdu.IBE.model.returnDto.AvailableRoomModel;
 import com.kdu.IBE.model.returnDto.AvailableRoomModelResponse;
 import com.kdu.IBE.service.graphQl.GraphQlWebClient;
+import com.kdu.IBE.utils.RoomServiceFilters;
 import com.kdu.IBE.utils.RoomServiceUtils;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import software.amazon.awssdk.services.ivs.model.IngestConfiguration;
+
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,15 +29,19 @@ public class RoomService implements IRoomService{
     public GraphQlWebClient graphQlWebClient;
     @Autowired
     public RoomServiceUtils roomServiceUtils;
+    @Autowired
+    public RoomServiceFilters roomServiceFilters;
 
     @Override
-    public ResponseEntity<?> getRoomTypes(FilterSort filterSort, BindingResult result, String propertyId, String startDate, String endDate, String skip, String take , String minNoOfRooms) {
+    public ResponseEntity<?> getRoomTypes(FilterSort filterSort, BindingResult result, String propertyId, String startDate, String endDate, String skip, String take , String minNoOfRooms,String minNoOfBeds,String maxCapacity) {
         if(result.hasErrors()){
             throw  new ObjectNotFoundException("Request Body passed is invalid","Invalid");
         }
         Map<String, Object> requestBody = new HashMap<>();
         List<Integer> roomTypeArray=new ArrayList<>();
         Integer minNumberOfRooms=Integer.parseInt(minNoOfRooms);
+        Integer minNumberOfBeds= Integer.parseInt(minNoOfBeds);
+        Integer maxCapacityRequired=Integer.parseInt(maxCapacity);
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
         LocalDate startDateForCount = LocalDate.parse(startDate.substring(0,10), formatter);
         LocalDate endDateForCount = LocalDate.parse(endDate.substring(0,10), formatter);
@@ -74,7 +81,7 @@ public class RoomService implements IRoomService{
         roomServiceUtils.roomTypeListSetter(roomTypesMap , minNumberOfRooms, roomTypeArray);
 
         /**
-         * getting the roomrates values from the graphQl api
+         * getting the room rates values from the graphQl api
          */
         String roomTypeListString=roomTypeArray.toString();
         Integer roomTypeArrayLength=roomTypeArray.size();
@@ -117,6 +124,12 @@ public class RoomService implements IRoomService{
          * applying sort
          */
         roomServiceUtils.getSortApply(filterSort.getSortState(),availableRoomModelList);
+
+        /**
+         * applying bed count filter and max capacity
+         * it is a compulsory filter
+         */
+        roomServiceFilters.getBedCountAndMaxCapacityFilters(availableRoomModelList,minNumberOfBeds,maxCapacityRequired);
 
         /**
          * pagination in backend
