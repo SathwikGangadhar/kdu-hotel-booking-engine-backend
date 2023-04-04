@@ -2,9 +2,9 @@ package com.kdu.IBE.service.room;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kdu.IBE.model.recieveModel.FilterSort;
-import com.kdu.IBE.model.recieveModel.FiltersModel;
 import com.kdu.IBE.model.returnDto.AvailableRoomModel;
 import com.kdu.IBE.model.returnDto.AvailableRoomModelResponse;
+import com.kdu.IBE.model.returnDto.RoomRateModel;
 import com.kdu.IBE.service.graphQl.GraphQlWebClient;
 import com.kdu.IBE.utils.RoomServiceUtils;
 import org.hibernate.ObjectNotFoundException;
@@ -13,13 +13,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.time.format.DateTimeFormatter;
-import java.time.LocalDate;
 @Service
 public class RoomService implements IRoomService{
     @Autowired
@@ -59,7 +60,6 @@ public class RoomService implements IRoomService{
             jsonNode=graphQlWebClient.getGraphQlResponse(requestBody);
             JsonNode availableRoomsList=jsonNode.get("data").get("listRoomAvailabilities");
             if(availableRoomsList==null || availableRoomsList.size()==0){
-
                 break;
             }
             /**
@@ -131,4 +131,39 @@ public class RoomService implements IRoomService{
 
         return new ResponseEntity<AvailableRoomModelResponse>(availableRoomModelResponse, HttpStatus.OK);
     }
-}
+
+
+    /**
+     * to fetch the rate of the rooms across all the days needed by the user
+     * @param roomTypeId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public ResponseEntity<List<RoomRateModel>> getRoomRatePerDate(String roomTypeId, String startDate , String endDate){
+
+        Map<String, Object> requestBody = new HashMap<>();
+        List<RoomRateModel> roomRateModelList=new ArrayList<>();
+        requestBody.put("query",
+                roomServiceUtils.getRoomRatePerDataQuery(roomTypeId,startDate,endDate)
+        );
+        /**
+         * getting the graphql response
+         */
+        JsonNode jsonNode=graphQlWebClient.getGraphQlResponse(requestBody);
+        JsonNode roomRateArray=jsonNode.get("data").get("listRoomRateRoomTypeMappings");
+
+        /**
+         * mapping the results to the DTO
+         */
+        for(JsonNode roomRate:roomRateArray){
+            RoomRateModel roomRateModel=RoomRateModel.builder()
+                    .basicNightlyRate(roomRate.get("room_rate").get("basic_nightly_rate").asDouble())
+                    .date(roomRate.get("room_rate").get("date").toString())
+                    .build();
+            roomRateModelList.add(roomRateModel);
+        }
+
+        return new ResponseEntity<>(roomRateModelList,HttpStatus.OK);
+    }
+    }

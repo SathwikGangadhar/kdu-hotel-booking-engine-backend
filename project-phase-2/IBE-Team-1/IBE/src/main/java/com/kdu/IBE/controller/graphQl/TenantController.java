@@ -6,6 +6,7 @@ import com.kdu.IBE.service.constumeDeal.ICostumeDealService;
 import com.kdu.IBE.service.room.IRoomService;
 import com.kdu.IBE.service.tenant.ITenantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -34,4 +35,10 @@ public class TenantController {
     ResponseEntity<?> getPromoCodeDetails(@RequestParam(name="promo_code") String promoCode ,@RequestParam(name = "room_type") String roomType) {
         return costumeDealService.getPromoCodeDetails(promoCode, roomType);
     }
+
+    @GetMapping(EndPointConstants.GET_ROOM_RATE_PER_DATE)
+    ResponseEntity<?> getRoomRatePerDate(@RequestParam(name="room_type_id") String roomTypeId, @RequestParam(name="start_date") String startDate , @RequestParam(name="end_date") String endDate){
+        return roomService.getRoomRatePerDate(roomTypeId,startDate,endDate);
     }
+    }
+
