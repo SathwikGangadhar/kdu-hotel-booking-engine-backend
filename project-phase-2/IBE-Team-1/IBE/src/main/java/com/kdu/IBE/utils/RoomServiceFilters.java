@@ -65,9 +65,9 @@ public class RoomServiceFilters {
         availableRoomModelList.clear();
         availableRoomModelList.addAll(filteredList);
     }
-    public  void getBedCountFilters(List<AvailableRoomModel> availableRoomModelList,Integer value){
+    public  void getBedCountAndMaxCapacityFilters(List<AvailableRoomModel> availableRoomModelList,Integer value,Integer maxCapacity){
         List<AvailableRoomModel> filteredList;
-        filteredList=availableRoomModelList.stream().filter(availableRoomModel -> availableRoomModel.singleBed+availableRoomModel.doubleBed>=value).collect(Collectors.toList());
+        filteredList=availableRoomModelList.stream().filter(availableRoomModel -> availableRoomModel.singleBed+availableRoomModel.doubleBed>=value && availableRoomModel.maxCapacity>=maxCapacity).collect(Collectors.toList());
         availableRoomModelList.clear();
         availableRoomModelList.addAll(filteredList);
     }
