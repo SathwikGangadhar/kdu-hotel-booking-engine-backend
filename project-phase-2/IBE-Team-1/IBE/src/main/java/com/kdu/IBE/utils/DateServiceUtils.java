@@ -1,7 +1,6 @@
 package com.kdu.IBE.utils;
 
 import org.springframework.stereotype.Component;
-
 @Component
 public class DateServiceUtils {
     public String getMinRatePerDateQuery(Integer skip,Integer take){

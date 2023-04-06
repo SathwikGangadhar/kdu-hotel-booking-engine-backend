@@ -22,6 +22,11 @@ public class RatingsAndReviews {
     @NotNull
     @JoinColumn(name="room_type_id")
     private RoomType roomType;
+
+    @ManyToOne
+    @JoinColumn(name="booking_id")
+    private Booking booking;
+
     @NotNull
     private Double ratings;
     private String reviews;
