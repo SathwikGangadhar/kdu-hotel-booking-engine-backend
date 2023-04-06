@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 @Service
 public class PromotionDealService implements IPromotionDealService {
     @Autowired
@@ -20,7 +19,6 @@ public class PromotionDealService implements IPromotionDealService {
     @Autowired
     private PromotionDealServiceUtil promotionDealServiceUtil;
     JsonNode jsonNode;
-
 
     @Override
     public ResponseEntity<?> getAllPromotionDeals(String startDate, String endDate) {
@@ -30,13 +28,13 @@ public class PromotionDealService implements IPromotionDealService {
                 promotionDealServiceUtil.getPromotionDealQuery(startDate, endDate));
         jsonNode = graphQlWebClient.getGraphQlResponse(availablePromotionDealsMap);
         JsonNode availablePromotionDealsJsonList = jsonNode.get("data").get("listPromotions");
-        List<PromotionDealModel> availablePromotionDeals=new ArrayList<>();
-        promotionDealServiceUtil.promotionDealsListSetter(availablePromotionDealsJsonList,availablePromotionDealsMap,availablePromotionDeals);
-        List<PromotionDealModel> filteredAvailablePromotionDeals=promotionDealServiceUtil.getFilteredAvailablePromotionDeals(availablePromotionDeals,startDate,endDate);
-        List<PromotionDealModel> sortedFilteredAvailablePromotionDeals = filteredAvailablePromotionDeals
+        List<PromotionDealModel> availablePromotionDeals = new ArrayList<>();
+        promotionDealServiceUtil.promotionDealsListSetter(availablePromotionDealsJsonList, availablePromotionDealsMap, availablePromotionDeals);
+        List<PromotionDealModel> filteredAvailablePromotionDeals = promotionDealServiceUtil.getFilteredAvailablePromotionDeals(availablePromotionDeals, startDate, endDate);
+        filteredAvailablePromotionDeals = filteredAvailablePromotionDeals
                 .stream()
                 .sorted(Comparator.comparing(PromotionDealModel::getPromotionDealPriceFactor).reversed())
                 .collect(Collectors.toList());
-        return new ResponseEntity<List<PromotionDealModel>>(sortedFilteredAvailablePromotionDeals, HttpStatus.OK);
+        return new ResponseEntity<List<PromotionDealModel>>(filteredAvailablePromotionDeals, HttpStatus.OK);
     }
 }

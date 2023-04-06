@@ -8,9 +8,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class PromotionDealServiceUtil {
@@ -44,17 +44,26 @@ public class PromotionDealServiceUtil {
     }
 
     public List<PromotionDealModel> getFilteredAvailablePromotionDeals(List<PromotionDealModel> availablePromotionDeals, String startDate, String endDate) {
-        List<PromotionDealModel> filteredAvailablePromotionDeals;
-        filteredAvailablePromotionDeals = availablePromotionDeals.stream().filter(deal -> deal.getPromotionDealTitle().contains("weekend")) // filter based on the promotion weekend title
-                .filter(deal -> {
-                    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
-                    LocalDate startDateForCount = LocalDate.parse(startDate.substring(0, 10), formatter);
-                    LocalDate endDateForCount = LocalDate.parse(endDate.substring(0, 10), formatter);
-                    long weekdays = countWeekdaysAndWeekends(startDateForCount, endDateForCount, false);
-                    long weekends = countWeekdaysAndWeekends(startDateForCount, endDateForCount, true);
-                    return ((weekends > 1 && (weekdays >= 1 || weekdays == 0)) ); // filter based on the number of weekdays and weekends
-                })
-                .collect(Collectors.toList());
+        List<PromotionDealModel> filteredAvailablePromotionDeals = new ArrayList<PromotionDealModel>();
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        LocalDate startDateForCount = LocalDate.parse(startDate.substring(0, 10), formatter);
+        LocalDate endDateForCount = LocalDate.parse(endDate.substring(0, 10), formatter);
+        long weekdays = countWeekdaysAndWeekends(startDateForCount, endDateForCount, false);
+        long weekends = countWeekdaysAndWeekends(startDateForCount, endDateForCount, true);
+        for (PromotionDealModel deal : availablePromotionDeals) {
+            if (deal.getPromotionDealTitle().toLowerCase().contains("weekend")) {
+                if (deal.getPromotionDealTitle().contains("Long weekend")) {
+                    if (weekends == 2 && weekdays > 0) {
+                        filteredAvailablePromotionDeals.add(deal);
+                    }
+                }
+                if (weekends == 2 && !deal.getPromotionDealTitle().contains("Long weekend")) {
+                    filteredAvailablePromotionDeals.add(deal);
+                }
+            } else {
+                filteredAvailablePromotionDeals.add(deal);
+            }
+        }
         return filteredAvailablePromotionDeals;
     }
 
@@ -72,7 +81,6 @@ public class PromotionDealServiceUtil {
             }
             currentDate = currentDate.plus(1, ChronoUnit.DAYS);
         }
-
         return countWeekends ? weekends : weekdays;
     }
 }
