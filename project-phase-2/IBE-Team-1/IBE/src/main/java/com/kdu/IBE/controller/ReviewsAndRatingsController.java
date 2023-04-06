@@ -20,22 +20,24 @@ public class ReviewsAndRatingsController {
     private SesService sesService;
     @Autowired
     private IRatingsAndReviewsService ratingsAndReviewsService;
+
     @GetMapping("/send/review/form")
-    public ResponseEntity<String> sendEmail(@RequestParam(name = "receiver_email") String receiverEmail){
-        String[] arr=new String[]{"sathwik.shetty@kickdrumtech.com",receiverEmail,"email sent through Ses"};
-        try {
-            sesService.sesMessageSender(arr);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return new ResponseEntity<>("Email sent successfully", HttpStatus.OK);
+    public ResponseEntity<String> sendEmail(@RequestParam(name = "receiver_email") String receiverEmail, @RequestParam(name = "room_type_id") String roomTypeId) {
+        return ratingsAndReviewsService.sendEmail(receiverEmail, roomTypeId);
     }
+
+    @GetMapping("is/ratingIsValid")
+    public ResponseEntity<Integer> ratingIsValid(@RequestParam(name = "rating_id") String ratingId) {
+        return ratingsAndReviewsService.checkIfRatingsIsValid(ratingId);
+    }
+
     @PostMapping(EndPointConstants.PUT_RATINGS_AND_REVIEWS)
-    public ResponseEntity<?> putRatingsAndReview(@Valid @RequestBody RatingsAndReviewsReceiveModel ratingsAndReviewsReceiveModel, BindingResult result){
-        return ratingsAndReviewsService.putRatingsAndReviews(ratingsAndReviewsReceiveModel,result);
+    public ResponseEntity<?> putRatingsAndReview(@Valid @RequestBody RatingsAndReviewsReceiveModel ratingsAndReviewsReceiveModel, BindingResult result) {
+        return ratingsAndReviewsService.putRatingsAndReviews(ratingsAndReviewsReceiveModel, result);
     }
+
     @GetMapping(EndPointConstants.GET_RATINGS_AND_REVIEWS)
-    public ResponseEntity<?> putRatingsAndReview(@RequestParam(name="room_type_id") String roomTypeId){
+    public ResponseEntity<?> putRatingsAndReview(@RequestParam(name = "room_type_id") String roomTypeId) {
         return ratingsAndReviewsService.getRatingsAndReview(roomTypeId);
     }
 }

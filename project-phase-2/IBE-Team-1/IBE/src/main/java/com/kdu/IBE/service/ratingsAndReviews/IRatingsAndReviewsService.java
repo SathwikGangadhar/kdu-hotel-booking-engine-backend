@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
 public interface IRatingsAndReviewsService {
-    public ResponseEntity<String> putRatingsAndReviews(RatingsAndReviewsReceiveModel ratingsAndReviewsReceiveModel, BindingResult result);
+    public ResponseEntity<String> sendEmail(String receiverEmail,String roomTypeId);
+        public ResponseEntity<String> putRatingsAndReviews(RatingsAndReviewsReceiveModel ratingsAndReviewsReceiveModel, BindingResult result);
     public ResponseEntity<?> getRatingsAndReview(String roomTypeId);
+    public ResponseEntity<Integer> checkIfRatingsIsValid(String ratingId);
 }

@@ -1,6 +1,7 @@
 package com.kdu.IBE.service.sesService;
 
 // snippet-start:[ses.java2.sendmessage.import]
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -8,10 +9,12 @@ import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.awscore.AwsRequestOverrideConfiguration;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ses.SesClient;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Properties;
+
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.services.ses.model.SendRawEmailRequest;
 import software.amazon.awssdk.services.ses.model.RawMessage;
@@ -29,9 +32,9 @@ import javax.mail.internet.MimeMultipart;
 
 /**
  * Before running this Java V2 code example, set up your development environment, including your credentials.
- *
+ * <p>
  * For more information, see the following documentation topic:
- *
+ * <p>
  * https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/get-started.html
  */
 
@@ -44,24 +47,17 @@ public class SesService {
     private String region;
     private SesClient client;
     private AwsRequestOverrideConfiguration myConf;
-    public void sesMessageSender(String[] args) throws IOException {
+
+    public void sesMessageSender(String sender, String recipient, String ratingsAndReviewsId) throws IOException {
 
         final String usage = "\n" +
                 "Usage:\n" +
                 "    <sender> <recipient> <subject> \n\n" +
                 "Where:\n" +
-                "    sender - An email address that represents the sender. \n"+
-                "    recipient -  An email address that represents the recipient. \n"+
-                "    subject - The  subject line. \n" ;
-
-        if (args.length != 3) {
-            log.info(usage);
-            System.exit(1);
-        }
-        log.info("1");
-        String sender = args[0];
-        String recipient = args[1];
-        String subject = args[2];
+                "    sender - An email address that represents the sender. \n" +
+                "    recipient -  An email address that represents the recipient. \n" +
+                "    subject - The  subject line. \n";
+        String subject = "Please submit this review";
         Region region = Region.of(this.region);
 
         // The email body for non-HTML email clients.
@@ -69,8 +65,12 @@ public class SesService {
 
         // The HTML body of the email.
         String bodyHTML = "<html>" + "<head></head>" + "<body>" + "<h1>Hello!</h1>"
-                + "<p> Please click on this link to submit the review</p>"+"<p> Link</p>"+ "</body>" + "</html>";
+                + "<p> Please click on this link to submit the review</p>" + "<p><a href=\"http://localhost:3000/?id=" + ratingsAndReviewsId + "\">http://localhost:3000/?id=" + ratingsAndReviewsId + "</a></p>" + "</body>" + "</html>";
 
+        this.client = SesClient.builder()
+                .region(region)
+//                .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+                .build();
         try {
             send(client, sender, recipient, subject, bodyText, bodyHTML);
             client.close();
@@ -83,11 +83,11 @@ public class SesService {
 
     // snippet-start:[ses.java2.sendmessage.main]
     public void send(SesClient client,
-                            String sender,
-                            String recipient,
-                            String subject,
-                            String bodyText,
-                            String bodyHTML
+                     String sender,
+                     String recipient,
+                     String subject,
+                     String bodyText,
+                     String bodyHTML
     ) throws MessagingException, IOException {
 
         Session session = Session.getDefaultInstance(new Properties());
@@ -138,6 +138,10 @@ public class SesService {
             buf.get(arr);
 
             SdkBytes data = SdkBytes.fromByteArray(arr);
+            this.myConf = AwsRequestOverrideConfiguration.builder()
+//                    .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+                    .build();
+
             RawMessage rawMessage = RawMessage.builder()
                     .data(data)
                     .build();
@@ -155,17 +159,5 @@ public class SesService {
         }
     }
     // snippet-end:[ses.java2.sendmessage.main]
-
-    @PostConstruct
-    public void initializeClient(){
-        Region region = Region.of(this.region);
-        this.client = SesClient.builder()
-                .region(region)
-                .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
-                .build();
-        this.myConf = AwsRequestOverrideConfiguration.builder()
-                .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
-                .build() ;
-    }
 }
 // snippet-end:[ses.java2.sendmessage.complete]

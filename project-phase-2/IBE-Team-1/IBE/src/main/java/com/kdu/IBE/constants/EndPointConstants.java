@@ -11,6 +11,6 @@ public class EndPointConstants {
     public static final String RATINGS_AND_REVIEWS_MAPPING="/reviews";
     public  static final String PUT_RATINGS_AND_REVIEWS="/put/ratingsAndReviews";
     public static final String GET_RATINGS_AND_REVIEWS="/get/ratingsAndReviews";
-
+    public static final String GET_PROMOTION_DEALS="/get/promotion/deals";
 }
 
