@@ -6,6 +6,9 @@ import com.kdu.IBE.model.returnDto.AvailableRoomModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +52,25 @@ public class RoomServiceUtils {
                 "    max_capacity\n" +
                 "    double_bed\n" +
                 "    area_in_square_feet\n" +
+                "  }\n" +
+                "}";
+    }
+
+    public String getRoomRatePerDataQuery(String roomType,String startDate,String endDate){
+        /**
+         * calculating the count of the days of stay to apply it to the take of the graph ql query
+         */
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        LocalDate startDateForCount = LocalDate.parse(startDate.substring(0,10), formatter);
+        LocalDate endDateForCount = LocalDate.parse(endDate.substring(0,10), formatter);
+        long daysBetween = ChronoUnit.DAYS.between(startDateForCount, endDateForCount)+1;
+        String take=Long.toString(daysBetween);
+        return "query MyQuery2 {\n" +
+                "  listRoomRateRoomTypeMappings(where: {room_rate: {date: {gte: \""+startDate+"\", lte: \""+endDate+"\"}}, room_type: {room_type_id: {equals: "+roomType+"}}}, skip: 0, take: "+take+") {\n" +
+                "    room_rate {\n" +
+                "      basic_nightly_rate\n" +
+                "      date\n" +
+                "    }\n" +
                 "  }\n" +
                 "}";
     }

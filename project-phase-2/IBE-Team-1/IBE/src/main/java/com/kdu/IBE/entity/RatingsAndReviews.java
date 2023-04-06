@@ -1,0 +1,28 @@
+package com.kdu.IBE.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "ratings_and_reviews")
+public class RatingsAndReviews {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @ManyToOne
+    @NotNull
+    @JoinColumn(name="room_type_id")
+    private RoomType roomType;
+    @NotNull
+    private Double ratings;
+    private String reviews;
+}
