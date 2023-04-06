@@ -2,7 +2,7 @@ package com.kdu.IBE.controller.graphQl;
 
 import com.kdu.IBE.constants.EndPointConstants;
 import com.kdu.IBE.model.recieveModel.FilterSort;
-import com.kdu.IBE.model.recieveModel.FiltersModel;
+import com.kdu.IBE.service.constumeDeal.ICostumeDealService;
 import com.kdu.IBE.service.room.IRoomService;
 import com.kdu.IBE.service.tenant.ITenantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,9 @@ public class TenantController {
     ITenantService tenantService;
     @Autowired
     public IRoomService roomService;
+
+    @Autowired
+    ICostumeDealService costumeDealService;
     @GetMapping(EndPointConstants.GET_TENANT_PROPERTIES)
     ResponseEntity<?> getTenantProperties(@RequestParam(name = "tenant_id") String tenantId) {
         return tenantService.getTenantProperties(tenantId);
@@ -27,4 +30,11 @@ public class TenantController {
     ResponseEntity<?> getRoomTypes(@Valid @RequestBody FilterSort filterSort, BindingResult result, @RequestParam(name="property_id") String propertyId, @RequestParam(name="start_date") String startDate , @RequestParam(name="end_date") String endDate, @RequestParam(name="skip")String skip, @RequestParam(name="take")String take , @RequestParam(name="min_no_of_rooms") String minNoOfRooms,@RequestParam(name="min_no_of_beds") String minNoOfBeds,@RequestParam(name="max_capacity") String maxCapacity){
         return roomService.getRoomTypes(filterSort,result,propertyId, startDate , endDate, skip, take, minNoOfRooms,minNoOfBeds,maxCapacity);
     }
+
+    @GetMapping(EndPointConstants.GET_PROMO_CODE_DETAILS)
+    ResponseEntity<?> getPromoCodeDetails(@RequestParam(name="promo_code") String promoCode ,@RequestParam(name = "room_type") String roomType) {
+        return costumeDealService.getPromoCodeDetails(promoCode, roomType);
+    }
+    }
 }
+

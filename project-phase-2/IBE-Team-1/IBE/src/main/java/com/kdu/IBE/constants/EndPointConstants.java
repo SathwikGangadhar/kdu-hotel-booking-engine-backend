@@ -6,6 +6,6 @@ public class EndPointConstants {
     public static final String GET_TENANT_PROPERTIES="/get/properties";
     public static final String TENANT_REQUEST_MAPPING="/tenant";
     public static final String GET_ROOMS="/get/rooms";
-
+    public static final String GET_PROMO_CODE_DETAILS="/get/promo/code/details";
 }
 

@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -14,7 +16,9 @@ import javax.persistence.*;
 public class RoomType {
     @Id
     private Long roomTypeId;
+
+
     @ManyToOne
-    @JoinColumn(name = "property_table")
+    @JoinColumn(name = "property_id")
     private PropertyTable property;
 }
