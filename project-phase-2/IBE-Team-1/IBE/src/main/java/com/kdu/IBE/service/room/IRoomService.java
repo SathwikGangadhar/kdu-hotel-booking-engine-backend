@@ -10,6 +10,6 @@ import org.springframework.validation.BindingResult;
 import java.util.List;
 
 public interface IRoomService {
-    ResponseEntity<?> getRoomTypes(FilterSort filterSort, BindingResult result, String propertyId, String startDate, String endDate, String skip, String take, String min);
+    ResponseEntity<?> getRoomTypes(FilterSort filterSort, BindingResult result, String propertyId, String startDate, String endDate, String skip, String take, String minNoOfRooms,String minNoOfBeds,String maxCapacity);
      ResponseEntity<List<RoomRateModel>> getRoomRatePerDate(String roomTypeId, String startDate , String endDate);
     }
