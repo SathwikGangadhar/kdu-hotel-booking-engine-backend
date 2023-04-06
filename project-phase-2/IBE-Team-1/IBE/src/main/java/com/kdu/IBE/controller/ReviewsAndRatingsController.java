@@ -17,16 +17,14 @@ import java.io.IOException;
 @RequestMapping(EndPointConstants.RATINGS_AND_REVIEWS_MAPPING)
 public class ReviewsAndRatingsController {
     @Autowired
-    private SesService sesService;
-    @Autowired
     private IRatingsAndReviewsService ratingsAndReviewsService;
 
-    @GetMapping("/send/review/form")
+    @GetMapping(EndPointConstants.SEND_REVIEW_DEALS)
     public ResponseEntity<String> sendEmail(@RequestParam(name = "receiver_email") String receiverEmail, @RequestParam(name = "room_type_id") String roomTypeId) {
         return ratingsAndReviewsService.sendEmail(receiverEmail, roomTypeId);
     }
 
-    @GetMapping("is/ratingIsValid")
+    @GetMapping(EndPointConstants.IS_RATING_VALID)
     public ResponseEntity<Integer> ratingIsValid(@RequestParam(name = "rating_id") String ratingId) {
         return ratingsAndReviewsService.checkIfRatingsIsValid(ratingId);
     }

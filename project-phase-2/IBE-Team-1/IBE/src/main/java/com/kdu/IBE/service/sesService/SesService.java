@@ -1,8 +1,9 @@
 package com.kdu.IBE.service.sesService;
 
-// snippet-start:[ses.java2.sendmessage.import]
 
+import com.kdu.IBE.utils.ServiceUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
@@ -28,15 +29,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-// snippet-end:[ses.java2.sendmessage.import]
-
-/**
- * Before running this Java V2 code example, set up your development environment, including your credentials.
- * <p>
- * For more information, see the following documentation topic:
- * <p>
- * https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/get-started.html
- */
 
 @Slf4j
 @Service
@@ -45,31 +37,32 @@ public class SesService {
     private String awsProfileName;
     @Value("${region}")
     private String region;
+    @Autowired
+    private ServiceUtils serviceUtils;
     private SesClient client;
     private AwsRequestOverrideConfiguration myConf;
 
+    /**
+     * @param sender
+     * @param recipient
+     * @param ratingsAndReviewsId
+     * @throws IOException
+     */
     public void sesMessageSender(String sender, String recipient, String ratingsAndReviewsId) throws IOException {
 
-        final String usage = "\n" +
-                "Usage:\n" +
-                "    <sender> <recipient> <subject> \n\n" +
-                "Where:\n" +
-                "    sender - An email address that represents the sender. \n" +
-                "    recipient -  An email address that represents the recipient. \n" +
-                "    subject - The  subject line. \n";
+        final String usage =serviceUtils.getUsage();
         String subject = "Please submit this review";
         Region region = Region.of(this.region);
 
         // The email body for non-HTML email clients.
-        String bodyText = "Hello,\r\n" + "See the list of customers. ";
+        String bodyText = "Hello,\r\n" + "See the list below message. ";
 
         // The HTML body of the email.
-        String bodyHTML = "<html>" + "<head></head>" + "<body>" + "<h1>Hello!</h1>"
-                + "<p> Please click on this link to submit the review</p>" + "<p><a href=\"http://localhost:3000/?id=" + ratingsAndReviewsId + "\">http://localhost:3000/?id=" + ratingsAndReviewsId + "</a></p>" + "</body>" + "</html>";
-
+        String bodyHTML = serviceUtils.getBodyHtml(ratingsAndReviewsId);
+        System.out.println(bodyHTML);
         this.client = SesClient.builder()
                 .region(region)
-//                .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+                .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
                 .build();
         try {
             send(client, sender, recipient, subject, bodyText, bodyHTML);
@@ -81,6 +74,16 @@ public class SesService {
         }
     }
 
+    /**
+     * @param client
+     * @param sender
+     * @param recipient
+     * @param subject
+     * @param bodyText
+     * @param bodyHTML
+     * @throws MessagingException
+     * @throws IOException
+     */
     // snippet-start:[ses.java2.sendmessage.main]
     public void send(SesClient client,
                      String sender,
@@ -139,7 +142,7 @@ public class SesService {
 
             SdkBytes data = SdkBytes.fromByteArray(arr);
             this.myConf = AwsRequestOverrideConfiguration.builder()
-//                    .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+                    .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
                     .build();
 
             RawMessage rawMessage = RawMessage.builder()
@@ -158,6 +161,4 @@ public class SesService {
             System.exit(1);
         }
     }
-    // snippet-end:[ses.java2.sendmessage.main]
 }
-// snippet-end:[ses.java2.sendmessage.complete]
