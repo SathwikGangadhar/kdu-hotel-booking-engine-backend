@@ -101,9 +101,9 @@ public class RoomServiceUtils {
          }
      }
 
-     public void roomTypeListSetter(HashMap<Integer,Integer> roomTypesMap , Integer minNumberOfRooms, List<Integer> roomTypeArray){
+     public void roomTypeListSetter(HashMap<Integer,Integer> roomTypesMap , Integer minNumberOfRooms,List<Integer> roomTypeArray){
          for (Map.Entry<Integer,Integer> entry : roomTypesMap.entrySet()){
-             if(entry.getValue()>=minNumberOfRooms){
+             if(entry.getValue()>=minNumberOfRooms ){
                  roomTypeArray.add(entry.getKey());
              }
          }
@@ -166,9 +166,6 @@ public class RoomServiceUtils {
          }
          if(filters.getRate().getIsNeeded()>0){
              roomServiceFilters.getRateFilters(availableRoomModelList,filters.getRate().getValue());
-         }
-         if(filters.getBedCounts().getIsNeeded()>0){
-             roomServiceFilters.getBedCountFilters(availableRoomModelList,filters.getBedCounts().getValue());
          }
      }
 
