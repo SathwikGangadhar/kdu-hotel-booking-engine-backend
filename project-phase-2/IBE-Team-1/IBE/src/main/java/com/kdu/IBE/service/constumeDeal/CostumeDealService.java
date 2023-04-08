@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 public class CostumeDealService implements ICostumeDealService{
     @Autowired
     CustomDealRepository customDealRepository;
-    public ResponseEntity<CustomDealModel> getPromoCodeDetails(String promoCode , String roomType){
+    public ResponseEntity<?> getPromoCodeDetails(String promoCode , String roomType){
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         Long roomTypeIdValue=Long.parseLong(roomType);
 
@@ -25,7 +25,9 @@ public class CostumeDealService implements ICostumeDealService{
          */
         String currentDate = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
         CustomDeal customDeal =customDealRepository.findByPromoCodeEqualsAndRoomTypeIdEqualsAndStartDateEqualsAndEndDateEquals(promoCode,roomTypeIdValue,currentDate);
-
+        if(customDeal==null){
+            return new ResponseEntity<>("No data", HttpStatus.OK);
+        }
         CustomDealModel customDealModel=CustomDealModel.builder()
                 .dealId(customDeal.getDealId())
                 .price_factor(customDeal.getPrice_factor())

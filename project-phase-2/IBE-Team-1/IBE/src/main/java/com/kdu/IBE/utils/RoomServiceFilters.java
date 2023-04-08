@@ -40,7 +40,7 @@ public class RoomServiceFilters {
         for(AvailableRoomModel availableRoomModel:filterAllList){
             if(availableRoomModelMap.get(availableRoomModel.getRoomTypeId())==null){
                 availableRoomModelList.add(availableRoomModel);
-                availableRoomModelMap.put(availableRoomModel.getRoomTypeId(),1);
+                availableRoomModelMap.put(availableRoomModel.getRoomTypeId(), Integer.valueOf(1));
             }
         }
     }
@@ -65,7 +65,7 @@ public class RoomServiceFilters {
         availableRoomModelList.clear();
         availableRoomModelList.addAll(filteredList);
     }
-    public  void getBedCountAndMaxCapacityFilters(List<AvailableRoomModel> availableRoomModelList,Integer value,Integer maxCapacity){
+    public  void getBedCountAndMaxCapacityFilters(List<AvailableRoomModel> availableRoomModelList,int value,int maxCapacity){
         List<AvailableRoomModel> filteredList;
         filteredList=availableRoomModelList.stream().filter(availableRoomModel -> availableRoomModel.singleBed+availableRoomModel.doubleBed>=value && availableRoomModel.maxCapacity>=maxCapacity).collect(Collectors.toList());
         availableRoomModelList.clear();
