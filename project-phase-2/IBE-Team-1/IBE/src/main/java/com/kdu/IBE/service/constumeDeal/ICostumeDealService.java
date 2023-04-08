@@ -5,5 +5,5 @@ import com.kdu.IBE.model.returnDto.CustomDealModel;
 import org.springframework.http.ResponseEntity;
 
 public interface ICostumeDealService {
-    public ResponseEntity<CustomDealModel> getPromoCodeDetails(String promoCode , String roomType);
+    public ResponseEntity<?> getPromoCodeDetails(String promoCode , String roomType);
 }

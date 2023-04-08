@@ -7,6 +7,7 @@ import com.kdu.IBE.model.returnDto.RoomRatingReturnModel;
 import com.kdu.IBE.repo.RatingsAndReviewsRepository;
 import com.kdu.IBE.repo.RoomTypeRepository;
 import com.kdu.IBE.service.sesService.SesService;
+import com.kdu.IBE.utils.EmailValidator;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,18 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
     private RatingsAndReviewsRepository ratingsAndReviewsRepository;
     @Autowired
     private RoomTypeRepository roomTypeRepository;
+    @Autowired
+    private EmailValidator emailValidator;
 
     public ResponseEntity<String> sendEmail(String receiverEmail, String roomTypeId) {
+        /**
+         * validating the email
+         */
+        boolean isEmailValid =emailValidator.validateEmail(receiverEmail);
+        if(!isEmailValid){
+            return new ResponseEntity<>("Email Passed is invalid",HttpStatus.BAD_REQUEST);
+        }
+
         /**
          *  getting the room type with id
          */
@@ -97,6 +108,11 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
     public ResponseEntity<?> getRatingsAndReview(String roomTypeId) {
         Map<String, Object> roomRatingReturnModelMap = ratingsAndReviewsRepository.getCountAndAverageRatingByRoomTypeId(Long.parseLong(roomTypeId));
         RoomRatingReturnModel roomRatingReturnModel = new RoomRatingReturnModel();
+        if(roomRatingReturnModelMap.get("count")==null || roomRatingReturnModelMap.get("averageRating")==null){
+            roomRatingReturnModel.setCount(0l);
+            roomRatingReturnModel.setAverageRating(0d);
+            return new ResponseEntity<RoomRatingReturnModel>(roomRatingReturnModel,HttpStatus.OK);
+        }
         roomRatingReturnModel.setCount(Long.parseLong(roomRatingReturnModelMap.get("count").toString()));
         roomRatingReturnModel.setAverageRating(Double.parseDouble(roomRatingReturnModelMap.get("averageRating").toString()));
         return new ResponseEntity<RoomRatingReturnModel>(roomRatingReturnModel, HttpStatus.OK);

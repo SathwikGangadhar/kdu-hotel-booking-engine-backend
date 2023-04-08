@@ -123,7 +123,7 @@ public class RoomServiceUtils {
      }
 
 
-     public void roomTypeRateAverageSetter( HashMap<Integer,Double> roomTypeRateMap,Integer minNumberOfRooms ){
+     public void roomTypeRateAverageSetter( HashMap<Integer,Double> roomTypeRateMap,int minNumberOfRooms ){
          for (Map.Entry<Integer,Double> entry : roomTypeRateMap.entrySet()){
              roomTypeRateMap.put(entry.getKey(),entry.getValue()/minNumberOfRooms);
          }
@@ -181,4 +181,15 @@ public class RoomServiceUtils {
                  // code block
          }
          }
+     public  double getTaxesAndSurchargesAmount(double subTotal,double taxValue,double surchargesValue){
+         return subTotal*(taxValue+surchargesValue);
+     }
+
+     public  double getVatAmount(double subTotal,double vatValue){
+         return subTotal*(vatValue);
+     }
+
+     public double getDueNowAmount(double subTotal,double dueNowValue){
+         return subTotal*dueNowValue;
+     }
      }

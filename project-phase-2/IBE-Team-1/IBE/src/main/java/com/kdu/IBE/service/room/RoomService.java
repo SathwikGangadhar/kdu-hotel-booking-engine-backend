@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.kdu.IBE.model.recieveModel.FilterSort;
 import com.kdu.IBE.model.returnDto.AvailableRoomModel;
 import com.kdu.IBE.model.returnDto.AvailableRoomModelResponse;
+import com.kdu.IBE.model.returnDto.RoomRateDetailModel;
 import com.kdu.IBE.model.returnDto.RoomRateModel;
 import com.kdu.IBE.service.graphQl.GraphQlWebClient;
 import com.kdu.IBE.utils.RoomServiceFilters;
@@ -39,9 +40,9 @@ public class RoomService implements IRoomService{
         }
         Map<String, Object> requestBody = new HashMap<>();
         List<Integer> roomTypeArray=new ArrayList<>();
-        Integer minNumberOfRooms=Integer.parseInt(minNoOfRooms);
-        Integer minNumberOfBeds= Integer.parseInt(minNoOfBeds);
-        Integer maxCapacityRequired=Integer.parseInt(maxCapacity);
+        int minNumberOfRooms=Integer.parseInt(minNoOfRooms);
+        int minNumberOfBeds= Integer.parseInt(minNoOfBeds);
+        int maxCapacityRequired=Integer.parseInt(maxCapacity);
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
         LocalDate startDateForCount = LocalDate.parse(startDate.substring(0,10), formatter);
         LocalDate endDateForCount = LocalDate.parse(endDate.substring(0,10), formatter);
@@ -53,10 +54,10 @@ public class RoomService implements IRoomService{
         List<AvailableRoomModel> finalAvailableRoomModelList=new ArrayList<>();
         AvailableRoomModelResponse availableRoomModelResponse=new AvailableRoomModelResponse();
         JsonNode jsonNode;
-        Integer skipValue=Integer.parseInt(skip);
-        Integer startIndex=Integer.parseInt(skip);
-        Integer endIndex=(startIndex+Integer.parseInt(take));
-        Integer availableListCount;
+        int skipValue=Integer.parseInt(skip);
+        int startIndex=Integer.parseInt(skip);
+        int endIndex=(startIndex+Integer.parseInt(take));
+        int availableListCount;
         while(true){
             requestBody.put("query",
             roomServiceUtils.getAvailableRoomDetailsQuery(startDate ,endDate,propertyId,skipValue)
@@ -83,7 +84,7 @@ public class RoomService implements IRoomService{
          * getting the room rates values from the graphQl api
          */
         String roomTypeListString=roomTypeArray.toString();
-        Integer roomTypeArrayLength=roomTypeArray.size();
+        int roomTypeArrayLength=roomTypeArray.size();
         requestBody.put("query", roomServiceUtils.getRoomRatesQuery(startDate ,endDate, roomTypeListString ,roomTypeArrayLength ,daysBetween)
         );
 
@@ -152,10 +153,20 @@ public class RoomService implements IRoomService{
      * @param endDate
      * @return
      */
-    public ResponseEntity<List<RoomRateModel>> getRoomRatePerDate(String roomTypeId, String startDate , String endDate){
+    public ResponseEntity<RoomRateDetailModel > getRoomRatePerDate(String roomTypeId, String startDate , String endDate, String tax , String surcharges, String vat, String dueNow){
 
         Map<String, Object> requestBody = new HashMap<>();
         List<RoomRateModel> roomRateModelList=new ArrayList<>();
+        double taxValue=Double.parseDouble(tax);
+        double surchargesValue=Double.parseDouble(surcharges);
+        double vatValue=Double.parseDouble(vat);
+        double dueNowValue=Double.parseDouble(dueNow);
+        double subTotal=0;
+        double taxesAndSurchargesAmount=0;
+        double vatAmount=0;
+        double grandTotal=0;
+        double dueNowAmount=0;
+        double dueAtResortAmount=0;
         requestBody.put("query",
                 roomServiceUtils.getRoomRatePerDataQuery(roomTypeId,startDate,endDate)
         );
@@ -168,14 +179,45 @@ public class RoomService implements IRoomService{
         /**
          * mapping the results to the DTO
          */
+
         for(JsonNode roomRate:roomRateArray){
+            /**
+             * calculating the sub total
+             */
+            subTotal+=roomRate.get("room_rate").get("basic_nightly_rate").asDouble();
+
             RoomRateModel roomRateModel=RoomRateModel.builder()
                     .basicNightlyRate(roomRate.get("room_rate").get("basic_nightly_rate").asDouble())
                     .date(roomRate.get("room_rate").get("date").toString())
                     .build();
             roomRateModelList.add(roomRateModel);
         }
-
-        return new ResponseEntity<>(roomRateModelList,HttpStatus.OK);
+        /**
+         * getting the amount of tax
+         */
+        taxesAndSurchargesAmount= roomServiceUtils.getTaxesAndSurchargesAmount(subTotal,taxValue,surchargesValue);
+        /**
+         * getting the amount of vat
+         */
+        vatAmount= roomServiceUtils.getVatAmount(subTotal,vatValue);
+        /**
+         * Grand total calculation
+         */
+        grandTotal=subTotal+taxesAndSurchargesAmount+vatAmount;
+        /**
+         * Deu Now amount and due at resort
+         */
+        dueNowAmount= roomServiceUtils.getDueNowAmount(grandTotal,dueNowValue);
+        dueAtResortAmount=grandTotal-dueNowAmount;
+        RoomRateDetailModel roomRateDetailModel=RoomRateDetailModel.builder()
+                .roomRateModelList(roomRateModelList)
+                .subTotal(subTotal)
+                .taxesAndSurchargesAmount(taxesAndSurchargesAmount)
+                .vatAmount(vatAmount)
+                .grandTotal(grandTotal)
+                .dueNow(dueNowAmount)
+                .dueAtResort(dueAtResortAmount)
+                .build();
+        return new ResponseEntity<>(roomRateDetailModel,HttpStatus.OK);
     }
     }

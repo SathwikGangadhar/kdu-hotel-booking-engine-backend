@@ -12,5 +12,7 @@ public class EndPointConstants {
     public  static final String PUT_RATINGS_AND_REVIEWS="/put/ratingsAndReviews";
     public static final String GET_RATINGS_AND_REVIEWS="/get/ratingsAndReviews";
     public static final String GET_PROMOTION_DEALS="/get/promotion/deals";
+    public static final String SEND_REVIEW_DEALS="/send/review/form";
+    public static final String IS_RATING_VALID="is/ratingIsValid";
 }
 
