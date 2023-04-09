@@ -72,8 +72,8 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
 
     /**
      * to check in the form whether it is submitted or not present
-     * @param ratingId
-     * @return
+     * @param ratingId rating id
+     * @return validity of rating presence
      */
     public ResponseEntity<Integer> checkIfRatingsIsValid(String ratingId) {
         if (!ratingsAndReviewsRepository.existsById(Long.parseLong(ratingId))) {
@@ -89,8 +89,8 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
 
     /**
      * to add ratings and review in the database
-     * @param ratingsAndReviewsReceiveModel
-     * @return
+     * @param ratingsAndReviewsReceiveModel model which represents  the data is passed
+     * @return required message
      */
     public ResponseEntity<String> putRatingsAndReviews(RatingsAndReviewsReceiveModel ratingsAndReviewsReceiveModel, BindingResult result) {
         if (result.hasErrors()) {
@@ -102,8 +102,8 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
 
     /**
      * to get the ratings and reviews
-     * @param roomTypeId
-     * @return
+     * @param roomTypeId (id of which the ratings are to be fetched)
+     * @return ratings
      */
     public ResponseEntity<?> getRatingsAndReview(String roomTypeId) {
         Map<String, Object> roomRatingReturnModelMap = ratingsAndReviewsRepository.getCountAndAverageRatingByRoomTypeId(Long.parseLong(roomTypeId));

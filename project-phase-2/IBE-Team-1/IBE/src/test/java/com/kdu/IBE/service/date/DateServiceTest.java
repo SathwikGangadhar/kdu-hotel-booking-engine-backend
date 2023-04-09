@@ -8,10 +8,12 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@SpringBootTest
 class DateServiceTest {
     @Autowired
     public IDateService dateService;
 
+    @Test
     public void testMinRateForDate(){
         ResponseEntity<Map<String, Integer>> response= dateService.getMinDate();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
