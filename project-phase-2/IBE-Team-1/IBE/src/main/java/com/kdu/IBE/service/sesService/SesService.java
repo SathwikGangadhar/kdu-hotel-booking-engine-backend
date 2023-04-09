@@ -62,7 +62,7 @@ public class SesService {
         System.out.println(bodyHTML);
         this.client = SesClient.builder()
                 .region(region)
-                // .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+//              .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
                 .build();
         try {
             send(client, sender, recipient, subject, bodyText, bodyHTML);
@@ -142,7 +142,8 @@ public class SesService {
 
             SdkBytes data = SdkBytes.fromByteArray(arr);
             this.myConf = AwsRequestOverrideConfiguration.builder()
-                    // .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+                 // .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+
                     .build();
 
             RawMessage rawMessage = RawMessage.builder()

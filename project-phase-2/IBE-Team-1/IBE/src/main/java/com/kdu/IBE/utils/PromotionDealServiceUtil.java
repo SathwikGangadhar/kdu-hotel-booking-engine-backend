@@ -20,7 +20,7 @@ public class PromotionDealServiceUtil {
         LocalDate endDateForCount = LocalDate.parse(endDate.substring(0, 10), formatter);
         long daysBetween = ChronoUnit.DAYS.between(startDateForCount, endDateForCount) + 1;
         String skip = Long.toString(0);
-        String take = Long.toString(10);
+        String take = Long.toString(50);
         return "query MyQuery { " +
                 "listPromotions(where: {is_deactivated: {equals: false}, minimum_days_of_stay: {lte: " + Long.toString(daysBetween) + "}}, skip: " + skip + ", take: " + take + ") { " +
                 "price_factor " +
@@ -31,7 +31,7 @@ public class PromotionDealServiceUtil {
                 "}";
     }
 
-    public void promotionDealsListSetter(JsonNode availablePromotionDealsJsonList, Map<String, Object> availablePromotionDealsMap, List<PromotionDealModel> availablePromotionDeals) {
+    public void promotionDealsListSetter(JsonNode availablePromotionDealsJsonList, List<PromotionDealModel> availablePromotionDeals) {
         for (JsonNode promotionDeal : availablePromotionDealsJsonList) {
             PromotionDealModel promotionDealModel = PromotionDealModel.builder()
                     .promotionDealId(promotionDeal.get("promotion_id").asLong())
@@ -48,16 +48,14 @@ public class PromotionDealServiceUtil {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
         LocalDate startDateForCount = LocalDate.parse(startDate.substring(0, 10), formatter);
         LocalDate endDateForCount = LocalDate.parse(endDate.substring(0, 10), formatter);
-        long weekdays = countWeekdaysAndWeekends(startDateForCount, endDateForCount, false);
         long weekends = countWeekdaysAndWeekends(startDateForCount, endDateForCount, true);
+
         for (PromotionDealModel deal : availablePromotionDeals) {
             if (deal.getPromotionDealTitle().toLowerCase().contains("weekend")) {
-                if (deal.getPromotionDealTitle().contains("Long weekend")) {
-                    if (weekends == 2 && weekdays > 0) {
-                        filteredAvailablePromotionDeals.add(deal);
-                    }
+                if(deal.getPromotionDealTitle().contains("Long weekend discount") && weekends >= 2){
+                    filteredAvailablePromotionDeals.add(deal);
                 }
-                if (weekends == 2 && !deal.getPromotionDealTitle().contains("Long weekend")) {
+                else if(deal.getPromotionDealTitle().contains("Weekend discount") && weekends>=1){
                     filteredAvailablePromotionDeals.add(deal);
                 }
             } else {

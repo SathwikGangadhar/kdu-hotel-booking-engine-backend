@@ -29,11 +29,12 @@ public class PromotionDealService implements IPromotionDealService {
         jsonNode = graphQlWebClient.getGraphQlResponse(availablePromotionDealsMap);
         JsonNode availablePromotionDealsJsonList = jsonNode.get("data").get("listPromotions");
         List<PromotionDealModel> availablePromotionDeals = new ArrayList<>();
-        promotionDealServiceUtil.promotionDealsListSetter(availablePromotionDealsJsonList, availablePromotionDealsMap, availablePromotionDeals);
+        promotionDealServiceUtil.promotionDealsListSetter(availablePromotionDealsJsonList, availablePromotionDeals);
         List<PromotionDealModel> filteredAvailablePromotionDeals = promotionDealServiceUtil.getFilteredAvailablePromotionDeals(availablePromotionDeals, startDate, endDate);
+
         filteredAvailablePromotionDeals = filteredAvailablePromotionDeals
                 .stream()
-                .sorted(Comparator.comparing(PromotionDealModel::getPromotionDealPriceFactor).reversed())
+                .sorted(Comparator.comparing(PromotionDealModel::getPromotionDealPriceFactor))
                 .collect(Collectors.toList());
         return new ResponseEntity<List<PromotionDealModel>>(filteredAvailablePromotionDeals, HttpStatus.OK);
     }
