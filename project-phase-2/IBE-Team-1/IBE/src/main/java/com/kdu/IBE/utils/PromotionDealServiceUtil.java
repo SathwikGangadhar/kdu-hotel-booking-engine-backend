@@ -55,7 +55,7 @@ public class PromotionDealServiceUtil {
                 if(deal.getPromotionDealTitle().contains("Long weekend discount") && weekends >= 2){
                     filteredAvailablePromotionDeals.add(deal);
                 }
-                else if(deal.getPromotionDealTitle().contains("Weekend discount") && weekends>=1){
+                else if(deal.getPromotionDealTitle().contains("Weekend discount") && weekends>=2){
                     filteredAvailablePromotionDeals.add(deal);
                 }
             } else {
