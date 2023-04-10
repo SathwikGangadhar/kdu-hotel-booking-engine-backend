@@ -14,12 +14,14 @@ public class ServiceUtils {
                 "    subject - The  subject line. \n";
     }
     public String getBodyHtml(String ratingsAndReviewsId){
+        String url = "https://d7ohsf89hdgnd.cloudfront.net/feedback?id=" + ratingsAndReviewsId;
+
         return " <html>\n"+
                 " <head></head>\n"+
                 " <body>\n"+
                 " <h1>Hello!</h1>\n"+
                 " <p>Please click on this link to submit the review</p>\n"+
-                " <p><a href=http://localhost:3000/?id="+ratingsAndReviewsId+">click here</a></p>\n"+
+                " <p><a href=https://d7ohsf89hdgnd.cloudfront.net/feedback?id="+ratingsAndReviewsId+">https://d7ohsf89hdgnd.cloudfront.net/feedback?id="+ratingsAndReviewsId+"</a></p>\n"+
                 " </body>\n"+
                 "</html>";
     }

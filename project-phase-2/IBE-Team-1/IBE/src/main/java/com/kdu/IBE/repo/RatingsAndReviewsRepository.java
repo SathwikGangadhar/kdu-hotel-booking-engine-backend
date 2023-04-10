@@ -9,13 +9,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Repository
-public interface RatingsAndReviewsRepository extends JpaRepository<RatingsAndReviews, Long> {
+public interface RatingsAndReviewsRepository extends JpaRepository<RatingsAndReviews, UUID> {
     @Transactional
     @Modifying
     @Query("update RatingsAndReviews r set r.ratings = ?1, r.reviews = ?2 where r.id = ?3")
-    int updateRatingsAndReviewsByIdEquals(Double ratings, String reviews, Long id);
+    int updateRatingsAndReviewsByIdEquals(Double ratings, String reviews, UUID id);
 
     @Query(value = "SELECT COUNT(id) AS count, AVG(ratings) AS averageRating FROM ratings_and_reviews WHERE room_type_id = ?1", nativeQuery = true)
     Map<String, Object> getCountAndAverageRatingByRoomTypeId(Long roomTypeId);
@@ -24,5 +25,5 @@ public interface RatingsAndReviewsRepository extends JpaRepository<RatingsAndRev
     Map<String, Object> getRatingIdAndReview(Long roomTypeId);
 
     @Override
-    boolean existsById(Long aLong);
+    boolean existsById(UUID aLong);
 }

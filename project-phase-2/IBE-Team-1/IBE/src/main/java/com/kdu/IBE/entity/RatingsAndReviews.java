@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Builder
 @Data
@@ -17,7 +18,7 @@ import javax.validation.constraints.NotNull;
 public class RatingsAndReviews {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private UUID id;
     @ManyToOne
     @NotNull
     @JoinColumn(name="room_type_id")

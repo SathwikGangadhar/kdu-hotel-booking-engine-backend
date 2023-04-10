@@ -96,10 +96,11 @@ public class RoomService implements IRoomService{
          */
 
         roomServiceUtils.roomRateMapSetter(roomRateList,roomTypeRateMap );
+
         /**
          * to set the rates to the average
          */
-       roomServiceUtils.roomTypeRateAverageSetter(roomTypeRateMap,minNumberOfRooms );
+        roomServiceUtils.roomTypeRateAverageSetter(roomTypeRateMap,daysBetween );
 
         /**
          * get the room type details

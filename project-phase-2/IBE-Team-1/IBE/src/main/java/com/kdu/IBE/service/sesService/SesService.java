@@ -21,7 +21,6 @@ import software.amazon.awssdk.services.ses.model.SendRawEmailRequest;
 import software.amazon.awssdk.services.ses.model.RawMessage;
 import software.amazon.awssdk.services.ses.model.SesException;
 
-import javax.annotation.PostConstruct;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -59,10 +58,9 @@ public class SesService {
 
         // The HTML body of the email.
         String bodyHTML = serviceUtils.getBodyHtml(ratingsAndReviewsId);
-        System.out.println(bodyHTML);
         this.client = SesClient.builder()
                 .region(region)
-//              .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+              .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
                 .build();
         try {
             send(client, sender, recipient, subject, bodyText, bodyHTML);
@@ -142,7 +140,7 @@ public class SesService {
 
             SdkBytes data = SdkBytes.fromByteArray(arr);
             this.myConf = AwsRequestOverrideConfiguration.builder()
-                 // .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+                  .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
 
                     .build();
 
