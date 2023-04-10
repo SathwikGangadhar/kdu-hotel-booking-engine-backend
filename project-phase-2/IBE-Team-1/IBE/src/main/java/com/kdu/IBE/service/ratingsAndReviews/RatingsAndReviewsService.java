@@ -59,7 +59,7 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
          * getting the rating id to send in the param of the url sent in the email
          */
 
-        UUID ratingAndReviewsId = ratingsAndReviews.getId();
+        Long ratingAndReviewsId = ratingsAndReviews.getId();
 
 //        public void sesMessageSender(String sender,String recipient,Long ratingsAndReviewsId) throws IOException {
         String sender = "sathwik.shetty@kickdrumtech.com";
@@ -77,10 +77,11 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
      * @return validity of rating presence
      */
     public ResponseEntity<Integer> checkIfRatingsIsValid(String ratingId) {
-        if (!ratingsAndReviewsRepository.existsById(UUID.fromString(ratingId))) {
+        if (!ratingsAndReviewsRepository.existsById(Long.parseLong(ratingId))) {
             return new ResponseEntity<Integer>(0, HttpStatus.OK);
         } else {
             Map<String, Object> ratingMap = ratingsAndReviewsRepository.getRatingIdAndReview(Long.parseLong(ratingId));
+            System.out.println("rating till 1 =");
             if (!ratingMap.get("ratings").toString().equals("0.0")) {
                 return new ResponseEntity<Integer>(1, HttpStatus.OK);
             }

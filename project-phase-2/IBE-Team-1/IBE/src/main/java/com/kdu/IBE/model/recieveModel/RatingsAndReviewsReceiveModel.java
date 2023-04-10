@@ -6,7 +6,7 @@ import java.util.UUID;
 
 @Data
 public class RatingsAndReviewsReceiveModel {
-    private UUID roomTypeId;
+    private Long roomTypeId;
     private Double ratings;
     private String reviews;
 }

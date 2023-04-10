@@ -18,7 +18,7 @@ import java.util.UUID;
 public class RatingsAndReviews {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private Long id;
     @ManyToOne
     @NotNull
     @JoinColumn(name="room_type_id")

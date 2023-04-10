@@ -23,7 +23,7 @@ public class ReviewsAndRatingsController {
 
     @GetMapping(EndPointConstants.IS_RATING_VALID)
     public ResponseEntity<Integer> ratingIsValid(@RequestParam(name = "rating_id") String ratingId) {
-        return ratingsAndReviewsService.checkIfRatingsIsValid(ratingId.toString());
+        return ratingsAndReviewsService.checkIfRatingsIsValid(ratingId);
     }
 
     @PostMapping(EndPointConstants.PUT_RATINGS_AND_REVIEWS)
