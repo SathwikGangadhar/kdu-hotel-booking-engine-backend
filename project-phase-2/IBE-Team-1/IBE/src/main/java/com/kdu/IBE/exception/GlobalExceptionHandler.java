@@ -50,5 +50,8 @@ public class GlobalExceptionHandler {
         log.error(exception.getMessage());
         return new ResponseEntity<>("No Such data present",HttpStatus.BAD_REQUEST);
     }
-
+    @ExceptionHandler(RoomsNotFoundException.class)
+    public ResponseEntity<String> roomsNotFound(RoomsNotFoundException exception){
+        return new ResponseEntity<>(exception.getMessage(),HttpStatus.OK);
+    }
 }

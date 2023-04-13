@@ -1,5 +1,7 @@
 package com.kdu.IBE.constants;
 
+import javax.swing.plaf.PanelUI;
+
 public class EndPointConstants {
     public static final String GET_MIN_DATE_ALL = "/get/min/date/all";
     public static final String  DATE_REQUEST_MAPPING="/api/date";
@@ -14,5 +16,9 @@ public class EndPointConstants {
     public static final String GET_PROMOTION_DEALS="/get/promotion/deals";
     public static final String SEND_REVIEW_DEALS="/send/review/form";
     public static final String IS_RATING_VALID="is/ratingIsValid";
+    public static final String BOOKING="/booking";
+    public static final String GET_BOOKING="/get/bookings";
+    public static final String OTP="/otp";
+    public static final String SET_OTP="/set/otp";
 }
 

@@ -60,7 +60,7 @@ public class SesService {
         String bodyHTML = serviceUtils.getBodyHtml(ratingsAndReviewsId);
         this.client = SesClient.builder()
                 .region(region)
-//              .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+              .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
                 .build();
         try {
             send(client, sender, recipient, subject, bodyText, bodyHTML);
@@ -72,6 +72,30 @@ public class SesService {
         }
     }
 
+
+    public void sendOtp(String sender, String recipient, String otp) throws IOException {
+        final String usage =serviceUtils.getUsage();
+        String subject = "Please enter the otp";
+        Region region = Region.of(this.region);
+
+        // The email body for non-HTML email clients.
+        String bodyText = "Hello,\r\n" + "See the list below message. ";
+
+        // The HTML body of the email.
+        String bodyHTML = serviceUtils.getOtpBodyHtml(otp);
+        this.client = SesClient.builder()
+                .region(region)
+                .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+                .build();
+        try {
+            send(client, sender, recipient, subject, bodyText, bodyHTML);
+            client.close();
+            log.info("Done");
+
+        } catch (IOException | MessagingException e) {
+            e.getStackTrace();
+        }
+    }
     /**
      * @param client
      * @param sender
@@ -140,7 +164,7 @@ public class SesService {
 
             SdkBytes data = SdkBytes.fromByteArray(arr);
             this.myConf = AwsRequestOverrideConfiguration.builder()
-//                  .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+                  .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
 
                     .build();
 
