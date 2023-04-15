@@ -1,8 +1,9 @@
 package com.kdu.IBE.controller;
 
+import com.kdu.IBE.constants.EndPointConstants;
 import com.kdu.IBE.entity.User;
 import com.kdu.IBE.model.UserModel;
-import com.kdu.IBE.repo.UserRepository;
+import com.kdu.IBE.repository.UserRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,12 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping(EndPointConstants.USER)
 public class UserController {
-
     @Autowired
     UserRepository userRepository;
-    @PostMapping("/add/user")
+    @PostMapping(EndPointConstants.ADD_USER)
     public ResponseEntity<String> addUser(@Valid @RequestBody UserModel userModel , BindingResult result){
         if(result.hasErrors()){
             throw new ObjectNotFoundException("Value passed was invalid","");

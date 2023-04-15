@@ -1,6 +1,6 @@
 package com.kdu.IBE.utils;
 
-import com.kdu.IBE.model.returnDto.AvailableRoomModel;
+import com.kdu.IBE.model.responseDto.AvailableRoomModel;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;

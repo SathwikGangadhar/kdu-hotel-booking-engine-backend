@@ -1,7 +1,7 @@
 package com.kdu.IBE.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.kdu.IBE.model.returnDto.PropertyReturnModel;
+import com.kdu.IBE.model.responseDto.PropertyReturnModel;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -1,8 +1,8 @@
 package com.kdu.IBE.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.kdu.IBE.model.recieveModel.FiltersModel;
-import com.kdu.IBE.model.returnDto.AvailableRoomModel;
+import com.kdu.IBE.model.requestDto.FiltersModel;
+import com.kdu.IBE.model.responseDto.AvailableRoomModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

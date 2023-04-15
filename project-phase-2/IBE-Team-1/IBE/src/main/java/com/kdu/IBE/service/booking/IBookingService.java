@@ -1,13 +1,14 @@
 package com.kdu.IBE.service.booking;
 
-import com.kdu.IBE.model.recieveModel.BookingDetails;
-import com.kdu.IBE.model.recieveModel.BookingModel;
-import com.kdu.IBE.model.recieveModel.TravellerInfoModel;
-import com.kdu.IBE.model.recieveModel.UserInfoModel;
+import com.kdu.IBE.model.requestDto.BookingModel;
+import com.kdu.IBE.model.requestDto.BookingResponse;
+import com.kdu.IBE.model.responseDto.RoomBookedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
+import java.util.List;
+
 public interface IBookingService {
-    public ResponseEntity<?> bookRoom(BookingModel bookingModel, BindingResult result);
+    public ResponseEntity<BookingResponse> bookRoom(BookingModel bookingModel, BindingResult result);
 
 }

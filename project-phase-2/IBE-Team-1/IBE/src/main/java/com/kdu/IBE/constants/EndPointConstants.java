@@ -20,5 +20,8 @@ public class EndPointConstants {
     public static final String GET_BOOKING="/get/bookings";
     public static final String OTP="/otp";
     public static final String SET_OTP="/set/otp";
+    public static final String PUT_OTP="/put/otp";
+    public static final String USER="/user";
+    public static final String ADD_USER="/add/user";
 }
 

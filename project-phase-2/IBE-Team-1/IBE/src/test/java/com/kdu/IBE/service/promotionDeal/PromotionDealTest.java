@@ -1,10 +1,9 @@
 package com.kdu.IBE.service.promotionDeal;
 
-import com.kdu.IBE.model.returnDto.PromotionDealModel;
+import com.kdu.IBE.model.responseDto.PromotionDealModel;
 import com.kdu.IBE.utils.PromotionDealServiceUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

@@ -1,8 +1,8 @@
 package com.kdu.IBE.service.constumeDeal;
 
 import com.kdu.IBE.entity.CustomDeal;
-import com.kdu.IBE.model.returnDto.CustomDealModel;
-import com.kdu.IBE.repo.CustomDealRepository;
+import com.kdu.IBE.model.responseDto.CustomDealModel;
+import com.kdu.IBE.repository.CustomDealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

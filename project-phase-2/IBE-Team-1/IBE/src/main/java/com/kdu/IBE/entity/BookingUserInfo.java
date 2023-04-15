@@ -37,17 +37,20 @@ public class BookingUserInfo {
     private String billingMiddleName;
     private String billingLastName;
     @NotNull
+    private String mailingAddress;
+    private String alternateMailingAddress;
+    @NotNull
     private String billingEmail;
     private String billingAlternateEmail;
     @NotNull
     private String billingPhoneNumber;
     private String billingAlternatePhone;
     @NotNull
-    @Column(unique=true)
     private String cardNumber;
     @NotNull
     private String expiryMonth;
     @NotNull
     private String expiryYear;
-
+    private Boolean isSendOffers;
+    private Long roomTypeId;
 }

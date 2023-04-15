@@ -1,7 +1,7 @@
 package com.kdu.IBE.service.tenant;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.kdu.IBE.model.returnDto.PropertyReturnModel;
+import com.kdu.IBE.model.responseDto.PropertyReturnModel;
 import com.kdu.IBE.service.graphQl.GraphQlWebClient;
 import com.kdu.IBE.utils.PropertyServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;

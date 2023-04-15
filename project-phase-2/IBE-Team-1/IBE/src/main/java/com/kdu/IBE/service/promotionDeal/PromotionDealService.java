@@ -1,7 +1,7 @@
 package com.kdu.IBE.service.promotionDeal;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.kdu.IBE.model.returnDto.PromotionDealModel;
+import com.kdu.IBE.model.responseDto.PromotionDealModel;
 import com.kdu.IBE.service.graphQl.GraphQlWebClient;
 import com.kdu.IBE.utils.PromotionDealServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class PromotionDealService implements IPromotionDealService {
     JsonNode jsonNode;
 
     @Override
-    public ResponseEntity<?> getAllPromotionDeals(String startDate, String endDate) {
+    public ResponseEntity<List<PromotionDealModel>> getAllPromotionDeals(String startDate, String endDate) {
         Map<String, Object> availablePromotionDealsMap = new HashMap<>();
         JsonNode jsonNode;
         availablePromotionDealsMap.put("query",

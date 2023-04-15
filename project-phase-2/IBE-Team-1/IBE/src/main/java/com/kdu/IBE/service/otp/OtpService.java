@@ -1,8 +1,8 @@
 package com.kdu.IBE.service.otp;
 
 import com.kdu.IBE.entity.Otp;
-import com.kdu.IBE.repo.OtpRepository;
-import com.kdu.IBE.repo.RoomAvailabilityRepository;
+import com.kdu.IBE.repository.OtpRepository;
+import com.kdu.IBE.repository.RoomAvailabilityRepository;
 import com.kdu.IBE.service.sesService.SesService;
 import com.kdu.IBE.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class OtpService implements IOtpService{
     public OtpRepository otpRepository;
     @Autowired
     public RoomAvailabilityRepository roomAvailabilityRepository;
-    public ResponseEntity<?> setOtp(String bookingId,String receiverEmail){
+    public ResponseEntity<Integer> setOtp(String bookingId,String receiverEmail){
         long bookingIdValue=Long.parseLong(bookingId);
         int otpValue=otpUtils.getOtp();
         String senderEmail = "sathwik.shetty@kickdrumtech.com";
@@ -40,7 +40,7 @@ public class OtpService implements IOtpService{
         return new ResponseEntity<Integer>(otpValue, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> putOtp(String otp,String bookingId){
+    public ResponseEntity<String> putOtp(String otp,String bookingId){
         int otpValue=Integer.parseInt(otp);
         long bookingIdValue=Long.parseLong(bookingId);
         int response=otpRepository.deleteByOtpEqualsAndBookingIdEquals(otpValue,bookingIdValue);
@@ -49,8 +49,8 @@ public class OtpService implements IOtpService{
          */
         if(response==1){
             roomAvailabilityRepository.updateBookingIdByBookingIdEquals(bookingIdValue,0l);
-            return new ResponseEntity<>("Booking canceled successfully",HttpStatus.OK);
+            return new ResponseEntity<String>("Booking canceled successfully",HttpStatus.OK);
         }
-        return new ResponseEntity<>("OTP entered is wrong please try again",HttpStatus.OK);
+        return new ResponseEntity<String>("OTP entered is wrong please try again",HttpStatus.OK);
     }
 }
