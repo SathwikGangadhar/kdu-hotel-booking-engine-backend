@@ -8,5 +8,5 @@ import org.springframework.validation.BindingResult;
 
 public interface IRoomService {
     ResponseEntity<AvailableRoomModelResponse> getRoomTypes(FilterSort filterSort, BindingResult result, String propertyId, String startDate, String endDate, String skip, String take, String minNoOfRooms, String minNoOfBeds, String maxCapacity);
-    ResponseEntity<RoomRateDetailModel> getRoomRatePerDate(String roomTypeId, String startDate , String endDate, String tax , String surcharges, String vat, String dueNow);
+    ResponseEntity<RoomRateDetailModel> getRoomRatePerDate(String roomTypeId, String startDate , String endDate, String tax , String surcharges, String vat, String dueNow,String numberOfRooms);
  }

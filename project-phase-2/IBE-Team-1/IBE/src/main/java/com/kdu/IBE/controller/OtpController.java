@@ -19,9 +19,12 @@ public class OtpController {
     ResponseEntity<Integer> setOtp(@RequestParam(name="booking_id") String bookingId,@RequestParam(name="receiverEmail") String receiverEmail){
                 return otpService.setOtp(bookingId,receiverEmail);
     }
-
     @PostMapping(EndPointConstants.PUT_OTP)
     ResponseEntity<String> putOtp(@RequestParam(name = "otp") String otp,@RequestParam(name = "booking_id") String bookingId){
         return otpService.putOtp(otp,bookingId);
+    }
+    @PostMapping(EndPointConstants.PUT_OTP_FOR_LOGGED_USER)
+    ResponseEntity<String> putOtpForLoggedInUser(@RequestParam(name = "booking_id") String bookingId){
+        return otpService.putOtpForLoggedInUser(bookingId);
     }
 }

@@ -4,6 +4,9 @@ import lombok.Data;
 
 @Data
 public class BookingModel {
-    private BookingDetails bookingDetails;
+    private BookingDetailsModel bookingDetailsModel;
     private UserInfoModel userInfoModel;
+
 }
+
+

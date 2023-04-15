@@ -23,5 +23,7 @@ public class EndPointConstants {
     public static final String PUT_OTP="/put/otp";
     public static final String USER="/user";
     public static final String ADD_USER="/add/user";
+
+    public static final String PUT_OTP_FOR_LOGGED_USER="/put/otp/for/logged/user";
 }
 

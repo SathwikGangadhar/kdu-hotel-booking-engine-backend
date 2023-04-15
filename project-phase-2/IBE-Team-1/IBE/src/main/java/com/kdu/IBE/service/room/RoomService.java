@@ -154,7 +154,7 @@ public class RoomService implements IRoomService{
      * @param endDate
      * @return
      */
-    public ResponseEntity<RoomRateDetailModel > getRoomRatePerDate(String roomTypeId, String startDate , String endDate, String tax , String surcharges, String vat, String dueNow){
+    public ResponseEntity<RoomRateDetailModel > getRoomRatePerDate(String roomTypeId, String startDate , String endDate, String tax , String surcharges, String vat, String dueNow,String numberOfRooms){
 
         Map<String, Object> requestBody = new HashMap<>();
         List<RoomRateModel> roomRateModelList=new ArrayList<>();
@@ -168,6 +168,7 @@ public class RoomService implements IRoomService{
         double grandTotal=0;
         double dueNowAmount=0;
         double dueAtResortAmount=0;
+        int roomCount=Integer.parseInt(numberOfRooms);
         requestBody.put("query",
                 roomServiceUtils.getRoomRatePerDataQuery(roomTypeId,startDate,endDate)
         );
@@ -193,6 +194,8 @@ public class RoomService implements IRoomService{
                     .build();
             roomRateModelList.add(roomRateModel);
         }
+        subTotal*=roomCount;
+
         /**
          * getting the amount of tax
          */

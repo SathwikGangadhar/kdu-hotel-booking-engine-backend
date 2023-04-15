@@ -14,12 +14,12 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Entity
 @Table(name = "booking_user_info")
-public class BookingUserInfo {
+public class BookingUserDetails {
     @Id
     @JoinColumn(name="traveller_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long travellerId;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="booking_id")
     private Booking bookingId;
     @NotNull
@@ -42,6 +42,14 @@ public class BookingUserInfo {
     @NotNull
     private String billingEmail;
     private String billingAlternateEmail;
+    @NotNull
+    private String country;
+    @NotNull
+    private String city;
+    @NotNull
+    private String state;
+    @NotNull
+    private String zip;
     @NotNull
     private String billingPhoneNumber;
     private String billingAlternatePhone;

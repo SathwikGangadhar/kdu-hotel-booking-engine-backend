@@ -7,7 +7,7 @@ import java.util.Random;
 public class OtpUtils {
     public int getOtp(){
         Random random = new Random();
-        int number = random.nextInt(900000) + 100000;
+        int number = random.nextInt(9000) + 1000;
         return number;
     }
 }

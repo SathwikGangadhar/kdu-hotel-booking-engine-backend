@@ -14,6 +14,14 @@ public class BillingInfoModel {
     private String mailingAddress;
     private String alternateMailingAddress;
     @NotNull
+    private String country;
+    @NotNull
+    private String city;
+    @NotNull
+    private String state;
+    @NotNull
+    private String zip;
+    @NotNull
     private String phone;
     private String alternatePhone;
     @NotNull

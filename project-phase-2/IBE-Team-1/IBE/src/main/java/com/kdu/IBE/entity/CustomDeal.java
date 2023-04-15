@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 public class CustomDeal {
     @Id
     private Long dealId;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="room_type_id")
     private RoomType roomType;
     @NotNull

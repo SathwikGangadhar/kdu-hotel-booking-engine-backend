@@ -5,7 +5,6 @@ import com.kdu.IBE.exception.BookingIdDoesNotExistException;
 import com.kdu.IBE.model.requestDto.BookingModel;
 import com.kdu.IBE.model.requestDto.BookingResponse;
 import com.kdu.IBE.model.responseDto.BookingUserInfoResponse;
-import com.kdu.IBE.model.responseDto.RoomBookedModel;
 import com.kdu.IBE.service.booking.IBookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping(EndPointConstants.BOOKING)
@@ -27,6 +25,7 @@ public class BookingController {
     }
     @GetMapping("get/booking/user/details")
     ResponseEntity<BookingUserInfoResponse> getBookingUserDetails(@RequestParam(name="booking_id") String bookingId) throws BookingIdDoesNotExistException {
+        System.out.println("id = "+bookingId);
         return bookingService.getBookingUserInfo(bookingId);
     }
 }

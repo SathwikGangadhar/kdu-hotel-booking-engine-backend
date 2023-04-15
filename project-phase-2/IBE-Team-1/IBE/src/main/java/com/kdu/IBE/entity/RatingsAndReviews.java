@@ -19,7 +19,7 @@ public class RatingsAndReviews {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @NotNull
     @JoinColumn(name="room_type_id")
     private RoomType roomType;

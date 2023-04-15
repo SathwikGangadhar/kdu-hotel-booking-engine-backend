@@ -1,17 +1,20 @@
 package com.kdu.IBE.service.booking;
 
 import com.kdu.IBE.entity.Booking;
-import com.kdu.IBE.entity.BookingUserInfo;
+import com.kdu.IBE.entity.BookingDetails;
+import com.kdu.IBE.entity.BookingUserDetails;
 import com.kdu.IBE.exception.BookingIdDoesNotExistException;
 import com.kdu.IBE.exception.RoomsNotFoundException;
 import com.kdu.IBE.model.requestDto.BookingModel;
 import com.kdu.IBE.model.requestDto.BookingResponse;
 import com.kdu.IBE.model.responseDto.BookingUserInfoResponse;
 import com.kdu.IBE.model.responseDto.RoomBookedModel;
+import com.kdu.IBE.repository.BookingDetailsRepository;
 import com.kdu.IBE.repository.BookingRepository;
 import com.kdu.IBE.repository.BookingUserInfoRepository;
 import com.kdu.IBE.repository.RoomAvailabilityRepository;
 import com.kdu.IBE.utils.BookingUtils;
+import com.kdu.IBE.utils.DateConverter;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,12 +23,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
-import javax.validation.constraints.NotNull;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BookingService implements IBookingService{
@@ -36,7 +42,12 @@ public class BookingService implements IBookingService{
     @Autowired
     private BookingUserInfoRepository bookingUserInfoRepository;
     @Autowired
+    private BookingDetailsRepository bookingDetailsRepository;
+    @Autowired
+    private DateConverter dateConverter;
+    @Autowired
     private BookingUtils bookingUtils;
+
 
     @Transactional
     public ResponseEntity<BookingResponse> bookRoom(BookingModel bookingModel, BindingResult result){
@@ -47,16 +58,15 @@ public class BookingService implements IBookingService{
         bookingRepository.save(booking);
         bookingModel.getUserInfoModel().setBookingId(booking.getBookingId());
 //        try {
-            String startDateValue = bookingModel.getBookingDetails().getStartDate().substring(0, 10);
-            String endDateValue = bookingModel.getBookingDetails().getEndDate().substring(0, 10);
-            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
-            LocalDate startDateForCount = LocalDate.parse(startDateValue, formatter);
-            LocalDate endDateForCount = LocalDate.parse(endDateValue, formatter);
+            String startDateValue = bookingModel.getBookingDetailsModel().getStartDate().substring(0, 10);
+            String endDateValue = bookingModel.getBookingDetailsModel().getEndDate().substring(0, 10);
+            LocalDate startDateForCount = dateConverter.convertStringToDate(startDateValue);
+            LocalDate endDateForCount = dateConverter.convertStringToDate(endDateValue);
             long daysBetween = ChronoUnit.DAYS.between(startDateForCount, endDateForCount) + 1;
 
-            long numberOfDataRequired = daysBetween * bookingModel.getBookingDetails().getNumberOfRooms();
+            long numberOfDataRequired = daysBetween * bookingModel.getBookingDetailsModel().getNumberOfRooms();
 
-            List<List<Object>> roomAvailabilityResults = roomAvailabilityRepository.getRoomAvailabilityResult(bookingModel.getBookingDetails().getRoomTypeId(), startDateValue, endDateValue, numberOfDataRequired);
+            List<List<Object>> roomAvailabilityResults = roomAvailabilityRepository.getRoomAvailabilityResult(bookingModel.getBookingDetailsModel().getRoomTypeId(), startDateValue, endDateValue, numberOfDataRequired);
 
             long numberOfDataReceived = roomAvailabilityResults.size();
 
@@ -84,6 +94,7 @@ public class BookingService implements IBookingService{
                 throw new RoomsNotFoundException("Oops there are no rooms present for now try again");
             }
             bookingUtils.putBookingUserInfo(bookingModel.getUserInfoModel());
+            bookingUtils.putToBookingDetails(bookingModel.getBookingDetailsModel(),booking.getBookingId());
         BookingResponse bookingResponse=BookingResponse.builder()
                 .bookingId(booking.getBookingId())
                 .roomList(roomBookedList)
@@ -95,32 +106,70 @@ public class BookingService implements IBookingService{
     }
 
     public ResponseEntity<BookingUserInfoResponse> getBookingUserInfo(String bookingId) throws BookingIdDoesNotExistException {
-        BookingUserInfo bookingUserInfo=bookingUserInfoRepository.findByBookingIdEquals(Long.parseLong(bookingId));
-        if(bookingUserInfo==null){
+        Long bookingIdValue=Long.parseLong(bookingId);
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        final BookingUserDetails[] bookingUserDetails = {new BookingUserDetails()};
+        final BookingDetails[] bookingDetails = {new BookingDetails()};
+        Callable<Void> task1 = () -> {
+            bookingUserDetails[0] =bookingUserInfoRepository.findByBookingIdEquals(bookingIdValue);
+            return null;
+        };
+        executorService.submit(task1);
+        Callable<Void> task2 = () -> {
+            bookingDetails[0] =bookingDetailsRepository.findByBookingIdEquals(bookingIdValue);
+            return null;
+        };
+        executorService.submit(task2);
+        executorService.shutdown();
+
+        try {
+            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            // Handle the exception as needed
+        }
+
+
+        if(bookingUserDetails[0] ==null || bookingDetails[0] ==null){
             throw new BookingIdDoesNotExistException("The booking id given is not present in the database");
         }
+
         BookingUserInfoResponse bookingUserInfoResponse=BookingUserInfoResponse.builder()
-                .travellerFirstName(bookingUserInfo.getTravellerFirstName())
-                .travellerMiddleName(bookingUserInfo.getTravellerMiddleName())
-                .travellerLastName(bookingUserInfo.getTravellerLastName())
-                .travellerPhoneNumber(bookingUserInfo.getTravellerPhoneNumber())
-                .travellerAlternatePhone(bookingUserInfo.getTravellerAlternatePhone())
-                .travellerEmail(bookingUserInfo.getTravellerEmail())
-                .travellerAlternateEmail(bookingUserInfo.getTravellerAlternateEmail())
-                .billingFirstName(bookingUserInfo.getBillingFirstName())
-                .billingMiddleName(bookingUserInfo.getBillingMiddleName())
-                .billingLastName(bookingUserInfo.getBillingLastName())
-                .mailingAddress(bookingUserInfo.getMailingAddress())
-                .alternateMailingAddress(bookingUserInfo.getAlternateMailingAddress())
-                .billingEmail(bookingUserInfo.getBillingEmail())
-                .billingAlternateEmail(bookingUserInfo.getBillingAlternateEmail())
-                .billingPhoneNumber(bookingUserInfo.getBillingPhoneNumber())
-                .billingAlternatePhone(bookingUserInfo.getBillingAlternatePhone())
-                .cardNumber(bookingUserInfo.getCardNumber())
-                .expiryMonth(bookingUserInfo.getExpiryMonth())
-                .expiryYear(bookingUserInfo.getExpiryYear())
-                .isSendOffers(bookingUserInfo.getIsSendOffers())
-                .roomTypeId(bookingUserInfo.getRoomTypeId())
+                .bookingId(bookingDetails[0].getBookingId())
+                .startDate(bookingDetails[0].getStartDate())
+                .endDate(bookingDetails[0].getEndDate())
+                .dealPrice(bookingDetails[0].getDealPrice())
+                .dealTitle(bookingDetails[0].getDealTitle())
+                .dealDescription(bookingDetails[0].getDealDescription())
+                .roomTypeId(bookingUserDetails[0].getRoomTypeId())
+                .roomImage(bookingDetails[0].getRoomImage())
+                .adultCount(bookingDetails[0].getAdultCount())
+                .childCount(bookingDetails[0].getChildCount())
+                .averagePrice(bookingDetails[0].getAveragePrice())
+                .subTotal(bookingDetails[0].getSubTotal())
+                .taxPrice(bookingDetails[0].getTaxPrice())
+                .vatPrice(bookingDetails[0].getVatPrice())
+                .totalAmount(bookingDetails[0].getTotalAmount())
+                .travellerFirstName(bookingUserDetails[0].getTravellerFirstName())
+                .travellerMiddleName(bookingUserDetails[0].getTravellerMiddleName())
+                .travellerLastName(bookingUserDetails[0].getTravellerLastName())
+                .travellerPhoneNumber(bookingUserDetails[0].getTravellerPhoneNumber())
+                .travellerAlternatePhone(bookingUserDetails[0].getTravellerAlternatePhone())
+                .travellerEmail(bookingUserDetails[0].getTravellerEmail())
+                .travellerAlternateEmail(bookingUserDetails[0].getTravellerAlternateEmail())
+                .billingFirstName(bookingUserDetails[0].getBillingFirstName())
+                .billingMiddleName(bookingUserDetails[0].getBillingMiddleName())
+                .billingLastName(bookingUserDetails[0].getBillingLastName())
+                .mailingAddress(bookingUserDetails[0].getMailingAddress())
+                .alternateMailingAddress(bookingUserDetails[0].getAlternateMailingAddress())
+                .billingEmail(bookingUserDetails[0].getBillingEmail())
+                .billingAlternateEmail(bookingUserDetails[0].getBillingAlternateEmail())
+                .billingPhoneNumber(bookingUserDetails[0].getBillingPhoneNumber())
+                .billingAlternatePhone(bookingUserDetails[0].getBillingAlternatePhone())
+                .cardNumber(bookingUserDetails[0].getCardNumber())
+                .expiryMonth(bookingUserDetails[0].getExpiryMonth())
+                .expiryYear(bookingUserDetails[0].getExpiryYear())
+                .isSendOffers(bookingUserDetails[0].getIsSendOffers())
+                .roomTypeId(bookingUserDetails[0].getRoomTypeId())
                 .build();
         return new ResponseEntity<BookingUserInfoResponse>(bookingUserInfoResponse,HttpStatus.OK);
     }

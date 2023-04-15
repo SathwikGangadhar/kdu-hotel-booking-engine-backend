@@ -1,15 +1,23 @@
 package com.kdu.IBE.utils;
 
 import com.kdu.IBE.entity.Booking;
-import com.kdu.IBE.entity.BookingUserInfo;
+import com.kdu.IBE.entity.BookingDetails;
+import com.kdu.IBE.entity.BookingUserDetails;
+import com.kdu.IBE.entity.RoomType;
+import com.kdu.IBE.model.requestDto.BookingDetailsModel;
 import com.kdu.IBE.model.requestDto.UserInfoModel;
+import com.kdu.IBE.repository.BookingDetailsRepository;
 import com.kdu.IBE.repository.BookingRepository;
 import com.kdu.IBE.repository.BookingUserInfoRepository;
+import com.kdu.IBE.repository.RoomTypeRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import javax.persistence.*;
+import java.time.LocalDate;
 
 @Component
 public class BookingUtils {
@@ -17,12 +25,16 @@ public class BookingUtils {
     private BookingRepository bookingRepository;
     @Autowired
     private BookingUserInfoRepository bookingUserInfoRepository;
-    public ResponseEntity<?> putBookingUserInfo(UserInfoModel userInfoModel){
-        System.out.println("userInfoModel = "+userInfoModel);
+    @Autowired
+    private DateConverter dateConverter;
+    @Autowired
+    private RoomTypeRepository roomTypeRepository;
+    @Autowired
+    private BookingDetailsRepository bookingDetailsRepository;
+    public void putBookingUserInfo(UserInfoModel userInfoModel){
         Booking booking=bookingRepository.findById(userInfoModel.getBookingId())
                 .orElseThrow(() -> new ObjectNotFoundException("Booking Id given is invalid", "Exception"));
-        System.out.println("----"+booking);
-        BookingUserInfo bookingUserInfo=BookingUserInfo.builder()
+        BookingUserDetails bookingUserDetails = BookingUserDetails.builder()
                 .bookingId(booking)
                 .travellerFirstName(userInfoModel.getTravellerInfoModel().getFirstName())
                 .travellerMiddleName(userInfoModel.getTravellerInfoModel().getMiddleName())
@@ -38,6 +50,10 @@ public class BookingUtils {
                 .alternateMailingAddress(userInfoModel.getBillingInfoModel().getAlternateMailingAddress())
                 .billingEmail(userInfoModel.getBillingInfoModel().getEmail())
                 .billingAlternateEmail(userInfoModel.getBillingInfoModel().getAlternateEmail())
+                .country(userInfoModel.getBillingInfoModel().getCountry())
+                .city(userInfoModel.getBillingInfoModel().getCity())
+                .state(userInfoModel.getBillingInfoModel().getState())
+                .zip(userInfoModel.getBillingInfoModel().getZip())
                 .billingPhoneNumber(userInfoModel.getBillingInfoModel().getPhone())
                 .billingAlternatePhone(userInfoModel.getBillingInfoModel().getAlternatePhone())
                 .cardNumber(userInfoModel.getPaymentInfoModel().getCardNumber())
@@ -47,9 +63,43 @@ public class BookingUtils {
                 .roomTypeId(userInfoModel.getRoomTypeId())
                 .build();
         System.out.println("yes-2");
-        bookingUserInfoRepository.save(bookingUserInfo);
-        return new ResponseEntity<>("Billing info added successfully", HttpStatus.OK);
+        bookingUserInfoRepository.save(bookingUserDetails);
+
+    }
+    /**
+     * add booking details
+     */
+
+    public void putToBookingDetails(BookingDetailsModel bookingDetailsModel,Long bookingId){
+        Booking booking=bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ObjectNotFoundException("Booking Id given is invalid", "Exception"));
+        String startDate=bookingDetailsModel.getStartDate().substring(0,10);
+        String endDate=bookingDetailsModel.getEndDate();
+        LocalDate startDateValue=dateConverter.convertStringToDate(startDate);
+        LocalDate endDateValue=dateConverter.convertStringToDate(endDate);
+        RoomType roomType=roomTypeRepository.findById(bookingDetailsModel.getRoomTypeId())
+                .orElseThrow(() -> new ObjectNotFoundException("Booking Id given is invalid", "Exception"));
+        BookingDetails bookingDetails=BookingDetails.builder()
+                .bookingId(booking)
+                .startDate(startDateValue)
+                .endDate(endDateValue)
+                .dealPrice(bookingDetailsModel.getDealPrice())
+                .dealTitle(bookingDetailsModel.getDealTitle())
+                .dealDescription(bookingDetailsModel.getDealDescription())
+                .roomTypeId(roomType)
+                .roomImage(bookingDetailsModel.getRoomImage())
+                .adultCount(bookingDetailsModel.getAdultCount())
+                .childCount(bookingDetailsModel.getChildCount())
+                .averagePrice(bookingDetailsModel.getAveragePrice())
+                .subTotal(bookingDetailsModel.getSubTotal())
+                .taxPrice(bookingDetailsModel.getTaxPrice())
+                .vatPrice(bookingDetailsModel.getVatPrice())
+                .totalAmount(bookingDetailsModel.getTotalAmount())
+                .build();
+        bookingDetailsRepository.save(bookingDetails);
     }
 
 }
+
+
 

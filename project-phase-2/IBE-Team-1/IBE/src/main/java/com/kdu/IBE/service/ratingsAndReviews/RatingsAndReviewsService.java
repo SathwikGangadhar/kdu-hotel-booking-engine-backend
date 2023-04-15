@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class RatingsAndReviewsService implements IRatingsAndReviewsService {
@@ -178,6 +179,11 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
                 executorService.submit(task);
             }
             executorService.shutdown();
+            try {
+                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+            } catch (InterruptedException e) {
+                // Handle the exception as needed
+            }
         }
         return new ResponseEntity<>("Emails sent successfully",HttpStatus.OK);
     }

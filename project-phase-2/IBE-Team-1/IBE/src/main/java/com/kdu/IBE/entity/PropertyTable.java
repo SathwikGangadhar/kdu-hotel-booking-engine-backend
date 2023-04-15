@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class PropertyTable {
     @Id
     private Long property_id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "tenant_id")
     private TenantTable tenantTable;
 }
