@@ -24,6 +24,7 @@ import software.amazon.awssdk.services.ses.model.SesException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -115,72 +116,34 @@ public class SesService {
                      String bodyHTML
     ) throws MessagingException, IOException {
 
-        Session session = Session.getDefaultInstance(new Properties());
-        MimeMessage message = new MimeMessage(session);
+        Properties props = System.getProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.port", 587);
 
-        // Add subject, from and to lines.
-        message.setSubject(subject, "UTF-8");
-        message.setFrom(new InternetAddress(sender));
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
+        Session session = Session.getDefaultInstance(props);
 
-        // Create a multipart/alternative child container.
-        MimeMultipart msgBody = new MimeMultipart("alternative");
-
-        // Create a wrapper for the HTML and text parts.
-        MimeBodyPart wrap = new MimeBodyPart();
-
-        // Define the text part.
-        MimeBodyPart textPart = new MimeBodyPart();
-        textPart.setContent(bodyText, "text/plain; charset=UTF-8");
-
-        // Define the HTML part.
-        MimeBodyPart htmlPart = new MimeBodyPart();
-        htmlPart.setContent(bodyHTML, "text/html; charset=UTF-8");
-
-        // Add the text and HTML parts to the child container.
-        msgBody.addBodyPart(textPart);
-        msgBody.addBodyPart(htmlPart);
-
-        // Add the child container to the wrapper object.
-        wrap.setContent(msgBody);
-
-        // Create a multipart/mixed parent container.
-        MimeMultipart msg = new MimeMultipart("mixed");
-
-        // Add the parent container to the message.
-        message.setContent(msg);
-
-        // Add the multipart/alternative part to the message.
-        msg.addBodyPart(wrap);
+        MimeMessage msg = new MimeMessage(session);
+        msg.setFrom(new InternetAddress(sender));
+        msg.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(recipient));
+        msg.setSubject(subject);
+        msg.setContent(bodyHTML, "text/html");
+        Transport transport = session.getTransport();
 
         try {
-            log.info("Attempting to send an email through Amazon SES " + "using the AWS SDK for Java...");
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            message.writeTo(outputStream);
-            ByteBuffer buf = ByteBuffer.wrap(outputStream.toByteArray());
+            System.out.println("Attempting to send an email through the Amazon SES SMTP interface...");
 
-            byte[] arr = new byte[buf.remaining()];
-            buf.get(arr);
+            // Connect to Amazon SES using the SMTP username and password you specified above.
+            transport.connect("email-smtp.us-east-1.amazonaws.com", "AKIAXKKU4AB4UZ33UJPI", "BOP1XnFwPphpxfy6RF7TYdl2uTrTklJMHrskscWPpDd/");
 
-            SdkBytes data = SdkBytes.fromByteArray(arr);
-            this.myConf = AwsRequestOverrideConfiguration.builder()
-                    .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
-                    .build();
-
-            RawMessage rawMessage = RawMessage.builder()
-                    .data(data)
-                    .build();
-            SendRawEmailRequest rawEmailRequest = SendRawEmailRequest.builder()
-                    .rawMessage(rawMessage)
-                    .overrideConfiguration(myConf)
-                    .build();
-
-            client.sendRawEmail(rawEmailRequest);
-            log.info("Email message Sent");
-
-        } catch (SesException e) {
-            log.error(e.awsErrorDetails().errorMessage());
-            System.exit(1);
+            // Send the email.
+            transport.sendMessage(msg, msg.getAllRecipients());
+            System.out.println("Email sent!");
+        } catch (Exception ex) {
+            System.out.println("The email was not sent.");
+            System.out.println("Error message: " + ex.getMessage());
+        } finally {
+            // Close and terminate the connection.
+            transport.close();
         }
     }
 }

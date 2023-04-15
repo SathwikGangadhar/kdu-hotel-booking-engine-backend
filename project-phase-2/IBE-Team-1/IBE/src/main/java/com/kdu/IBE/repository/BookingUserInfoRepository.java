@@ -14,4 +14,8 @@ public interface BookingUserInfoRepository extends JpaRepository<BookingUserInfo
     @Query("select b.travellerEmail,b.roomTypeId from BookingUserInfo b where b.bookingId.bookingId in ?1")
     List<List<String>> findByBookingIdIn(Collection<Long> bookingIds);
 
+    @Query("select b from BookingUserInfo b where b.bookingId.bookingId = ?1")
+    BookingUserInfo findByBookingIdEquals(Long bookingId);
+
+
 }

@@ -58,4 +58,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> unexpectedError(UnexpectedErrorException exception){
         return new ResponseEntity<>("Unexpected error occurred",HttpStatus.OK);
     }
+    @ExceptionHandler(BookingIdDoesNotExistException.class)
+    public ResponseEntity<String> bookingIdDoesNotExistException(BookingIdDoesNotExistException exception){
+        return new ResponseEntity<>("The booking id given does not exits",HttpStatus.OK);
+    }
 }

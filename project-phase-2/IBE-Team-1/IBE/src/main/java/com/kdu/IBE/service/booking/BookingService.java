@@ -1,9 +1,12 @@
 package com.kdu.IBE.service.booking;
 
 import com.kdu.IBE.entity.Booking;
+import com.kdu.IBE.entity.BookingUserInfo;
+import com.kdu.IBE.exception.BookingIdDoesNotExistException;
 import com.kdu.IBE.exception.RoomsNotFoundException;
 import com.kdu.IBE.model.requestDto.BookingModel;
 import com.kdu.IBE.model.requestDto.BookingResponse;
+import com.kdu.IBE.model.responseDto.BookingUserInfoResponse;
 import com.kdu.IBE.model.responseDto.RoomBookedModel;
 import com.kdu.IBE.repository.BookingRepository;
 import com.kdu.IBE.repository.BookingUserInfoRepository;
@@ -21,6 +24,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.constraints.NotNull;
 
 @Service
 public class BookingService implements IBookingService{
@@ -89,7 +94,36 @@ public class BookingService implements IBookingService{
 //        }
     }
 
-
+    public ResponseEntity<BookingUserInfoResponse> getBookingUserInfo(String bookingId) throws BookingIdDoesNotExistException {
+        BookingUserInfo bookingUserInfo=bookingUserInfoRepository.findByBookingIdEquals(Long.parseLong(bookingId));
+        if(bookingUserInfo==null){
+            throw new BookingIdDoesNotExistException("The booking id given is not present in the database");
+        }
+        BookingUserInfoResponse bookingUserInfoResponse=BookingUserInfoResponse.builder()
+                .travellerFirstName(bookingUserInfo.getTravellerFirstName())
+                .travellerMiddleName(bookingUserInfo.getTravellerMiddleName())
+                .travellerLastName(bookingUserInfo.getTravellerLastName())
+                .travellerPhoneNumber(bookingUserInfo.getTravellerPhoneNumber())
+                .travellerAlternatePhone(bookingUserInfo.getTravellerAlternatePhone())
+                .travellerEmail(bookingUserInfo.getTravellerEmail())
+                .travellerAlternateEmail(bookingUserInfo.getTravellerAlternateEmail())
+                .billingFirstName(bookingUserInfo.getBillingFirstName())
+                .billingMiddleName(bookingUserInfo.getBillingMiddleName())
+                .billingLastName(bookingUserInfo.getBillingLastName())
+                .mailingAddress(bookingUserInfo.getMailingAddress())
+                .alternateMailingAddress(bookingUserInfo.getAlternateMailingAddress())
+                .billingEmail(bookingUserInfo.getBillingEmail())
+                .billingAlternateEmail(bookingUserInfo.getBillingAlternateEmail())
+                .billingPhoneNumber(bookingUserInfo.getBillingPhoneNumber())
+                .billingAlternatePhone(bookingUserInfo.getBillingAlternatePhone())
+                .cardNumber(bookingUserInfo.getCardNumber())
+                .expiryMonth(bookingUserInfo.getExpiryMonth())
+                .expiryYear(bookingUserInfo.getExpiryYear())
+                .isSendOffers(bookingUserInfo.getIsSendOffers())
+                .roomTypeId(bookingUserInfo.getRoomTypeId())
+                .build();
+        return new ResponseEntity<BookingUserInfoResponse>(bookingUserInfoResponse,HttpStatus.OK);
+    }
 }
 
 
