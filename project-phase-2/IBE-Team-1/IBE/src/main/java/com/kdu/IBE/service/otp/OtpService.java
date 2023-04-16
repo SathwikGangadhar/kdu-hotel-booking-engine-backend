@@ -30,7 +30,7 @@ public class OtpService implements IOtpService{
     public ResponseEntity<Integer> setOtp(String bookingId,String receiverEmail){
         long bookingIdValue=Long.parseLong(bookingId);
         int otpValue=otpUtils.getOtp();
-        String senderEmail = "sathwik.shetty@kickdrumtech.com";
+        String senderEmail = "nitesh.gupta@kickdrumtech.com";
         otpRepository.deleteByBookingIdEquals(Long.parseLong(bookingId));
         Otp otp=Otp.builder()
                 .bookingId(bookingIdValue)
@@ -66,7 +66,7 @@ public class OtpService implements IOtpService{
 
 
     public void deleteBooking(Long bookingIdValue){
-        roomAvailabilityRepository.updateBookingIdByBookingIdEquals(bookingIdValue,0l);
+        roomAvailabilityRepository.updateBookingIdByBookingIdEquals(0l,bookingIdValue);
         bookingRepository.deleteByBookingIdEquals(bookingIdValue);
     }
 }

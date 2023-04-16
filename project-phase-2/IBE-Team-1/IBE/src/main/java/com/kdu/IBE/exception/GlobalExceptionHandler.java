@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(RoomsNotFoundException.class)
     public ResponseEntity<String> roomsNotFound(RoomsNotFoundException exception){
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(UnexpectedErrorException.class)
     public ResponseEntity<String> unexpectedError(UnexpectedErrorException exception){
