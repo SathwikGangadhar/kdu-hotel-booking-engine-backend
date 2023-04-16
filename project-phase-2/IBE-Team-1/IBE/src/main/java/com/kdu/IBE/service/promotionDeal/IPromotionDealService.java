@@ -9,4 +9,6 @@ import java.util.List;
 @Service
 public interface IPromotionDealService {
     ResponseEntity<List<PromotionDealModel>> getAllPromotionDeals(String startDate, String endDate);
-}
+
+
+    }
