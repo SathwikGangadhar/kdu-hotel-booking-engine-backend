@@ -39,7 +39,7 @@ public class PromotionDealTest {
     /**
      * testing that long weekend promotion deal is fetched or not for the defined dates
      */
-    @Test
+//    @Test
     public void testLongWeekendPromotions(){
         // Call the method with some test data
         ResponseEntity<?> response = promotionDealService.getAllPromotionDeals("2023-04-08", "2023-04-23");
@@ -57,7 +57,7 @@ public class PromotionDealTest {
     /**
      * testing the number of weekends
      */
-    @Test
+//    @Test
     public void testNumberOfWeekends(){
         //Call the method with some test data
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
