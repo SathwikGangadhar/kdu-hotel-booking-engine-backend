@@ -26,7 +26,6 @@ public class SecretCredentialsService implements ISecretCredentials{
     public SecretCredentialsModel getSecretCredentials() {
 
         Region region = Region.of(this.region);
-
         // Create a Secrets Manager client
         SecretsManagerClient client = SecretsManagerClient.builder()
                 .region(region)

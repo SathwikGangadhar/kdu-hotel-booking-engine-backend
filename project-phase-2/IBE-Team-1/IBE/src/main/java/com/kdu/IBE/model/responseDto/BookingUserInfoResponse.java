@@ -3,6 +3,8 @@ package com.kdu.IBE.model.responseDto;
 import com.kdu.IBE.entity.Booking;
 import lombok.Builder;
 import lombok.Data;
+
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Builder
@@ -41,6 +43,10 @@ public class BookingUserInfoResponse {
     private String billingAlternateEmail;
     private String billingPhoneNumber;
     private String billingAlternatePhone;
+    private String country;
+    private String city;
+    private String state;
+    private String zip;
     private String cardNumber;
     private String expiryMonth;
     private String expiryYear;
