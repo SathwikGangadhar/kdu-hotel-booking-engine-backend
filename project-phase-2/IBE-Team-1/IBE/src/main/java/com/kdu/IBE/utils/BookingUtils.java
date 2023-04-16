@@ -62,7 +62,6 @@ public class BookingUtils {
                 .isSendOffers(userInfoModel.getIsSendOffers())
                 .roomTypeId(userInfoModel.getRoomTypeId())
                 .build();
-        System.out.println("yes-2");
         bookingUserInfoRepository.save(bookingUserDetails);
 
     }
@@ -94,6 +93,8 @@ public class BookingUtils {
                 .subTotal(bookingDetailsModel.getSubTotal())
                 .taxPrice(bookingDetailsModel.getTaxPrice())
                 .vatPrice(bookingDetailsModel.getVatPrice())
+                .dueNow(bookingDetailsModel.getDueNow())
+                .dueAtResort(bookingDetailsModel.getDueAtResort())
                 .totalAmount(bookingDetailsModel.getTotalAmount())
                 .build();
         bookingDetailsRepository.save(bookingDetails);

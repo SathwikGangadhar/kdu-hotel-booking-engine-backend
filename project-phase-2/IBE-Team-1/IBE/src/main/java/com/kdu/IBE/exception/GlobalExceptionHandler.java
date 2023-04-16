@@ -19,6 +19,12 @@ public class GlobalExceptionHandler {
         log.error(exception.getMessage());
         return new ResponseEntity<>("Oops users not present", HttpStatus.OK);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> Exception(Exception exception){
+        log.error(exception.getMessage());
+        return new ResponseEntity<>("Unexpected Error Occurred",HttpStatus.OK);
+    }
     @ExceptionHandler(InvalidObjectInput.class)
     public ResponseEntity<String> invalidInput(InvalidObjectInput exception){
         log.error(exception.getMessage());

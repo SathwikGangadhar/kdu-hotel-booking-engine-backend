@@ -20,12 +20,16 @@ public class BookingController {
     private IBookingService bookingService;
     @PostMapping(EndPointConstants.GET_BOOKING)
     ResponseEntity<BookingResponse> getBooking(@Valid @RequestBody BookingModel bookingModel, BindingResult result){
-        System.out.println("booking model"+bookingModel);
       return bookingService.bookRoom(bookingModel,result);
     }
     @GetMapping("get/booking/user/details")
     ResponseEntity<BookingUserInfoResponse> getBookingUserDetails(@RequestParam(name="booking_id") String bookingId) throws BookingIdDoesNotExistException {
-        System.out.println("id = "+bookingId);
         return bookingService.getBookingUserInfo(bookingId);
     }
+     @GetMapping("/send/booking/email")
+    ResponseEntity<String> sendBookingEmail(@RequestParam(name = "recipient") String recipient,@RequestParam(name = "image") String image,@RequestParam(name = "booking_id")
+        String bookingId,@RequestParam(name = "room_type") String roomType,@RequestParam(name = "start_date") String startDate,@RequestParam(name = "end_date") String endDate){
+         System.out.println("iunidqunwieubxciwudbni");
+        return bookingService.sendBookingEmail(recipient,image,bookingId,roomType,startDate,endDate);
+        }
 }

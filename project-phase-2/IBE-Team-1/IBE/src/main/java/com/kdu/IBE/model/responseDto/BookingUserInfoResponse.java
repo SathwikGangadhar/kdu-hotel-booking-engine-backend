@@ -22,6 +22,8 @@ public class BookingUserInfoResponse {
     private Double subTotal;
     private Double taxPrice;
     private Double vatPrice;
+    private Double dueNow;
+    private Double dueAtResort;
     private Double totalAmount;
     private String travellerFirstName;
     private String travellerMiddleName;

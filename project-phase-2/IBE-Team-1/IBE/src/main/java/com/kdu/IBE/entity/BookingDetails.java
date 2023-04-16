@@ -39,5 +39,7 @@ public class BookingDetails {
     private Double subTotal;
     private Double taxPrice;
     private Double vatPrice;
+    private Double dueNow;
+    private Double dueAtResort;
     private Double totalAmount;
 }

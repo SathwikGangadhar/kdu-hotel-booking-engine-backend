@@ -1,7 +1,6 @@
 package com.kdu.IBE.service.ratingsAndReviews;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.kdu.IBE.constants.EndPointConstants;
 import com.kdu.IBE.entity.RatingsAndReviews;
 import com.kdu.IBE.entity.RoomType;
 import com.kdu.IBE.model.requestDto.RatingsAndReviewsReceiveModel;
@@ -20,10 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import java.io.IOException;
@@ -99,7 +95,6 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
             return new ResponseEntity<Integer>(0, HttpStatus.OK);
         } else {
             Map<String, Object> ratingMap = ratingsAndReviewsRepository.getRatingIdAndReview(Long.parseLong(ratingId));
-            System.out.println("rating till 1 =");
             if (!ratingMap.get("ratings").toString().equals("0.0")) {
                 return new ResponseEntity<Integer>(1, HttpStatus.OK);
             }
@@ -166,7 +161,6 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
                 bookingIdList.add(booking.get("booking_id").asLong());
             }
             List<List<String>> reviewSenderList=bookingUserInfoRepository.findByBookingIdIn(bookingIdList);
-            System.out.println("list = "+reviewSenderList);
             /**
              * implemented the task of sending the email to be run in treads so that all the mails to be sent at a time without waiting for the other
              */

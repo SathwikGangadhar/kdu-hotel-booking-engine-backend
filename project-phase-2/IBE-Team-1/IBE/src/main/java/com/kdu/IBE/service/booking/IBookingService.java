@@ -13,6 +13,7 @@ import java.util.List;
 public interface IBookingService {
     public ResponseEntity<BookingResponse> bookRoom(BookingModel bookingModel, BindingResult result);
     public ResponseEntity<BookingUserInfoResponse> getBookingUserInfo(String bookingId) throws BookingIdDoesNotExistException ;
+    public ResponseEntity<String> sendBookingEmail(String recipient,String image,String bookingId,String roomType,String startDate,String endDate);
 
 
     }
