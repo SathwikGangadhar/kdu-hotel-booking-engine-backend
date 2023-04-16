@@ -148,6 +148,8 @@ public class BookingService implements IBookingService{
                 .subTotal(bookingDetails[0].getSubTotal())
                 .taxPrice(bookingDetails[0].getTaxPrice())
                 .vatPrice(bookingDetails[0].getVatPrice())
+                .dueNow(bookingDetails[0].getDueNow())
+                .dueAtResort(bookingDetails[0].getDueAtResort())
                 .totalAmount(bookingDetails[0].getTotalAmount())
                 .travellerFirstName(bookingUserDetails[0].getTravellerFirstName())
                 .travellerMiddleName(bookingUserDetails[0].getTravellerMiddleName())

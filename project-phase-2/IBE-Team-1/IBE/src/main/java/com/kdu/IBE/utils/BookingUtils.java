@@ -94,6 +94,8 @@ public class BookingUtils {
                 .subTotal(bookingDetailsModel.getSubTotal())
                 .taxPrice(bookingDetailsModel.getTaxPrice())
                 .vatPrice(bookingDetailsModel.getVatPrice())
+                .dueNow(bookingDetailsModel.getDueNow())
+                .dueAtResort(bookingDetailsModel.getDueAtResort())
                 .totalAmount(bookingDetailsModel.getTotalAmount())
                 .build();
         bookingDetailsRepository.save(bookingDetails);
