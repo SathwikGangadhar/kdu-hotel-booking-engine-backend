@@ -1,7 +1,7 @@
 package com.kdu.IBE.service.sesService;
 
 
-import com.kdu.IBE.utils.ServiceUtils;
+import com.kdu.IBE.utils.SesServiceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,7 @@ public class SesService {
     @Value("${region}")
     private String region;
     @Autowired
-    private ServiceUtils serviceUtils;
+    private SesServiceUtils sesServiceUtils;
     private SesClient client;
     private AwsRequestOverrideConfiguration myConf;
 
@@ -39,7 +39,7 @@ public class SesService {
      */
     public void sesMessageSender(String sender, String recipient, String ratingsAndReviewsId) throws IOException {
 
-        final String usage =serviceUtils.getUsage();
+        final String usage = sesServiceUtils.getUsage();
         String subject = "Please submit this review";
         Region region = Region.of(this.region);
 
@@ -47,7 +47,7 @@ public class SesService {
         String bodyText = "Hello,\r\n" + "See the list below message. ";
 
         // The HTML body of the email.
-        String bodyHTML = serviceUtils.getBodyHtml(ratingsAndReviewsId);
+        String bodyHTML = sesServiceUtils.getBodyHtml(ratingsAndReviewsId);
         this.client = SesClient.builder()
                 .region(region)
 
@@ -65,7 +65,7 @@ public class SesService {
 
 
     public void sendOtp(String sender, String recipient, String otp) throws IOException {
-        final String usage =serviceUtils.getUsage();
+        final String usage = sesServiceUtils.getUsage();
         String subject = "Please enter the otp";
         Region region = Region.of(this.region);
 
@@ -73,7 +73,7 @@ public class SesService {
         String bodyText = "Hello,\r\n" + "See the list below message. ";
 
         // The HTML body of the email.
-        String bodyHTML = serviceUtils.getOtpBodyHtml(otp);
+        String bodyHTML = sesServiceUtils.getOtpBodyHtml(otp);
         this.client = SesClient.builder()
                 .region(region)
                 .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
@@ -87,6 +87,35 @@ public class SesService {
             e.getStackTrace();
         }
     }
+//    public String getBookingEmail(String image,String bookingId,String roomType,String startDate,String endDate){
+
+        public void sendBookingEmail(String sender,String recipient,String image,String bookingId,String roomType,String startDate,String endDate){
+            final String usage = sesServiceUtils.getUsage();
+            String subject = "Booking confirmation";
+            Region region = Region.of(this.region);
+
+            // The email body for non-HTML email clients.
+            String bodyText = "Hello,\r\n" + "See the list below message. ";
+
+            // The HTML body of the email.
+            String bodyHTML = sesServiceUtils.getBookingEmail(image,bookingId,roomType,startDate,endDate);
+            this.client = SesClient.builder()
+                    .region(region)
+                    .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+                    .build();
+            try {
+                send(client, sender, recipient, subject, bodyText, bodyHTML);
+                client.close();
+                log.info("Done");
+
+            } catch (IOException | MessagingException e) {
+                e.getStackTrace();
+            }
+        }
+
+//    public void sendBookingConfirmationEmail(){
+//
+//    }
     /**
      * @param client
      * @param sender
@@ -120,17 +149,14 @@ public class SesService {
         Transport transport = session.getTransport();
 
         try {
-            System.out.println("Attempting to send an email through the Amazon SES SMTP interface...");
-
             // Connect to Amazon SES using the SMTP username and password you specified above.
             transport.connect("email-smtp.us-east-1.amazonaws.com", "AKIAXKKU4AB4UZ33UJPI", "BOP1XnFwPphpxfy6RF7TYdl2uTrTklJMHrskscWPpDd/");
 
             // Send the email.
             transport.sendMessage(msg, msg.getAllRecipients());
-            System.out.println("Email sent!");
         } catch (Exception ex) {
-            System.out.println("The email was not sent.");
-            System.out.println("Error message: " + ex.getMessage());
+            log.info("The email was not sent.");
+            log.error("Error message: " + ex.getMessage());
         } finally {
             // Close and terminate the connection.
             transport.close();

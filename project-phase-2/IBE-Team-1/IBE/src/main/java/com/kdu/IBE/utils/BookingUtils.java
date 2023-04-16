@@ -62,7 +62,6 @@ public class BookingUtils {
                 .isSendOffers(userInfoModel.getIsSendOffers())
                 .roomTypeId(userInfoModel.getRoomTypeId())
                 .build();
-        System.out.println("yes-2");
         bookingUserInfoRepository.save(bookingUserDetails);
 
     }

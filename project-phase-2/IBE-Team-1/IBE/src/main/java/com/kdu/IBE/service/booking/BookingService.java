@@ -5,6 +5,7 @@ import com.kdu.IBE.entity.BookingDetails;
 import com.kdu.IBE.entity.BookingUserDetails;
 import com.kdu.IBE.exception.BookingIdDoesNotExistException;
 import com.kdu.IBE.exception.RoomsNotFoundException;
+import com.kdu.IBE.exception.UnexpectedErrorException;
 import com.kdu.IBE.model.requestDto.BookingModel;
 import com.kdu.IBE.model.requestDto.BookingResponse;
 import com.kdu.IBE.model.responseDto.BookingUserInfoResponse;
@@ -13,6 +14,7 @@ import com.kdu.IBE.repository.BookingDetailsRepository;
 import com.kdu.IBE.repository.BookingRepository;
 import com.kdu.IBE.repository.BookingUserInfoRepository;
 import com.kdu.IBE.repository.RoomAvailabilityRepository;
+import com.kdu.IBE.service.sesService.SesService;
 import com.kdu.IBE.utils.BookingUtils;
 import com.kdu.IBE.utils.DateConverter;
 import org.hibernate.ObjectNotFoundException;
@@ -48,6 +50,9 @@ public class BookingService implements IBookingService{
     @Autowired
     private BookingUtils bookingUtils;
 
+    @Autowired
+    private SesService sesService;
+
 
     @Transactional
     public ResponseEntity<BookingResponse> bookRoom(BookingModel bookingModel, BindingResult result){
@@ -57,7 +62,6 @@ public class BookingService implements IBookingService{
         Booking booking=new Booking();
         bookingRepository.save(booking);
         bookingModel.getUserInfoModel().setBookingId(booking.getBookingId());
-//        try {
             String startDateValue = bookingModel.getBookingDetailsModel().getStartDate().substring(0, 10);
             String endDateValue = bookingModel.getBookingDetailsModel().getEndDate().substring(0, 10);
             LocalDate startDateForCount = dateConverter.convertStringToDate(startDateValue);
@@ -93,16 +97,37 @@ public class BookingService implements IBookingService{
             if (updatedNumberOfRows != availabilityIdList.size()) {
                 throw new RoomsNotFoundException("Oops there are no rooms present for now try again");
             }
+            //used for future use
+
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        ExecutorService executorServiceForMail=Executors.newFixedThreadPool(1);
+//        Callable<Void> sendMailTask=()->{
+//
+//          return null;
+//        };
+        Callable<Void> task1 = () -> {
             bookingUtils.putBookingUserInfo(bookingModel.getUserInfoModel());
+            return null;
+        };
+        executorService.submit(task1);
+        Callable<Void> task2 = () -> {
             bookingUtils.putToBookingDetails(bookingModel.getBookingDetailsModel(),booking.getBookingId());
+            return null;
+        };
+        executorService.submit(task2);
+        executorService.shutdown();
+        try {
+            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            // Handle the exception as needed
+        }
+
         BookingResponse bookingResponse=BookingResponse.builder()
                 .bookingId(booking.getBookingId())
                 .roomList(roomBookedList)
                 .build();
             return new ResponseEntity<BookingResponse>(bookingResponse, HttpStatus.OK);
-//        }catch (Exception exception){
-//            throw new UnexpectedErrorException("Unexpected error occurred");
-//        }
+
     }
 
     public ResponseEntity<BookingUserInfoResponse> getBookingUserInfo(String bookingId) throws BookingIdDoesNotExistException {
@@ -174,6 +199,10 @@ public class BookingService implements IBookingService{
                 .roomTypeId(bookingUserDetails[0].getRoomTypeId())
                 .build();
         return new ResponseEntity<BookingUserInfoResponse>(bookingUserInfoResponse,HttpStatus.OK);
+    }
+    public ResponseEntity<String> sendBookingEmail(String recipient, String image, String bookingId, String roomType, String startDate, String endDate){
+        sesService.sendBookingEmail("sathwik.shetty@kickdrumtech.com",recipient,image,bookingId,roomType,startDate,endDate);
+        return new ResponseEntity<>("Email sent successfully",HttpStatus.OK);
     }
 }
 
