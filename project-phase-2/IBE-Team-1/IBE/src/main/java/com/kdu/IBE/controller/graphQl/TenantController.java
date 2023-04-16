@@ -1,7 +1,11 @@
 package com.kdu.IBE.controller.graphQl;
 
 import com.kdu.IBE.constants.EndPointConstants;
-import com.kdu.IBE.model.recieveModel.FilterSort;
+import com.kdu.IBE.model.requestDto.FilterSort;
+import com.kdu.IBE.model.responseDto.AvailableRoomModelResponse;
+import com.kdu.IBE.model.responseDto.PromotionDealModel;
+import com.kdu.IBE.model.responseDto.PropertyReturnModel;
+import com.kdu.IBE.model.responseDto.RoomRateDetailModel;
 import com.kdu.IBE.service.constumeDeal.ICostumeDealService;
 import com.kdu.IBE.service.promotionDeal.IPromotionDealService;
 import com.kdu.IBE.service.room.IRoomService;
@@ -12,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(EndPointConstants.TENANT_REQUEST_MAPPING)
@@ -26,11 +31,11 @@ public class TenantController {
     @Autowired
     ICostumeDealService costumeDealService;
     @GetMapping(EndPointConstants.GET_TENANT_PROPERTIES)
-    ResponseEntity<?> getTenantProperties(@RequestParam(name = "tenant_id") String tenantId) {
+    ResponseEntity<List<PropertyReturnModel>> getTenantProperties(@RequestParam(name = "tenant_id") String tenantId) {
         return tenantService.getTenantProperties(tenantId);
     }
     @PostMapping(EndPointConstants.GET_ROOMS)
-    ResponseEntity<?> getRoomTypes(@Valid @RequestBody FilterSort filterSort, BindingResult result, @RequestParam(name="property_id") String propertyId, @RequestParam(name="start_date") String startDate , @RequestParam(name="end_date") String endDate, @RequestParam(name="skip")String skip, @RequestParam(name="take")String take , @RequestParam(name="min_no_of_rooms") String minNoOfRooms,@RequestParam(name="min_no_of_beds") String minNoOfBeds,@RequestParam(name="max_capacity") String maxCapacity){
+    ResponseEntity<AvailableRoomModelResponse> getRoomTypes(@Valid @RequestBody FilterSort filterSort, BindingResult result, @RequestParam(name="property_id") String propertyId, @RequestParam(name="start_date") String startDate , @RequestParam(name="end_date") String endDate, @RequestParam(name="skip")String skip, @RequestParam(name="take")String take , @RequestParam(name="min_no_of_rooms") String minNoOfRooms, @RequestParam(name="min_no_of_beds") String minNoOfBeds, @RequestParam(name="max_capacity") String maxCapacity){
         return roomService.getRoomTypes(filterSort,result,propertyId, startDate , endDate, skip, take, minNoOfRooms,minNoOfBeds,maxCapacity);
     }
 
@@ -40,12 +45,11 @@ public class TenantController {
     }
 
     @GetMapping(EndPointConstants.GET_ROOM_RATE_PER_DATE)
-    ResponseEntity<?> getRoomRatePerDate(@RequestParam(name="room_type_id") String roomTypeId, @RequestParam(name="start_date") String startDate , @RequestParam(name="end_date") String endDate , @RequestParam(name="tax") String tax , @RequestParam(name="surcharges") String surcharges, @RequestParam(name = "vat") String vat,@RequestParam(name="due_now") String dueNow){
-        return roomService.getRoomRatePerDate(roomTypeId,startDate,endDate,tax,surcharges,vat,dueNow);
+    ResponseEntity<RoomRateDetailModel> getRoomRatePerDate(@RequestParam(name="room_type_id") String roomTypeId, @RequestParam(name="start_date") String startDate , @RequestParam(name="end_date") String endDate , @RequestParam(name="tax") String tax , @RequestParam(name="surcharges") String surcharges, @RequestParam(name = "vat") String vat, @RequestParam(name="due_now") String dueNow, @RequestParam(name="number_of_rooms") String numberOfRooms){
+        return roomService.getRoomRatePerDate(roomTypeId,startDate,endDate,tax,surcharges,vat,dueNow,numberOfRooms);
     }
-
     @GetMapping(EndPointConstants.GET_PROMOTION_DEALS)
-    ResponseEntity<?> getPromotionDeals(@RequestParam(name="start_date") String startDate,@RequestParam(name="end_date") String endDate){
+    ResponseEntity<List<PromotionDealModel>> getPromotionDeals(@RequestParam(name="start_date") String startDate, @RequestParam(name="end_date") String endDate){
         return promotionDealService.getAllPromotionDeals(startDate,endDate);
     }
 }

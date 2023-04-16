@@ -1,7 +1,7 @@
 package com.kdu.IBE.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.kdu.IBE.model.returnDto.PromotionDealModel;
+import com.kdu.IBE.model.responseDto.PromotionDealModel;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class PromotionDealServiceUtil {

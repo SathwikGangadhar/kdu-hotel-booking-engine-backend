@@ -25,4 +25,15 @@ public class ServiceUtils {
                 " </body>\n"+
                 "</html>";
     }
+    public String getOtpBodyHtml(String otp){
+        String otpMessage = "Your otp is"+otp;
+        return " <html>\n"+
+                " <head></head>\n"+
+                " <body>\n"+
+                " <h1>Hello!</h1>\n"+
+                " <p>Please click on this link to submit the review</p>\n"+
+                " <p>"+otpMessage+"</p>\n"+
+                " </body>\n"+
+                "</html>";
+    }
 }

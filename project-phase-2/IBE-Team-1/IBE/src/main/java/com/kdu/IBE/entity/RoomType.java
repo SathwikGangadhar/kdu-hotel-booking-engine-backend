@@ -17,8 +17,7 @@ public class RoomType {
     @Id
     private Long roomTypeId;
 
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "property_id")
     private PropertyTable property;
 }

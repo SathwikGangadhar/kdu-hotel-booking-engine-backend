@@ -1,11 +1,11 @@
 package com.kdu.IBE.service.room;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.kdu.IBE.model.recieveModel.FilterSort;
-import com.kdu.IBE.model.returnDto.AvailableRoomModel;
-import com.kdu.IBE.model.returnDto.AvailableRoomModelResponse;
-import com.kdu.IBE.model.returnDto.RoomRateDetailModel;
-import com.kdu.IBE.model.returnDto.RoomRateModel;
+import com.kdu.IBE.model.requestDto.FilterSort;
+import com.kdu.IBE.model.responseDto.AvailableRoomModel;
+import com.kdu.IBE.model.responseDto.AvailableRoomModelResponse;
+import com.kdu.IBE.model.responseDto.RoomRateDetailModel;
+import com.kdu.IBE.model.responseDto.RoomRateModel;
 import com.kdu.IBE.service.graphQl.GraphQlWebClient;
 import com.kdu.IBE.utils.RoomServiceFilters;
 import com.kdu.IBE.utils.RoomServiceUtils;
@@ -13,6 +13,7 @@ import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
@@ -32,9 +33,8 @@ public class RoomService implements IRoomService{
     public RoomServiceUtils roomServiceUtils;
     @Autowired
     public RoomServiceFilters roomServiceFilters;
-
     @Override
-    public ResponseEntity<?> getRoomTypes(FilterSort filterSort, BindingResult result, String propertyId, String startDate, String endDate, String skip, String take , String minNoOfRooms,String minNoOfBeds,String maxCapacity) {
+    public ResponseEntity<AvailableRoomModelResponse > getRoomTypes(FilterSort filterSort, BindingResult result, String propertyId, String startDate, String endDate, String skip, String take , String minNoOfRooms,String minNoOfBeds,String maxCapacity) {
         if(result.hasErrors()){
             throw  new ObjectNotFoundException("Request Body passed is invalid","Invalid");
         }
@@ -154,7 +154,7 @@ public class RoomService implements IRoomService{
      * @param endDate
      * @return
      */
-    public ResponseEntity<RoomRateDetailModel > getRoomRatePerDate(String roomTypeId, String startDate , String endDate, String tax , String surcharges, String vat, String dueNow){
+    public ResponseEntity<RoomRateDetailModel > getRoomRatePerDate(String roomTypeId, String startDate , String endDate, String tax , String surcharges, String vat, String dueNow,String numberOfRooms){
 
         Map<String, Object> requestBody = new HashMap<>();
         List<RoomRateModel> roomRateModelList=new ArrayList<>();
@@ -168,6 +168,7 @@ public class RoomService implements IRoomService{
         double grandTotal=0;
         double dueNowAmount=0;
         double dueAtResortAmount=0;
+        int roomCount=Integer.parseInt(numberOfRooms);
         requestBody.put("query",
                 roomServiceUtils.getRoomRatePerDataQuery(roomTypeId,startDate,endDate)
         );
@@ -193,6 +194,8 @@ public class RoomService implements IRoomService{
                     .build();
             roomRateModelList.add(roomRateModel);
         }
+        subTotal*=roomCount;
+
         /**
          * getting the amount of tax
          */

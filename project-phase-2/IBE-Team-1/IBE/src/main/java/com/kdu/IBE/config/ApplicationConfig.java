@@ -21,7 +21,6 @@ public class ApplicationConfig {
 
     @Bean
     public DataSource dataSource() {
-
         return DataSourceBuilder
                 .create()
                 .url("jdbc:postgresql://" + secretCredentialsService.getSecretCredentialsModel().getHost() + "/" + secretCredentialsService.getSecretCredentialsModel().getUsername())

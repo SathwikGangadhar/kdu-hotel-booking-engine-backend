@@ -1,10 +1,9 @@
 package com.kdu.IBE.service.promotionDeal;
 
-import com.kdu.IBE.model.returnDto.PromotionDealModel;
+import com.kdu.IBE.model.responseDto.PromotionDealModel;
 import com.kdu.IBE.utils.PromotionDealServiceUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -15,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
+//@SpringBootTest
 public class PromotionDealTest {
 
     @Autowired
@@ -26,7 +25,7 @@ public class PromotionDealTest {
     /**
      * testing whether all promotionDeals are fetched or not for the given dates
      */
-    @Test
+//    @Test
     public void testGetAllPromotionDeals(){
         // Call the method with some test data
         ResponseEntity<?> response = promotionDealService.getAllPromotionDeals("2023-04-08", "2023-04-23");

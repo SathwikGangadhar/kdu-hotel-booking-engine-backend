@@ -50,5 +50,16 @@ public class GlobalExceptionHandler {
         log.error(exception.getMessage());
         return new ResponseEntity<>("No Such data present",HttpStatus.BAD_REQUEST);
     }
-
+    @ExceptionHandler(RoomsNotFoundException.class)
+    public ResponseEntity<String> roomsNotFound(RoomsNotFoundException exception){
+        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(UnexpectedErrorException.class)
+    public ResponseEntity<String> unexpectedError(UnexpectedErrorException exception){
+        return new ResponseEntity<>("Unexpected error occurred",HttpStatus.OK);
+    }
+    @ExceptionHandler(BookingIdDoesNotExistException.class)
+    public ResponseEntity<String> bookingIdDoesNotExistException(BookingIdDoesNotExistException exception){
+        return new ResponseEntity<>("The booking id given does not exits",HttpStatus.OK);
+    }
 }

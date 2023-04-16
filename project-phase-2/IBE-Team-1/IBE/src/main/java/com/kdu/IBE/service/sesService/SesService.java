@@ -6,17 +6,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.awscore.AwsRequestOverrideConfiguration;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ses.SesClient;
 
 import java.io.IOException;
 import java.util.Properties;
-
-import javax.mail.*;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
+import javax.mail.internet.MimeMessage;
 @Slf4j
 @Service
 public class SesService {
@@ -48,6 +50,7 @@ public class SesService {
         String bodyHTML = serviceUtils.getBodyHtml(ratingsAndReviewsId);
         this.client = SesClient.builder()
                 .region(region)
+
 //                .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
                 .build();
         try {
@@ -60,6 +63,30 @@ public class SesService {
         }
     }
 
+
+    public void sendOtp(String sender, String recipient, String otp) throws IOException {
+        final String usage =serviceUtils.getUsage();
+        String subject = "Please enter the otp";
+        Region region = Region.of(this.region);
+
+        // The email body for non-HTML email clients.
+        String bodyText = "Hello,\r\n" + "See the list below message. ";
+
+        // The HTML body of the email.
+        String bodyHTML = serviceUtils.getOtpBodyHtml(otp);
+        this.client = SesClient.builder()
+                .region(region)
+//                .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+                .build();
+        try {
+            send(client, sender, recipient, subject, bodyText, bodyHTML);
+            client.close();
+            log.info("Done");
+
+        } catch (IOException | MessagingException e) {
+            e.getStackTrace();
+        }
+    }
     /**
      * @param client
      * @param sender
@@ -90,7 +117,6 @@ public class SesService {
         msg.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(recipient));
         msg.setSubject(subject);
         msg.setContent(bodyHTML, "text/html");
-
         Transport transport = session.getTransport();
 
         try {
