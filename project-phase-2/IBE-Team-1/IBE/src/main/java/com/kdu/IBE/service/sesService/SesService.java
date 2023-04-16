@@ -100,7 +100,7 @@ public class SesService {
             String bodyHTML = sesServiceUtils.getBookingEmail(image,bookingId,roomType,startDate,endDate);
             this.client = SesClient.builder()
                     .region(region)
-                    .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+//                    .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
                     .build();
             try {
                 send(client, sender, recipient, subject, bodyText, bodyHTML);
