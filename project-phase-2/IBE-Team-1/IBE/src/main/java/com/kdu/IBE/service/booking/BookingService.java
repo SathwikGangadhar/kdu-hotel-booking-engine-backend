@@ -99,28 +99,28 @@ public class BookingService implements IBookingService{
             }
             //used for future use
 
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
-        ExecutorService executorServiceForMail=Executors.newFixedThreadPool(1);
-//        Callable<Void> sendMailTask=()->{
+//        ExecutorService executorService = Executors.newFixedThreadPool(2);
 //
-//          return null;
+//        Callable<Void> task1 = () -> {
+//            bookingUtils.putBookingUserInfo(bookingModel.getUserInfoModel());
+//            return null;
 //        };
-        Callable<Void> task1 = () -> {
-            bookingUtils.putBookingUserInfo(bookingModel.getUserInfoModel());
-            return null;
-        };
-        executorService.submit(task1);
-        Callable<Void> task2 = () -> {
-            bookingUtils.putToBookingDetails(bookingModel.getBookingDetailsModel(),booking.getBookingId());
-            return null;
-        };
-        executorService.submit(task2);
-        executorService.shutdown();
-        try {
-            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-        } catch (InterruptedException e) {
-            // Handle the exception as needed
-        }
+//        executorService.submit(task1);
+//        Callable<Void> task2 = () -> {
+//            bookingUtils.putToBookingDetails(bookingModel.getBookingDetailsModel(),booking.getBookingId());
+//            return null;
+//        };
+//        executorService.submit(task2);
+//        executorService.shutdown();
+//        try {
+//            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+//        } catch (InterruptedException e) {
+//            // Handle the exception as needed
+//        }
+
+        bookingUtils.putBookingUserInfo(bookingModel.getUserInfoModel());
+        bookingUtils.putToBookingDetails(bookingModel.getBookingDetailsModel(),booking.getBookingId());
+
 
         BookingResponse bookingResponse=BookingResponse.builder()
                 .bookingId(booking.getBookingId())
