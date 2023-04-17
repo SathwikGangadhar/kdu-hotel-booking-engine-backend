@@ -68,4 +68,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> bookingIdDoesNotExistException(BookingIdDoesNotExistException exception){
         return new ResponseEntity<>("The booking id given does not exits",HttpStatus.OK);
     }
+    @ExceptionHandler(EmailNotSent.class)
+    public ResponseEntity<String> emailNotSent(EmailNotSent exception){
+        return new ResponseEntity<String >("Failed to send the Email",HttpStatus.BAD_REQUEST);
+    }
 }

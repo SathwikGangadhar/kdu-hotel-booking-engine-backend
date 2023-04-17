@@ -1,6 +1,7 @@
 package com.kdu.IBE.service.sesService;
 
 
+import com.kdu.IBE.exception.EmailNotSent;
 import com.kdu.IBE.utils.SesServiceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,6 +157,7 @@ public class SesService {
         } catch (Exception ex) {
             log.info("The email was not sent.");
             log.error("Error message: " + ex.getMessage());
+            throw new EmailNotSent("The email was not sent.");
         } finally {
             // Close and terminate the connection.
             transport.close();
