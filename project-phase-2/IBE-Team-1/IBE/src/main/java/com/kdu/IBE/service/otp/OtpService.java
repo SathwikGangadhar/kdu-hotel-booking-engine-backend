@@ -56,7 +56,7 @@ public class OtpService implements IOtpService{
             deleteBooking(bookingIdValue);
             return new ResponseEntity<String>("Booking canceled successfully",HttpStatus.OK);
         }
-        return new ResponseEntity<String>("OTP entered is wrong please try again",HttpStatus.OK);
+        return new ResponseEntity<String>("OTP entered is wrong please try again",HttpStatus.BAD_REQUEST);
     }
     public ResponseEntity<String> putOtpForLoggedInUser(String bookingId){
         long bookingIdValue=Long.parseLong(bookingId);
