@@ -31,7 +31,6 @@ public class SesServiceUtils {
                 " <head></head>\n"+
                 " <body>\n"+
                 " <h1>Hello!</h1>\n"+
-                " <p>Please click on this link to submit the review</p>\n"+
                 " <p>"+otpMessage+"</p>\n"+
                 " </body>\n"+
                 "</html>";

@@ -38,7 +38,7 @@ public class OtpService implements IOtpService{
                 .build();
         otpRepository.save(otp);
         try {
-            sesService.sendOtp(senderEmail,receiverEmail,otp.toString());
+            sesService.sendOtp(senderEmail,receiverEmail,Integer.toString(otpValue));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
