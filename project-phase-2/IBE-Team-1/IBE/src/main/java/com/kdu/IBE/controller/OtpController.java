@@ -16,7 +16,7 @@ public class OtpController {
     @Autowired
     public IOtpService otpService;
     @PostMapping(EndPointConstants.SET_OTP)
-    ResponseEntity<Integer> setOtp(@RequestParam(name="booking_id") String bookingId,@RequestParam(name="receiverEmail") String receiverEmail){
+    ResponseEntity<String> setOtp(@RequestParam(name="booking_id") String bookingId,@RequestParam(name="receiverEmail") String receiverEmail){
                 return otpService.setOtp(bookingId,receiverEmail);
     }
     @PostMapping(EndPointConstants.PUT_OTP)

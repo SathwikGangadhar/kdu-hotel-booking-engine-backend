@@ -26,7 +26,7 @@ public class SesServiceUtils {
                 "</html>";
     }
     public String getOtpBodyHtml(String otp){
-        String otpMessage = "Your otp is"+otp;
+        String otpMessage = "Your otp is "+otp;
         return " <html>\n"+
                 " <head></head>\n"+
                 " <body>\n"+

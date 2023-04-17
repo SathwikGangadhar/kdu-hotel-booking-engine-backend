@@ -27,7 +27,7 @@ public class OtpService implements IOtpService{
     private BookingRepository bookingRepository;
 
 
-    public ResponseEntity<Integer> setOtp(String bookingId,String receiverEmail){
+    public ResponseEntity<String> setOtp(String bookingId,String receiverEmail){
         long bookingIdValue=Long.parseLong(bookingId);
         int otpValue=otpUtils.getOtp();
         String senderEmail = "nitesh.gupta@kickdrumtech.com";
@@ -42,7 +42,7 @@ public class OtpService implements IOtpService{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new ResponseEntity<Integer>(otpValue, HttpStatus.OK);
+        return new ResponseEntity<String>("Otp generated successfully", HttpStatus.OK);
     }
 
     public ResponseEntity<String> putOtp(String otp,String bookingId){
