@@ -2,7 +2,7 @@ package com.kdu.IBE.controller;
 
 import com.kdu.IBE.constants.EndPointConstants;
 import com.kdu.IBE.entity.User;
-import com.kdu.IBE.model.UserModel;
+import com.kdu.IBE.model.responseDto.UserModel;
 import com.kdu.IBE.repository.UserRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

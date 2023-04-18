@@ -27,4 +27,8 @@ public class BookingDetailsModel {
    private Double dueNow;
    private Double dueAtResort;
    private Double totalAmount;
+   private Double tax;
+   private Double surcharges;
+   private Double vat;
+   private Double dueNowFactor;
 }

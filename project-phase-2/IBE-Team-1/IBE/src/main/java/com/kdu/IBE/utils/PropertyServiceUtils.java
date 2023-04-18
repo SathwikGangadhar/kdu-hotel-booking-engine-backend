@@ -8,11 +8,21 @@ import java.util.List;
 
 @Component
 public class PropertyServiceUtils {
+    /**
+     * @return
+     */
     public String getCountPropertyQuery(){
         return "query MyQuery {\n" +
                 "  countProperties\n" +
                 "}";
     }
+
+    /**
+     * @param tenantId
+     * @param skip
+     * @param take
+     * @return
+     */
     public String getPropertyQuery(String tenantId,Integer skip,Integer take){
         return "query MyQuery {\n" +
                 "  listProperties(where: {tenant_id: {equals: " + tenantId + "}}, skip: " + Integer.toString(skip) + ", take: " + Integer.toString(take) + ") {\n" +
@@ -21,6 +31,11 @@ public class PropertyServiceUtils {
                 "  }\n" +
                 "}";
     }
+
+    /**
+     * @param propertyList
+     * @param propertyReturnModelList
+     */
     public void setPropertyDto(JsonNode propertyList, List<PropertyReturnModel> propertyReturnModelList){
         for (JsonNode property :propertyList){
             PropertyReturnModel propertyModel= PropertyReturnModel.builder().propertyId(property.get("property_id").asLong()).propertyName(property.get("property_name").toString()).build();

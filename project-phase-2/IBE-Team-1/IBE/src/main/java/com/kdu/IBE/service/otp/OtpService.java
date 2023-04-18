@@ -1,5 +1,6 @@
 package com.kdu.IBE.service.otp;
 
+import com.kdu.IBE.constants.SenderEmail;
 import com.kdu.IBE.entity.Otp;
 import com.kdu.IBE.repository.BookingRepository;
 import com.kdu.IBE.repository.OtpRepository;
@@ -26,11 +27,16 @@ public class OtpService implements IOtpService{
     @Autowired
     private BookingRepository bookingRepository;
 
-
+    /**
+     *
+     * @param bookingId
+     * @param receiverEmail
+     * @return
+     */
     public ResponseEntity<String> setOtp(String bookingId,String receiverEmail){
         long bookingIdValue=Long.parseLong(bookingId);
         int otpValue=otpUtils.getOtp();
-        String senderEmail = "nitesh.gupta@kickdrumtech.com";
+        String senderEmail = SenderEmail.SENDER_EMAIL;
         otpRepository.deleteByBookingIdEquals(Long.parseLong(bookingId));
         Otp otp=Otp.builder()
                 .bookingId(bookingIdValue)
@@ -45,6 +51,12 @@ public class OtpService implements IOtpService{
         return new ResponseEntity<String>("Otp generated successfully", HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param otp
+     * @param bookingId
+     * @return
+     */
     public ResponseEntity<String> putOtp(String otp,String bookingId){
         int otpValue=Integer.parseInt(otp);
         long bookingIdValue=Long.parseLong(bookingId);
@@ -58,6 +70,11 @@ public class OtpService implements IOtpService{
         }
         return new ResponseEntity<String>("OTP entered is wrong please try again",HttpStatus.BAD_REQUEST);
     }
+
+    /**
+     * @param bookingId
+     * @return
+     */
     public ResponseEntity<String> putOtpForLoggedInUser(String bookingId){
         long bookingIdValue=Long.parseLong(bookingId);
         deleteBooking(bookingIdValue);
@@ -65,6 +82,9 @@ public class OtpService implements IOtpService{
     }
 
 
+    /**
+     * @param bookingIdValue
+     */
     public void deleteBooking(Long bookingIdValue){
         roomAvailabilityRepository.updateBookingIdByBookingIdEquals(0l,bookingIdValue);
         bookingRepository.deleteByBookingIdEquals(bookingIdValue);

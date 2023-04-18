@@ -4,6 +4,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SesServiceUtils {
+    /**
+     * @return
+     */
     public String getUsage(){
         return "\n" +
                 "Usage:\n" +
@@ -13,6 +16,11 @@ public class SesServiceUtils {
                 "    recipient -  An email address that represents the recipient. \n" +
                 "    subject - The  subject line. \n";
     }
+
+    /**
+     * @param ratingsAndReviewsId
+     * @return
+     */
     public String getBodyHtml(String ratingsAndReviewsId){
         String url = "https://d7ohsf89hdgnd.cloudfront.net/feedback?id=" + ratingsAndReviewsId;
 
@@ -25,6 +33,11 @@ public class SesServiceUtils {
                 " </body>\n"+
                 "</html>";
     }
+
+    /**
+     * @param otp
+     * @return
+     */
     public String getOtpBodyHtml(String otp){
         String otpMessage = "Your otp is "+otp;
         return " <html>\n"+
@@ -35,6 +48,15 @@ public class SesServiceUtils {
                 " </body>\n"+
                 "</html>";
     }
+
+    /**
+     * @param image
+     * @param bookingId
+     * @param roomType
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     public String getBookingEmail(String image,String bookingId,String roomType,String startDate,String endDate){
         return "<!DOCTYPE html>" +
                 "<html>\n" +

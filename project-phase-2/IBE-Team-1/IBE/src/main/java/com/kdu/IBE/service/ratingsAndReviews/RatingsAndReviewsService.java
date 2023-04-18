@@ -3,6 +3,7 @@ package com.kdu.IBE.service.ratingsAndReviews;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kdu.IBE.entity.RatingsAndReviews;
 import com.kdu.IBE.entity.RoomType;
+import com.kdu.IBE.exception.RequestTimedException;
 import com.kdu.IBE.model.requestDto.RatingsAndReviewsReceiveModel;
 import com.kdu.IBE.model.responseDto.RoomRatingReturnModel;
 import com.kdu.IBE.repository.BookingUserInfoRepository;
@@ -44,13 +45,19 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
     public RatingsAndReviewUtils ratingsAndReviewUtils;
     @Autowired
     public BookingUserInfoRepository bookingUserInfoRepository;
+
+    /**
+     * @param receiverEmail
+     * @param roomTypeId
+     * @return
+     */
     public ResponseEntity<String> sendEmail(String receiverEmail, String roomTypeId) {
         /**
          * validating the email
          */
-        boolean isEmailValid =emailValidator.validateEmail(receiverEmail);
-        if(!isEmailValid){
-            return new ResponseEntity<>("Email Passed is invalid",HttpStatus.BAD_REQUEST);
+        boolean isEmailValid = emailValidator.validateEmail(receiverEmail);
+        if (!isEmailValid) {
+            return new ResponseEntity<>("Email Passed is invalid", HttpStatus.BAD_REQUEST);
         }
 
         /**
@@ -87,6 +94,7 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
 
     /**
      * to check in the form whether it is submitted or not present
+     *
      * @param ratingId rating id
      * @return validity of rating presence
      */
@@ -104,6 +112,7 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
 
     /**
      * to add ratings and review in the database
+     *
      * @param ratingsAndReviewsReceiveModel model which represents  the data is passed
      * @return required message
      */
@@ -111,56 +120,63 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
         if (result.hasErrors()) {
             throw new ObjectNotFoundException("Object passed in request body is invalid", "Error");
         }
-        ratingsAndReviewsRepository.updateRatingsAndReviewsByIdEquals(ratingsAndReviewsReceiveModel.getRatings(), ratingsAndReviewsReceiveModel.getReviews(), ratingsAndReviewsReceiveModel.getRoomTypeId());
-
+        ratingsAndReviewsRepository.updateRatingsAndReviewsAndBookingById(ratingsAndReviewsReceiveModel.getRatings(), ratingsAndReviewsReceiveModel.getReviews(), ratingsAndReviewsReceiveModel.getBookingId(), ratingsAndReviewsReceiveModel.getRoomTypeId());
         return new ResponseEntity<String>("ratings added successfully", HttpStatus.OK);
     }
 
     /**
      * to get the ratings and reviews
+     *
      * @param roomTypeId (id of which the ratings are to be fetched)
      * @return ratings
      */
     public ResponseEntity<?> getRatingsAndReview(String roomTypeId) {
         Map<String, Object> roomRatingReturnModelMap = ratingsAndReviewsRepository.getCountAndAverageRatingByRoomTypeId(Long.parseLong(roomTypeId));
         RoomRatingReturnModel roomRatingReturnModel = new RoomRatingReturnModel();
-        if(roomRatingReturnModelMap.get("count")==null || roomRatingReturnModelMap.get("averageRating")==null){
+        /**
+         * if the room type is a new entry to the database
+         */
+        if (roomRatingReturnModelMap.get("count") == null || roomRatingReturnModelMap.get("averageRating") == null) {
             roomRatingReturnModel.setCount(0l);
             roomRatingReturnModel.setAverageRating(0d);
-            return new ResponseEntity<RoomRatingReturnModel>(roomRatingReturnModel,HttpStatus.OK);
+            return new ResponseEntity<RoomRatingReturnModel>(roomRatingReturnModel, HttpStatus.OK);
         }
+        /**
+         * if the room type has a previous entry allready
+         */
         roomRatingReturnModel.setCount(Long.parseLong(roomRatingReturnModelMap.get("count").toString()));
         roomRatingReturnModel.setAverageRating(Double.parseDouble(roomRatingReturnModelMap.get("averageRating").toString()));
         return new ResponseEntity<RoomRatingReturnModel>(roomRatingReturnModel, HttpStatus.OK);
     }
+
     @Scheduled(cron = "0 0 12 * * ?") // runs every day at 12pm
-    public ResponseEntity<?> sendMailCheckedOutGuest(){
+    public ResponseEntity<?> sendMailCheckedOutGuest() {
         Map<String, Object> requestBody = new HashMap<>();
-        long skip=0;
-        int take=10000000;
+        long skip = 0;
+        int take = 10000000;
         /**
          * getting the current date
          */
         String formattedDate = ratingsAndReviewUtils.getCurrentDate();
-        while (true){
+        while (true) {
             /**
              * making the graphQl api call to fetch the booking id of all the bookings that are not submitted ratings
              */
-            requestBody.put("query", ratingsAndReviewUtils.getRatingBookingIdQuery(Long.toString(skip),formattedDate));
-            skip+=take;
+            requestBody.put("query", ratingsAndReviewUtils.getRatingBookingIdQuery(Long.toString(skip), formattedDate));
+            skip += take;
             JsonNode jsonNode;
-            jsonNode=graphQlWebClient.getGraphQlResponse(requestBody);
+            jsonNode = graphQlWebClient.getGraphQlResponse(requestBody);
             /**
              * getting the list of booking id
              */
-            Collection<Long> bookingIdList=new ArrayList<>();
-            if(jsonNode.get("data").get("listBookings").size()==0){
+            Collection<Long> bookingIdList = new ArrayList<>();
+            if (jsonNode.get("data").get("listBookings").size() == 0) {
                 break;
             }
-            for(JsonNode booking:jsonNode.get("data").get("listBookings")){
+            for (JsonNode booking : jsonNode.get("data").get("listBookings")) {
                 bookingIdList.add(booking.get("booking_id").asLong());
             }
-            List<List<String>> reviewSenderList=bookingUserInfoRepository.findByBookingIdIn(bookingIdList);
+            List<List<String>> reviewSenderList = bookingUserInfoRepository.findByBookingIdIn(bookingIdList);
             /**
              * implemented the task of sending the email to be run in treads so that all the mails to be sent at a time without waiting for the other
              */
@@ -176,9 +192,10 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
             try {
                 executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
             } catch (InterruptedException e) {
-                // Handle the exception as needed
+                throw new RequestTimedException(e.getMessage());
             }
         }
-        return new ResponseEntity<>("Emails sent successfully",HttpStatus.OK);
+
+        return new ResponseEntity<>("Emails sent successfully", HttpStatus.OK);
     }
 }

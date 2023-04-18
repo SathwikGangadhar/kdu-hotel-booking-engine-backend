@@ -13,6 +13,11 @@ import java.util.List;
 
 @Component
 public class PromotionDealServiceUtil {
+    /**
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     public String getPromotionDealQuery(String startDate, String endDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
         LocalDate startDateForCount = LocalDate.parse(startDate.substring(0, 10), formatter);
@@ -30,6 +35,10 @@ public class PromotionDealServiceUtil {
                 "}";
     }
 
+    /**
+     * @param availablePromotionDealsJsonList
+     * @param availablePromotionDeals
+     */
     public void promotionDealsListSetter(JsonNode availablePromotionDealsJsonList, List<PromotionDealModel> availablePromotionDeals) {
         for (JsonNode promotionDeal : availablePromotionDealsJsonList) {
             PromotionDealModel promotionDealModel = PromotionDealModel.builder()
@@ -42,6 +51,12 @@ public class PromotionDealServiceUtil {
         }
     }
 
+    /**
+     * @param availablePromotionDeals
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     public List<PromotionDealModel> getFilteredAvailablePromotionDeals(List<PromotionDealModel> availablePromotionDeals, String startDate, String endDate) {
         List<PromotionDealModel> filteredAvailablePromotionDeals = new ArrayList<PromotionDealModel>();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -64,6 +79,12 @@ public class PromotionDealServiceUtil {
         return filteredAvailablePromotionDeals;
     }
 
+    /**
+     * @param startDate
+     * @param endDate
+     * @param countWeekends
+     * @return
+     */
     public long countWeekdaysAndWeekends(LocalDate startDate, LocalDate endDate, boolean countWeekends) {
         long weekdays = 0;
         long weekends = 0;

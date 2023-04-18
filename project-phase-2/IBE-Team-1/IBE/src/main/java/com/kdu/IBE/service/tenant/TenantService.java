@@ -1,6 +1,7 @@
 package com.kdu.IBE.service.tenant;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.kdu.IBE.exception.GraphQlApiException;
 import com.kdu.IBE.model.responseDto.PropertyReturnModel;
 import com.kdu.IBE.service.graphQl.GraphQlWebClient;
 import com.kdu.IBE.utils.PropertyServiceUtils;
@@ -26,12 +27,23 @@ public class TenantService implements ITenantService{
         Map<String, Integer> minRatesByDate = new HashMap<>();
         int skip = 0;
         int take = 0;
-
+        /**
+         * getting the count of the
+         */
         Map<String, Object> requestBodyPropertyCount = new HashMap<>();
         requestBodyPropertyCount.put("query", propertyServiceUtils.getCountPropertyQuery()
         );
         JsonNode jsonNode=graphQlWebClient.getGraphQlResponse(requestBodyPropertyCount);
         take = jsonNode.get("data").get("countProperties").asInt();
+
+        if(take<1){
+            throw new GraphQlApiException("Room count is less than the 1");
+        }
+
+        /**
+         * getting properties of tenant from the property table
+         *
+         */
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("query", propertyServiceUtils.getPropertyQuery( tenantId,skip, take)

@@ -5,6 +5,9 @@ import java.util.Random;
 
 @Component
 public class OtpUtils {
+    /**
+     * @return
+     */
     public int getOtp(){
         Random random = new Random();
         int number = random.nextInt(9000) + 1000;

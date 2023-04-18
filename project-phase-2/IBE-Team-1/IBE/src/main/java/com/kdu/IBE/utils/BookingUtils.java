@@ -5,11 +5,14 @@ import com.kdu.IBE.entity.BookingDetails;
 import com.kdu.IBE.entity.BookingUserDetails;
 import com.kdu.IBE.entity.RoomType;
 import com.kdu.IBE.model.requestDto.BookingDetailsModel;
+import com.kdu.IBE.model.requestDto.BookingModel;
 import com.kdu.IBE.model.requestDto.UserInfoModel;
+import com.kdu.IBE.model.responseDto.RoomRateDetailModel;
 import com.kdu.IBE.repository.BookingDetailsRepository;
 import com.kdu.IBE.repository.BookingRepository;
 import com.kdu.IBE.repository.BookingUserInfoRepository;
 import com.kdu.IBE.repository.RoomTypeRepository;
+import com.kdu.IBE.service.room.RoomService;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,9 +34,18 @@ public class BookingUtils {
     private RoomTypeRepository roomTypeRepository;
     @Autowired
     private BookingDetailsRepository bookingDetailsRepository;
+
+    private RoomService roomService;
+
+    /**
+     * @param userInfoModel
+     */
     public void putBookingUserInfo(UserInfoModel userInfoModel){
         Booking booking=bookingRepository.findById(userInfoModel.getBookingId())
                 .orElseThrow(() -> new ObjectNotFoundException("Booking Id given is invalid", "Exception"));
+        /**
+         * making entry in the database
+         */
         BookingUserDetails bookingUserDetails = BookingUserDetails.builder()
                 .bookingId(booking)
                 .travellerFirstName(userInfoModel.getTravellerInfoModel().getFirstName())
@@ -65,10 +77,12 @@ public class BookingUtils {
         bookingUserInfoRepository.save(bookingUserDetails);
 
     }
-    /**
-     * add booking details
-     */
 
+
+    /**
+     * @param bookingDetailsModel
+     * @param bookingId
+     */
     public void putToBookingDetails(BookingDetailsModel bookingDetailsModel,Long bookingId){
         Booking booking=bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new ObjectNotFoundException("Booking Id given is invalid", "Exception"));
@@ -100,6 +114,18 @@ public class BookingUtils {
         bookingDetailsRepository.save(bookingDetails);
     }
 
+
+    /**
+     * @param bookingDetailsModel
+     * @return
+     */
+    public boolean validateBookingDetails(BookingModel bookingDetailsModel){
+        RoomRateDetailModel roomRateDetailModel= roomService.getRoomRatePerDate(bookingDetailsModel.getBookingDetailsModel().getRoomTypeId(), bookingDetailsModel.getBookingDetailsModel().getStartDate(), bookingDetailsModel.getBookingDetailsModel().getEndDate(), bookingDetailsModel.getBookingDetailsModel().getTax(), bookingDetailsModel.getBookingDetailsModel().getSurcharges(), bookingDetailsModel.getBookingDetailsModel().getVat(),bookingDetailsModel.getBookingDetailsModel().getDueNow(), bookingDetailsModel.getBookingDetailsModel().getNumberOfRooms()).getBody();
+        if(bookingDetailsModel.getBookingDetailsModel().getTotalAmount()==roomRateDetailModel.getGrandTotal()){
+            return true;
+        }
+        return false;
+    }
 }
 
 
