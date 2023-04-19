@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 @Builder
 @Data
 @NoArgsConstructor
@@ -19,3 +18,5 @@ public class Room {
     @JoinColumn(name = "room_type_id")
     private RoomType roomTypeId;
 }
+
+

@@ -1,7 +1,7 @@
 package com.kdu.IBE.service.secretCredentials;
 
 import com.google.gson.Gson;
-import com.kdu.IBE.model.SecretCredentialsModel;
+import com.kdu.IBE.model.requestDto.SecretCredentialsModel;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ public class SecretCredentialsService implements ISecretCredentials{
         // Create a Secrets Manager client
         SecretsManagerClient client = SecretsManagerClient.builder()
                 .region(region)
-//              .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+              .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
                 .build();
 
         GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()

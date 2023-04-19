@@ -13,7 +13,6 @@ import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
@@ -154,21 +153,20 @@ public class RoomService implements IRoomService{
      * @param endDate
      * @return
      */
-    public ResponseEntity<RoomRateDetailModel > getRoomRatePerDate(String roomTypeId, String startDate , String endDate, String tax , String surcharges, String vat, String dueNow,String numberOfRooms){
-
+    public ResponseEntity<RoomRateDetailModel > getRoomRatePerDate(Long roomTypeId, String startDate , String endDate, Double tax , Double surcharges, Double vat, Double dueNow,Integer numberOfRooms){
         Map<String, Object> requestBody = new HashMap<>();
         List<RoomRateModel> roomRateModelList=new ArrayList<>();
-        double taxValue=Double.parseDouble(tax);
-        double surchargesValue=Double.parseDouble(surcharges);
-        double vatValue=Double.parseDouble(vat);
-        double dueNowValue=Double.parseDouble(dueNow);
+        double taxValue=tax;
+        double surchargesValue=surcharges;
+        double vatValue=vat;
+        double dueNowValue=dueNow;
         double subTotal=0;
         double taxesAndSurchargesAmount=0;
         double vatAmount=0;
         double grandTotal=0;
         double dueNowAmount=0;
         double dueAtResortAmount=0;
-        int roomCount=Integer.parseInt(numberOfRooms);
+        int roomCount=numberOfRooms;
         requestBody.put("query",
                 roomServiceUtils.getRoomRatePerDataQuery(roomTypeId,startDate,endDate)
         );
@@ -179,22 +177,10 @@ public class RoomService implements IRoomService{
         JsonNode roomRateArray=jsonNode.get("data").get("listRoomRateRoomTypeMappings");
 
         /**
-         * mapping the results to the DTO
+         * calculating subtotal and parsing the room rate list
          */
 
-        for(JsonNode roomRate:roomRateArray){
-            /**
-             * calculating the sub total
-             */
-            subTotal+=roomRate.get("room_rate").get("basic_nightly_rate").asDouble();
-
-            RoomRateModel roomRateModel=RoomRateModel.builder()
-                    .basicNightlyRate(roomRate.get("room_rate").get("basic_nightly_rate").asDouble())
-                    .date(roomRate.get("room_rate").get("date").toString())
-                    .build();
-            roomRateModelList.add(roomRateModel);
-        }
-        subTotal*=roomCount;
+        subTotal=roomServiceUtils.getSubTotalAndBuildRoomRateModelList(roomRateArray,subTotal,roomRateModelList,roomCount);
 
         /**
          * getting the amount of tax
@@ -213,6 +199,7 @@ public class RoomService implements IRoomService{
          */
         dueNowAmount= roomServiceUtils.getDueNowAmount(grandTotal,dueNowValue);
         dueAtResortAmount=grandTotal-dueNowAmount;
+
         RoomRateDetailModel roomRateDetailModel=RoomRateDetailModel.builder()
                 .roomRateModelList(roomRateModelList)
                 .subTotal(subTotal)

@@ -18,5 +18,6 @@ public class PropertyTable {
     private Long property_id;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "tenant_id")
-    private TenantTable tenantTable;
+    private TenantTable tenantId;
+    private String configFileUlr;
 }

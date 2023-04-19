@@ -1,4 +1,4 @@
-package com.kdu.IBE.model;
+package com.kdu.IBE.model.requestDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

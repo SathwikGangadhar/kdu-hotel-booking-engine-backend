@@ -8,6 +8,11 @@ import java.util.TimeZone;
 
 @Component
 public class RatingsAndReviewUtils {
+    /**
+     * @param skip
+     * @param formattedDate
+     * @return
+     */
     public String getRatingBookingIdQuery(String skip,String formattedDate){
         return "query MyQuery {\n" +
                 "  listBookings(skip: "+skip+", take: 10000000, where: {property_id: {equals: 1}, check_out_date: {lt: \""+formattedDate+"\"}}) {\n" +
@@ -15,6 +20,10 @@ public class RatingsAndReviewUtils {
                 "  }\n" +
                 "}";
     }
+
+    /**
+     * @return
+     */
     public String getCurrentDate(){
         Date now = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");

@@ -1,4 +1,4 @@
-package com.kdu.IBE.model;
+package com.kdu.IBE.model.responseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomTypeModel {
-    private Long room_type_id;
+public class PropertyModel {
+    private Long tenant_id;
     private Long property_id;
 }

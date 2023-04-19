@@ -3,6 +3,7 @@ package com.kdu.IBE.utils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kdu.IBE.model.requestDto.FiltersModel;
 import com.kdu.IBE.model.responseDto.AvailableRoomModel;
+import com.kdu.IBE.model.responseDto.RoomRateModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,13 @@ public class RoomServiceUtils {
     @Autowired
     public RoomServiceSort roomServiceSort;
 
+    /**
+     * @param startDate
+     * @param endDate
+     * @param propertyId
+     * @param skipValue
+     * @return
+     */
     public String getAvailableRoomDetailsQuery(String startDate, String endDate, String propertyId, Integer skipValue) {
         return "query MyQuery {\n" +
                 "  listRoomAvailabilities(where: {AND: {booking_id: {equals: 0}, date: {gte: \"" + startDate + "\", lte: \"" + endDate + "\"}, property_id: {equals: " + propertyId + "}}},skip: " + Integer.toString(skipValue) + ", take: 1000000) {\n" +
@@ -32,6 +40,14 @@ public class RoomServiceUtils {
                 "}";
     }
 
+    /**
+     * @param startDate
+     * @param endDate
+     * @param roomTypeListString
+     * @param roomTypeArrayLength
+     * @param daysBetween
+     * @return
+     */
     public String getRoomRatesQuery(String startDate, String endDate, String roomTypeListString, Integer roomTypeArrayLength, long daysBetween) {
         return "query MyQuery3 {\n" +
                 "  listRoomRateRoomTypeMappings(where: {room_rate: {date: {gte: \"" + startDate + "\", lte: \"" + endDate + "\"}}, room_type: {room_type_id: {in: " + roomTypeListString + "}}}, skip: 0, take: " + Long.toString(roomTypeArrayLength * daysBetween) + ") {\n" +
@@ -43,6 +59,11 @@ public class RoomServiceUtils {
                 "}";
     }
 
+    /**
+     * @param roomTypeListString
+     * @param roomTypeArrayLength
+     * @return
+     */
     public String getRoomTypeQuery(String roomTypeListString, Integer roomTypeArrayLength) {
         return "query MyQuery2 {\n" +
                 "  listRoomTypes(where: {room_type_id: {in: " + roomTypeListString + "}}, skip: 0, take: " + Integer.toString(roomTypeArrayLength) + ") {\n" +
@@ -56,7 +77,13 @@ public class RoomServiceUtils {
                 "}";
     }
 
-    public String getRoomRatePerDataQuery(String roomType, String startDate, String endDate) {
+    /**
+     * @param roomType
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public String getRoomRatePerDataQuery(Long roomType, String startDate, String endDate) {
         /**
          * calculating the count of the days of stay to apply it to the take of the graph ql query
          */
@@ -66,7 +93,7 @@ public class RoomServiceUtils {
         long daysBetween = ChronoUnit.DAYS.between(startDateForCount, endDateForCount) + 1;
         String take = Long.toString(daysBetween);
         return "query MyQuery2 {\n" +
-                "  listRoomRateRoomTypeMappings(where: {room_rate: {date: {gte: \"" + startDate + "\", lte: \"" + endDate + "\"}}, room_type: {room_type_id: {equals: " + roomType + "}}}, skip: 0, take: " + take + ") {\n" +
+                "  listRoomRateRoomTypeMappings(where: {room_rate: {date: {gte: \"" + startDate + "\", lte: \"" + endDate + "\"}}, room_type: {room_type_id: {equals: " + roomType.toString() + "}}}, skip: 0, take: " + take + ") {\n" +
                 "    room_rate {\n" +
                 "      basic_nightly_rate\n" +
                 "      date\n" +
@@ -76,7 +103,10 @@ public class RoomServiceUtils {
     }
 
     /**
-     * map to fetch the room count and to fetch the count of the rooms in room type
+     * @param availableRoomsList
+     * @param roomsMap
+     * @param daysBetween
+     * @param roomTypesMap
      */
     public void roomCountFetcher(JsonNode availableRoomsList, HashMap<Integer, Integer> roomsMap, long daysBetween, HashMap<Integer, Integer> roomTypesMap) {
         for (JsonNode availableRoom : availableRoomsList) {
@@ -99,6 +129,11 @@ public class RoomServiceUtils {
         }
     }
 
+    /**
+     * @param roomTypesMap
+     * @param minNumberOfRooms
+     * @param roomTypeArray
+     */
     public void roomTypeListSetter(HashMap<Integer, Integer> roomTypesMap, Integer minNumberOfRooms, List<Integer> roomTypeArray) {
         for (Map.Entry<Integer, Integer> entry : roomTypesMap.entrySet()) {
             if (entry.getValue() >= minNumberOfRooms) {
@@ -107,6 +142,10 @@ public class RoomServiceUtils {
         }
     }
 
+    /**
+     * @param roomRateList
+     * @param roomTypeRateMap
+     */
     public void roomRateMapSetter(JsonNode roomRateList, HashMap<Integer, Double> roomTypeRateMap) {
 
         for (JsonNode roomRate : roomRateList) {
@@ -120,12 +159,22 @@ public class RoomServiceUtils {
     }
 
 
-    public void roomTypeRateAverageSetter( HashMap<Integer,Double> roomTypeRateMap,long daysBetween){
-        for (Map.Entry<Integer,Double> entry : roomTypeRateMap.entrySet()){
-            roomTypeRateMap.put(entry.getKey(),entry.getValue()/daysBetween);
+    /**
+     * @param roomTypeRateMap
+     * @param daysBetween
+     */
+    public void roomTypeRateAverageSetter(HashMap<Integer, Double> roomTypeRateMap, long daysBetween) {
+        for (Map.Entry<Integer, Double> entry : roomTypeRateMap.entrySet()) {
+            roomTypeRateMap.put(entry.getKey(), entry.getValue() / daysBetween);
         }
     }
 
+    /**
+     * @param roomTypeList
+     * @param roomTypesMap
+     * @param roomTypeRateMap
+     * @param availableRoomModelList
+     */
     public void roomAvailabilityListSetter(JsonNode roomTypeList, HashMap<Integer, Integer> roomTypesMap, HashMap<Integer, Double> roomTypeRateMap, List<AvailableRoomModel> availableRoomModelList) {
         for (JsonNode roomType : roomTypeList) {
             AvailableRoomModel availableRoomModel = AvailableRoomModel.builder()
@@ -165,6 +214,10 @@ public class RoomServiceUtils {
         }
     }
 
+    /**
+     * @param sortState
+     * @param availableRoomModelList
+     */
     public void getSortApply(Integer sortState, List<AvailableRoomModel> availableRoomModelList) {
         switch (Math.abs(sortState)) {
             case 1:
@@ -178,15 +231,55 @@ public class RoomServiceUtils {
         }
     }
 
+    /**
+     * @param subTotal
+     * @param taxValue
+     * @param surchargesValue
+     * @return
+     */
     public double getTaxesAndSurchargesAmount(double subTotal, double taxValue, double surchargesValue) {
         return subTotal * (taxValue + surchargesValue);
     }
 
+    /**
+     * @param subTotal
+     * @param vatValue
+     * @return
+     */
     public double getVatAmount(double subTotal, double vatValue) {
         return subTotal * (vatValue);
     }
 
+    /**
+     * @param subTotal
+     * @param dueNowValue
+     * @return
+     */
     public double getDueNowAmount(double subTotal, double dueNowValue) {
         return subTotal * dueNowValue;
+    }
+
+    /**
+     * @param roomRateArray
+     * @param subTotal
+     * @param roomRateModelList
+     * @param roomCount
+     * @return
+     */
+    public double getSubTotalAndBuildRoomRateModelList(JsonNode roomRateArray, double subTotal, List<RoomRateModel> roomRateModelList, Integer roomCount) {
+        for (JsonNode roomRate : roomRateArray) {
+            /**
+             * calculating the subtotal
+             */
+            subTotal += roomRate.get("room_rate").get("basic_nightly_rate").asDouble();
+
+            RoomRateModel roomRateModel = RoomRateModel.builder()
+                    .basicNightlyRate(roomRate.get("room_rate").get("basic_nightly_rate").asDouble())
+                    .date(roomRate.get("room_rate").get("date").toString())
+                    .build();
+            roomRateModelList.add(roomRateModel);
+        }
+        subTotal *= roomCount;
+        return subTotal;
     }
 }
