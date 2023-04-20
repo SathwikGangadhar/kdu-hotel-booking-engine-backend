@@ -65,6 +65,38 @@ public class SesService {
     }
 
 
+    public void sendRoomAvailabilityNotification(String sender, String recipient, String roomTypeId) throws IOException {
+        final String usage = sesServiceUtils.getUsage();
+        String subject = "Please submit this review";
+        Region region = Region.of(this.region);
+
+        // The email body for non-HTML email clients.
+        String bodyText = "Hello,\r\n" + "See the list below message. ";
+
+        // The HTML body of the email.
+        String bodyHTML = sesServiceUtils.getBodyHtml(roomTypeId);
+        this.client = SesClient.builder()
+                .region(region)
+//                .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+                .build();
+
+        try {
+            send(client, sender, recipient, subject, bodyText, bodyHTML);
+            client.close();
+            log.info("Done");
+
+        } catch (IOException | MessagingException e) {
+            e.getStackTrace();
+        }
+    }
+
+
+    /**
+     * @param sender
+     * @param recipient
+     * @param otp
+     * @throws IOException
+     */
     public void sendOtp(String sender, String recipient, String otp) throws IOException {
         final String usage = sesServiceUtils.getUsage();
         String subject = "Please enter the otp";

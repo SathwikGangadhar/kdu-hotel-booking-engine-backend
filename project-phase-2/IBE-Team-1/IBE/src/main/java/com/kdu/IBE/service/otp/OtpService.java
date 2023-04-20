@@ -3,6 +3,7 @@ package com.kdu.IBE.service.otp;
 import com.kdu.IBE.constants.SenderEmail;
 import com.kdu.IBE.entity.Otp;
 import com.kdu.IBE.repository.BookingRepository;
+import com.kdu.IBE.repository.NotifyUserRepository;
 import com.kdu.IBE.repository.OtpRepository;
 import com.kdu.IBE.repository.RoomAvailabilityRepository;
 import com.kdu.IBE.service.sesService.SesService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import java.util.List;
 
 import java.io.IOException;
 
@@ -26,6 +28,9 @@ public class OtpService implements IOtpService{
     public RoomAvailabilityRepository roomAvailabilityRepository;
     @Autowired
     private BookingRepository bookingRepository;
+
+    @Autowired
+    private NotifyUserRepository notifyUserRepository;
 
     /**
      *
@@ -81,12 +86,24 @@ public class OtpService implements IOtpService{
         return new ResponseEntity<String>("Booking canceled successfully",HttpStatus.OK);
     }
 
-
     /**
      * @param bookingIdValue
      */
     public void deleteBooking(Long bookingIdValue){
         roomAvailabilityRepository.updateBookingIdByBookingIdEquals(0l,bookingIdValue);
         bookingRepository.deleteByBookingIdEquals(bookingIdValue);
+    }
+    public ResponseEntity<List<String>> notifyUser(String startDate,Long roomTypeId) throws IOException {
+       List<String> notifyEmailList =notifyUserRepository.getEmailsToNotifyUser(startDate,roomTypeId);
+        String senderEmail=SenderEmail.SENDER_EMAIL;
+
+        /**
+         * threading has to be implemented
+         */
+        for(String email:notifyEmailList){
+            sesService.sesMessageSender(senderEmail,email,roomTypeId.toString());
+        }
+
+        return new ResponseEntity<>(notifyEmailList,HttpStatus.OK);
     }
 }

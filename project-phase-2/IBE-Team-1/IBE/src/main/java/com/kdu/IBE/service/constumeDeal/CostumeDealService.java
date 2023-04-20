@@ -38,15 +38,3 @@ public class CostumeDealService implements ICostumeDealService{
         return new ResponseEntity<CustomDealModel>(customDealModel, HttpStatus.OK);
     }
     }
-
-
-
-
-
-
-
-
-
-
-
-
