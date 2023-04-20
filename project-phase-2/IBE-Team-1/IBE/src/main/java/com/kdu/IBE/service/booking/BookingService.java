@@ -206,12 +206,16 @@ public class BookingService implements IBookingService {
         }
         String startDateValue = notifyUserRequestDto.getStartDate().substring(0, 10);
         LocalDate startDate = dateConverter.convertStringToDate(startDateValue);
+        String endDateValue= notifyUserRequestDto.getEndDate().substring(0,10);
+        LocalDate endDate=dateConverter.convertStringToDate(endDateValue);
         RoomType roomType = roomTypeRepository.findById(notifyUserRequestDto.getRoomTypeId())
                 .orElseThrow(() -> new ObjectNotFoundException("Room Id given is invalid", "Exception"));
         NotifyUser notifyUser = NotifyUser.builder()
                 .userEmail(notifyUserRequestDto.getUserEmail())
                 .startDate(startDate)
+                .endDate(endDate)
                 .roomTypeId(roomType)
+                .requiredRoomCount(notifyUserRequestDto.getRoomCount())
                 .build();
         notifyUserRepository.save(notifyUser);
         return new ResponseEntity<>("notify user details stored successfully", HttpStatus.OK);

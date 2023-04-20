@@ -13,15 +13,17 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="notify_user")
+@Table(name="notify_user" , uniqueConstraints = @UniqueConstraint(columnNames = {"user_email", "room_type_id"}))
 public class NotifyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(unique = true)
+    @Column(name = "user_email")
     private String userEmail;
     private LocalDate startDate;
+    private LocalDate endDate;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "room_type_id")
     private RoomType roomTypeId;
+    private Integer requiredRoomCount;
 }

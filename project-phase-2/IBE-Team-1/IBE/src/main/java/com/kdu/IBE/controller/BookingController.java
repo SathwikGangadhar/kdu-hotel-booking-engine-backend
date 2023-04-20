@@ -38,8 +38,4 @@ public class BookingController {
     ResponseEntity<String> putUserNotify(@Valid @RequestBody NotifyUserRequestDto notifyUserRequestDto,BindingResult result){
         return bookingService.putNotifyUser(notifyUserRequestDto,result);
      }
-
-
-
-
 }
