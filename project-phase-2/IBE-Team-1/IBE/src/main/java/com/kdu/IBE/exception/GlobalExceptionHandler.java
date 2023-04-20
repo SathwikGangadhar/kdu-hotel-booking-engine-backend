@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> Exception(Exception exception){
         log.error(exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.OK);
+        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(InvalidObjectInput.class)
     public ResponseEntity<String> invalidInput(InvalidObjectInput exception){
@@ -47,6 +47,7 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<String> nullPointerException(NullPointerException exception){
+        exception.printStackTrace();
         log.error(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
     }
@@ -86,5 +87,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> graphQlApiException(GraphQlApiException graphQlApiException){
         log.error(graphQlApiException.getMessage());
         return new ResponseEntity<>(graphQlApiException.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(UniqueConstraintException.class)
+    public ResponseEntity<String> uniqueConstraintException(UniqueConstraintException uniqueConstraintException){
+        log.error(uniqueConstraintException.getMessage());
+        return new ResponseEntity<>(uniqueConstraintException.getMessage(),HttpStatus.BAD_REQUEST);
     }
 }

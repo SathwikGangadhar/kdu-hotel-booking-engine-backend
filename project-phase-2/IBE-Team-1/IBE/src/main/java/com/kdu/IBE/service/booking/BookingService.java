@@ -1,20 +1,15 @@
 package com.kdu.IBE.service.booking;
 
 import com.kdu.IBE.constants.SenderEmail;
-import com.kdu.IBE.entity.Booking;
-import com.kdu.IBE.entity.BookingDetails;
-import com.kdu.IBE.entity.BookingUserDetails;
-import com.kdu.IBE.exception.BookingDetailsNotValidException;
+import com.kdu.IBE.entity.*;
 import com.kdu.IBE.exception.BookingIdDoesNotExistException;
 import com.kdu.IBE.exception.RoomsNotFoundException;
 import com.kdu.IBE.model.requestDto.BookingModel;
 import com.kdu.IBE.model.requestDto.BookingResponse;
+import com.kdu.IBE.model.requestDto.NotifyUserRequestDto;
 import com.kdu.IBE.model.responseDto.BookingUserInfoResponse;
 import com.kdu.IBE.model.responseDto.RoomBookedModel;
-import com.kdu.IBE.repository.BookingDetailsRepository;
-import com.kdu.IBE.repository.BookingRepository;
-import com.kdu.IBE.repository.BookingUserInfoRepository;
-import com.kdu.IBE.repository.RoomAvailabilityRepository;
+import com.kdu.IBE.repository.*;
 import com.kdu.IBE.service.sesService.SesService;
 import com.kdu.IBE.utils.BookingUtils;
 import com.kdu.IBE.utils.DateConverter;
@@ -53,22 +48,19 @@ public class BookingService implements IBookingService {
     @Autowired
     private SesService sesService;
 
+    @Autowired
+    private NotifyUserRepository notifyUserRepository;
+    @Autowired
+    private RoomTypeRepository roomTypeRepository;
 
     @Transactional
     public ResponseEntity<BookingResponse> bookRoom(BookingModel bookingModel, BindingResult result) {
         if (result.hasErrors()) {
             throw new ObjectNotFoundException("Request Body passed is invalid", "Invalid");
         }
-
         /**
          * Applying validation on booking details
          */
-
-        boolean isBookingDetailsValid = bookingUtils.validateBookingDetails(bookingModel);
-        if (isBookingDetailsValid) {
-//            throw new BookingDetailsNotValidException("Booking details given is not valid");
-        }
-
         Booking booking = new Booking();
         bookingRepository.save(booking);
         bookingModel.getUserInfoModel().setBookingId(booking.getBookingId());
@@ -90,6 +82,7 @@ public class BookingService implements IBookingService {
         if (numberOfDataReceived != numberOfDataRequired) {
             throw new RoomsNotFoundException("Oops there are no rooms present for now try again");
         }
+
         Collection<Long> availabilityIdList = new ArrayList<>();
         List<RoomBookedModel> roomBookedList = new ArrayList<>();
         Map<Long, Boolean> isRoomPresentCheckMap = new HashMap<>();
@@ -206,9 +199,21 @@ public class BookingService implements IBookingService {
         sesService.sendBookingEmail(SenderEmail.SENDER_EMAIL, recipient, image, bookingId, roomType, startDate, endDate);
         return new ResponseEntity<>("Email sent successfully", HttpStatus.OK);
     }
+
+    public ResponseEntity<String> putNotifyUser(NotifyUserRequestDto notifyUserRequestDto, BindingResult result) {
+        if (result.hasErrors()) {
+            throw new ObjectNotFoundException("Request body passes is invalid", "Invalid");
+        }
+        String startDateValue = notifyUserRequestDto.getStartDate().substring(0, 10);
+        LocalDate startDate = dateConverter.convertStringToDate(startDateValue);
+        RoomType roomType = roomTypeRepository.findById(notifyUserRequestDto.getRoomTypeId())
+                .orElseThrow(() -> new ObjectNotFoundException("Room Id given is invalid", "Exception"));
+        NotifyUser notifyUser = NotifyUser.builder()
+                .userEmail(notifyUserRequestDto.getUserEmail())
+                .startDate(startDate)
+                .roomTypeId(roomType)
+                .build();
+        notifyUserRepository.save(notifyUser);
+        return new ResponseEntity<>("notify user details stored successfully", HttpStatus.OK);
+    }
 }
-
-
-
-
-

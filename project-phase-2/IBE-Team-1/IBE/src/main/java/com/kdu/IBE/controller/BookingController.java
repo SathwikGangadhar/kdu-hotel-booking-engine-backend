@@ -4,12 +4,15 @@ import com.kdu.IBE.constants.EndPointConstants;
 import com.kdu.IBE.exception.BookingIdDoesNotExistException;
 import com.kdu.IBE.model.requestDto.BookingModel;
 import com.kdu.IBE.model.requestDto.BookingResponse;
+import com.kdu.IBE.model.requestDto.NotifyUserRequestDto;
 import com.kdu.IBE.model.responseDto.BookingUserInfoResponse;
 import com.kdu.IBE.service.booking.IBookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -31,4 +34,12 @@ public class BookingController {
         String bookingId,@RequestParam(name = "room_type") String roomType,@RequestParam(name = "start_date") String startDate,@RequestParam(name = "end_date") String endDate){
         return bookingService.sendBookingEmail(recipient,image,bookingId,roomType,startDate,endDate);
         }
+     @PostMapping("/put/user/notify")
+    ResponseEntity<String> putUserNotify(@Valid @RequestBody NotifyUserRequestDto notifyUserRequestDto,BindingResult result){
+        return bookingService.putNotifyUser(notifyUserRequestDto,result);
+     }
+
+
+
+
 }
