@@ -32,15 +32,14 @@ public class BookingController {
         return bookingService.getBookingUserInfo(bookingId);
     }
 
-    @GetMapping(EndPointConstants.SEND_BOOKING_EMAIL)
-    ResponseEntity<String> sendBookingEmail(@RequestParam(name = "recipient") String recipient, @RequestParam(name = "image") String image, @RequestParam(name = "booking_id")
-    String bookingId, @RequestParam(name = "room_type") String roomType, @RequestParam(name = "start_date") String startDate, @RequestParam(name = "end_date") String endDate) {
-        return bookingService.sendBookingEmail(recipient, image, bookingId, roomType, startDate, endDate);
+    @GetMapping("/send/booking/email")
+    ResponseEntity<String> sendBookingEmail(@RequestParam(name = "recipient") String recipient,@RequestParam(name = "image") String image,@RequestParam(name = "booking_id")
+    String bookingId,@RequestParam(name = "room_type") String roomType,@RequestParam(name = "start_date") String startDate,@RequestParam(name = "end_date") String endDate){
+        return bookingService.sendBookingEmail(recipient,image,bookingId,roomType,startDate,endDate);
     }
-
-    @PostMapping(EndPointConstants.PUT_USER_NOTIFY)
-    ResponseEntity<String> putUserNotify(@Valid @RequestBody NotifyUserRequestDto notifyUserRequestDto, BindingResult result) {
-        return bookingService.putNotifyUser(notifyUserRequestDto, result);
+    @PostMapping("/put/user/notify")
+    ResponseEntity<String> putUserNotify(@Valid @RequestBody NotifyUserRequestDto notifyUserRequestDto,BindingResult result){
+        return bookingService.putNotifyUser(notifyUserRequestDto,result);
     }
 
 
