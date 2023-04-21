@@ -61,7 +61,6 @@ public class RoomService implements IRoomService{
             requestBody.put("query",
             roomServiceUtils.getAvailableRoomDetailsQuery(startDate ,endDate,propertyId,skipValue)
             );
-
             skipValue+=1000000;
             jsonNode=graphQlWebClient.getGraphQlResponse(requestBody);
             JsonNode availableRoomsList=jsonNode.get("data").get("listRoomAvailabilities");
@@ -174,7 +173,9 @@ public class RoomService implements IRoomService{
          * getting the graphql response
          */
         JsonNode jsonNode=graphQlWebClient.getGraphQlResponse(requestBody);
+
         JsonNode roomRateArray=jsonNode.get("data").get("listRoomRateRoomTypeMappings");
+
 
         /**
          * calculating subtotal and parsing the room rate list

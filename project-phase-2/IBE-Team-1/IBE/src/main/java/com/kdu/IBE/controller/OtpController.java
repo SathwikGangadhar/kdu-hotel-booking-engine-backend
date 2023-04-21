@@ -28,8 +28,8 @@ public class OtpController {
         return otpService.putOtpForLoggedInUser(bookingId);
     }
 
-    @GetMapping("/notify/email")
-    ResponseEntity<List<String>> geNotifyEmail(@RequestParam(name = "room_type_id") Long roomTypeId, @RequestParam(name = "start_date") String startDate) throws IOException {
-        return otpService.notifyUser(startDate,roomTypeId);
-    }
+//    @GetMapping("/notify/email")
+//    ResponseEntity<List<String>> geNotifyEmail(@RequestParam(name = "room_type_id") Long roomTypeId, @RequestParam(name = "start_date") String startDate,@RequestParam(name = "end_date") String endDate) throws IOException {
+//        return otpService.notifyUser(startDate,endDate,roomTypeId);
+//    }
 }
