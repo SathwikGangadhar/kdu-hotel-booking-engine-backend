@@ -27,9 +27,9 @@ public class EndPointConstants {
     public static final String REFERRAL_REQUEST_MAPPING="/referral";
     public static final String PUT_REFERRAL="/put/referral-code";
     public static final String MY_BOOKINGS="/my-bookings";
-    public static final String GET_MY_BOOKINGS="/get";
-    public static final String GET_MY_CANCELED_BOOKING="get/canceled-booking";
-    public static final String GET_BOOKING_USER_DETAILS="get/booking/user/details";
+    public static final String GET_MY_BOOKINGS="/get-confirmed-bookings";
+    public static final String GET_MY_CANCELED_BOOKING="/get-canceled-bookings";
+    public static final String GET_BOOKING_USER_DETAILS="/get/booking/user/details";
     public static final String SEND_BOOKING_EMAIL="/send/booking/email";
     public static final String PUT_USER_NOTIFY="/put/user/notify";
 }
