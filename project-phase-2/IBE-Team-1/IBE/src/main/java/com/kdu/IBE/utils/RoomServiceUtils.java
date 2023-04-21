@@ -93,7 +93,7 @@ public class RoomServiceUtils {
         long daysBetween = ChronoUnit.DAYS.between(startDateForCount, endDateForCount) + 1;
         String take = Long.toString(daysBetween);
         return "query MyQuery2 {\n" +
-                "  listRoomRateRoomTypeMappings(where: {room_rate: {date: {gte: \"" + startDate + "\", lte: \"" + endDate + "\"}}, room_type: {room_type_id: {equals: " + roomType.toString() + "}}}, skip: 0, take: " + take + ") {\n" +
+                "  listRoomRateRoomTypeMappings(where: {room_rate: {date: {gte: \"" + startDate +"T00:00:00.000Z"+ "\", lte: \"" + endDate +"T00:00:00.000Z"+ "\"}}, room_type: {room_type_id: {equals: " + roomType.toString() + "}}}, skip: 0, take: " + take + ") {\n" +
                 "    room_rate {\n" +
                 "      basic_nightly_rate\n" +
                 "      date\n" +
@@ -146,6 +146,7 @@ public class RoomServiceUtils {
      * @param roomRateList
      * @param roomTypeRateMap
      */
+
     public void roomRateMapSetter(JsonNode roomRateList, HashMap<Integer, Double> roomTypeRateMap) {
 
         for (JsonNode roomRate : roomRateList) {

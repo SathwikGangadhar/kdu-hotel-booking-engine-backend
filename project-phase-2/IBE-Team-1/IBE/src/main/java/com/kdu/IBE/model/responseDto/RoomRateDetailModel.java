@@ -11,7 +11,7 @@ public class RoomRateDetailModel {
     private double subTotal;
     private double taxesAndSurchargesAmount;
     private double vatAmount;
-    private double grandTotal;
+    private Double grandTotal;
     private double dueNow;
     private double dueAtResort;
 }
