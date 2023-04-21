@@ -17,4 +17,7 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long bookingId;
+
+    @Column(columnDefinition = "boolean default true")
+    private Boolean isActive;
 }

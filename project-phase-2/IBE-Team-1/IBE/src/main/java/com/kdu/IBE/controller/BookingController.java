@@ -21,25 +21,27 @@ import javax.validation.Valid;
 public class BookingController {
     @Autowired
     private IBookingService bookingService;
+
     @PostMapping(EndPointConstants.GET_BOOKING)
-    ResponseEntity<BookingResponse> getBooking(@Valid @RequestBody BookingModel bookingModel, BindingResult result){
-      return bookingService.bookRoom(bookingModel,result);
+    ResponseEntity<BookingResponse> getBooking(@Valid @RequestBody BookingModel bookingModel, BindingResult result) {
+        return bookingService.bookRoom(bookingModel, result);
     }
-    @GetMapping("get/booking/user/details")
-    ResponseEntity<BookingUserInfoResponse> getBookingUserDetails(@RequestParam(name="booking_id") String bookingId) throws BookingIdDoesNotExistException {
+
+    @GetMapping(EndPointConstants.GET_BOOKING_USER_DETAILS)
+    ResponseEntity<BookingUserInfoResponse> getBookingUserDetails(@RequestParam(name = "booking_id") String bookingId) throws BookingIdDoesNotExistException {
         return bookingService.getBookingUserInfo(bookingId);
     }
-     @GetMapping("/send/booking/email")
-    ResponseEntity<String> sendBookingEmail(@RequestParam(name = "recipient") String recipient,@RequestParam(name = "image") String image,@RequestParam(name = "booking_id")
-        String bookingId,@RequestParam(name = "room_type") String roomType,@RequestParam(name = "start_date") String startDate,@RequestParam(name = "end_date") String endDate){
-        return bookingService.sendBookingEmail(recipient,image,bookingId,roomType,startDate,endDate);
-        }
-     @PostMapping("/put/user/notify")
-    ResponseEntity<String> putUserNotify(@Valid @RequestBody NotifyUserRequestDto notifyUserRequestDto,BindingResult result){
-        return bookingService.putNotifyUser(notifyUserRequestDto,result);
-     }
 
+    @GetMapping(EndPointConstants.SEND_BOOKING_EMAIL)
+    ResponseEntity<String> sendBookingEmail(@RequestParam(name = "recipient") String recipient, @RequestParam(name = "image") String image, @RequestParam(name = "booking_id")
+    String bookingId, @RequestParam(name = "room_type") String roomType, @RequestParam(name = "start_date") String startDate, @RequestParam(name = "end_date") String endDate) {
+        return bookingService.sendBookingEmail(recipient, image, bookingId, roomType, startDate, endDate);
+    }
 
+    @PostMapping(EndPointConstants.PUT_USER_NOTIFY)
+    ResponseEntity<String> putUserNotify(@Valid @RequestBody NotifyUserRequestDto notifyUserRequestDto, BindingResult result) {
+        return bookingService.putNotifyUser(notifyUserRequestDto, result);
+    }
 
 
 }

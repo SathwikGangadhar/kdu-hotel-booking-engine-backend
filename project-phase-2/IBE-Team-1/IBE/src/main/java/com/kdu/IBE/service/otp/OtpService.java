@@ -91,7 +91,8 @@ public class OtpService implements IOtpService{
      */
     public void deleteBooking(Long bookingIdValue){
         roomAvailabilityRepository.updateBookingIdByBookingIdEquals(0l,bookingIdValue);
-        bookingRepository.deleteByBookingIdEquals(bookingIdValue);
+
+        bookingRepository.updateIsActiveByBookingId(false,bookingIdValue);
     }
     public ResponseEntity<List<String>> notifyUser(String startDate,Long roomTypeId) throws IOException {
        List<String> notifyEmailList =notifyUserRepository.getEmailsToNotifyUser(startDate,roomTypeId);
