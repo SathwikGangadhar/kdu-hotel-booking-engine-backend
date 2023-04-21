@@ -29,7 +29,7 @@ public class SecretCredentialsService implements ISecretCredentials{
         // Create a Secrets Manager client
         SecretsManagerClient client = SecretsManagerClient.builder()
                 .region(region)
-              .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
+//                .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
                 .build();
 
         GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
