@@ -58,6 +58,13 @@ public class BookingService implements IBookingService {
         if (result.hasErrors()) {
             throw new ObjectNotFoundException("Request Body passed is invalid", "Invalid");
         }
+        boolean isBookingValid=bookingUtils.validateBookingDetails(bookingModel);
+        if(!isBookingValid){
+            /**
+             * need to change the exception
+             */
+            throw new RoomsNotFoundException("Mismatch of values in the request body");
+        }
         /**
          * Applying validation on booking details
          */
@@ -119,6 +126,7 @@ public class BookingService implements IBookingService {
      * @return
      * @throws BookingIdDoesNotExistException
      */
+
 
     public ResponseEntity<BookingUserInfoResponse> getBookingUserInfo(String bookingId) throws BookingIdDoesNotExistException {
         Long bookingIdValue = Long.parseLong(bookingId);

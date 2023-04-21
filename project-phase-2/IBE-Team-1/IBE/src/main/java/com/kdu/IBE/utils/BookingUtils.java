@@ -34,7 +34,7 @@ public class BookingUtils {
     private RoomTypeRepository roomTypeRepository;
     @Autowired
     private BookingDetailsRepository bookingDetailsRepository;
-
+    @Autowired
     private RoomService roomService;
 
     /**
@@ -121,12 +121,9 @@ public class BookingUtils {
      */
     public boolean validateBookingDetails(BookingModel bookingDetailsModel){
         RoomRateDetailModel roomRateDetailModel= roomService.getRoomRatePerDate(bookingDetailsModel.getBookingDetailsModel().getRoomTypeId(), bookingDetailsModel.getBookingDetailsModel().getStartDate(), bookingDetailsModel.getBookingDetailsModel().getEndDate(), bookingDetailsModel.getBookingDetailsModel().getTax(), bookingDetailsModel.getBookingDetailsModel().getSurcharges(), bookingDetailsModel.getBookingDetailsModel().getVat(),bookingDetailsModel.getBookingDetailsModel().getDueNow(), bookingDetailsModel.getBookingDetailsModel().getNumberOfRooms()).getBody();
-        if(bookingDetailsModel.getBookingDetailsModel().getTotalAmount()==roomRateDetailModel.getGrandTotal()){
+        if(bookingDetailsModel.getBookingDetailsModel().getTotalAmount().intValue() ==roomRateDetailModel.getGrandTotal().intValue()){
             return true;
         }
         return false;
     }
 }
-
-
-
