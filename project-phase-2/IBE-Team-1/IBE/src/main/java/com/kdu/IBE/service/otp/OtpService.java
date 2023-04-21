@@ -94,17 +94,17 @@ public class OtpService implements IOtpService{
 
         bookingRepository.updateIsActiveByBookingId(false,bookingIdValue);
     }
-    public ResponseEntity<List<String>> notifyUser(String startDate,Long roomTypeId) throws IOException {
-       List<String> notifyEmailList =notifyUserRepository.getEmailsToNotifyUser(startDate,roomTypeId);
-        String senderEmail=SenderEmail.SENDER_EMAIL;
-
-        /**
-         * threading has to be implemented
-         */
-        for(String email:notifyEmailList){
-            sesService.sesMessageSender(senderEmail,email,roomTypeId.toString());
-        }
-
-        return new ResponseEntity<>(notifyEmailList,HttpStatus.OK);
-    }
+//    public ResponseEntity<List<String>> notifyUser(String startDate,Long roomTypeId) throws IOException {
+//       List<String> notifyEmailList =notifyUserRepository.getEmailsToNotifyUser(startDate,roomTypeId);
+//        String senderEmail=SenderEmail.SENDER_EMAIL;
+//
+//        /**
+//         * threading has to be implemented
+//         */
+//        for(String email:notifyEmailList){
+//            sesService.sesMessageSender(senderEmail,email,roomTypeId.toString());
+//        }
+//
+//        return new ResponseEntity<>(notifyEmailList,HttpStatus.OK);
+//    }
 }
