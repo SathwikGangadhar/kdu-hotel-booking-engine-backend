@@ -46,7 +46,7 @@ public class TenantController {
 
     @GetMapping(EndPointConstants.GET_ROOM_RATE_PER_DATE)
     ResponseEntity<RoomRateDetailModel> getRoomRatePerDate(@RequestParam(name="room_type_id") Long roomTypeId, @RequestParam(name="start_date") String startDate , @RequestParam(name="end_date") String endDate , @RequestParam(name="tax") Double tax , @RequestParam(name="surcharges") Double surcharges, @RequestParam(name = "vat") Double vat, @RequestParam(name="due_now") Double dueNow, @RequestParam(name="number_of_rooms") Integer numberOfRooms){
-        return roomService.getRoomRatePerDate(roomTypeId,startDate,endDate,tax,surcharges,vat,dueNow,numberOfRooms);
+        return roomService.getRoomRatePerDate(roomTypeId,startDate.substring(0,10),endDate.substring(0,10),tax,surcharges,vat,dueNow,numberOfRooms);
     }
     @GetMapping(EndPointConstants.GET_PROMOTION_DEALS)
     ResponseEntity<List<PromotionDealModel>> getPromotionDeals(@RequestParam(name="start_date") String startDate, @RequestParam(name="end_date") String endDate){
