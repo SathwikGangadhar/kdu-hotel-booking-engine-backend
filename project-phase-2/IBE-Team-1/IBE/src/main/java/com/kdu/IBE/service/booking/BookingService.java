@@ -130,6 +130,16 @@ public class BookingService implements IBookingService {
 
     public ResponseEntity<BookingUserInfoResponse> getBookingUserInfo(String bookingId) throws BookingIdDoesNotExistException {
         Long bookingIdValue = Long.parseLong(bookingId);
+        /**
+         * to check whether the booking is active or not
+         */
+
+        Boolean isBookingIdActive=bookingRepository.findByBookingId(bookingIdValue);
+
+        if(isBookingIdActive==false){
+            throw new BookingIdDoesNotExistException("The booking id given is not present in the database");
+        }
+
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         final BookingUserDetails[] bookingUserDetails = {new BookingUserDetails()};
         final BookingDetails[] bookingDetails = {new BookingDetails()};

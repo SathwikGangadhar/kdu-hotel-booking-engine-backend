@@ -13,13 +13,10 @@ import java.util.List;
 public interface BookingUserInfoRepository extends JpaRepository<BookingUserDetails,Long> {
     @Query("select b.travellerEmail,b.roomTypeId from BookingUserDetails b where b.bookingId.bookingId in ?1")
     List<List<String>>  findByBookingIdIn(Collection<Long> bookingIds);
-
     @Query("select b from BookingUserDetails b where b.bookingId.bookingId = ?1")
     BookingUserDetails findByBookingIdEquals(Long bookingId);
-
-
-
-
+    @Query("select b.bookingId.bookingId from BookingUserDetails b where b.billingEmail = ?1 and b.bookingId.isActive=?2")
+    List<Long> findByBillingEmailEquals(String billingEmail,Boolean isActive);
 
 
 

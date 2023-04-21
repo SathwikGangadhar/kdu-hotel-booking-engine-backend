@@ -14,4 +14,15 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
     @Query("delete from Booking b where b.bookingId = ?1")
     int deleteByBookingIdEquals(Long bookingId);
 
+    @Query("select b.isActive from Booking b where b.bookingId = ?1")
+    Boolean findByBookingId(Long bookingId);
+
+    @Transactional
+    @Modifying
+    @Query("update Booking b set b.isActive = ?1 where b.bookingId = ?2")
+    int updateIsActiveByBookingId(Boolean isActive, Long bookingId);
+
+
+
+
 }
