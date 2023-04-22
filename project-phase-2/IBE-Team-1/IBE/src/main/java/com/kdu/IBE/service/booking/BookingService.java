@@ -68,7 +68,9 @@ public class BookingService implements IBookingService {
         /**
          * Applying validation on booking details
          */
-        Booking booking = new Booking();
+        Booking booking =Booking.builder()
+                .isActive(true)
+                .build();
         bookingRepository.save(booking);
         bookingModel.getUserInfoModel().setBookingId(booking.getBookingId());
         String startDateValue = bookingModel.getBookingDetailsModel().getStartDate().substring(0, 10);
