@@ -9,5 +9,6 @@ public interface IOtpService {
     public ResponseEntity<String> setOtp(String bookingId,String receiverEmail);
     public ResponseEntity<String> putOtp(String otp,String bookingId);
     public ResponseEntity<String> putOtpForLoggedInUser(String bookingId);
+    public void notifyUser(String startDate, String endDate, Long roomTypeId, String userEmail) throws IOException ;
 
     }
