@@ -7,6 +7,7 @@ import com.kdu.IBE.entity.RoomType;
 import com.kdu.IBE.model.requestDto.BookingDetailsModel;
 import com.kdu.IBE.model.requestDto.BookingModel;
 import com.kdu.IBE.model.requestDto.UserInfoModel;
+import com.kdu.IBE.model.responseDto.RoomBookedModel;
 import com.kdu.IBE.model.responseDto.RoomRateDetailModel;
 import com.kdu.IBE.repository.BookingDetailsRepository;
 import com.kdu.IBE.repository.BookingRepository;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 @Component
 public class BookingUtils {
@@ -78,6 +81,33 @@ public class BookingUtils {
 
     }
 
+    /**
+     * @param bookingModel
+     * @return
+     */
+    public long getDaysBetween(BookingModel bookingModel){
+        /**
+         * calculating number of days between
+         */
+        String startDateValue = bookingModel.getBookingDetailsModel().getStartDate().substring(0, 10);
+        String endDateValue = bookingModel.getBookingDetailsModel().getEndDate().substring(0, 10);
+        LocalDate startDateForCount = dateConverter.convertStringToDate(startDateValue);
+        LocalDate endDateForCount = dateConverter.convertStringToDate(endDateValue);
+        long daysBetween = ChronoUnit.DAYS.between(startDateForCount, endDateForCount) + 1;
+        return daysBetween;
+    }
+    public  void getDataForUpdateAvailabilityTable(Collection<Long> availabilityIdList,List<RoomBookedModel> roomBookedList, Map<Long, Boolean> isRoomPresentCheckMap , List<List<Object>> roomAvailabilityResults){
+        for (List<Object> value : roomAvailabilityResults) {
+            availabilityIdList.add(Long.parseLong(value.get(0).toString()));
+            if (isRoomPresentCheckMap.get(Long.parseLong(value.get(1).toString())) == null) {
+                RoomBookedModel roomBookedModel = RoomBookedModel.builder()
+                        .roomNumber(Long.parseLong(value.get(1).toString()))
+                        .build();
+                roomBookedList.add(roomBookedModel);
+                isRoomPresentCheckMap.put(Long.parseLong(value.get(1).toString()), true);
+            }
+        }
+    }
 
     /**
      * @param bookingDetailsModel

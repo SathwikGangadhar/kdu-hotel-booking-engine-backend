@@ -60,9 +60,7 @@ public class BookingService implements IBookingService {
         }
         boolean isBookingValid=bookingUtils.validateBookingDetails(bookingModel);
         if(!isBookingValid){
-            /**
-             * need to change the exception
-             */
+
             throw new RoomsNotFoundException("Mismatch of values in the request body");
         }
         /**
@@ -73,13 +71,16 @@ public class BookingService implements IBookingService {
                 .build();
         bookingRepository.save(booking);
         bookingModel.getUserInfoModel().setBookingId(booking.getBookingId());
-        String startDateValue = bookingModel.getBookingDetailsModel().getStartDate().substring(0, 10);
-        String endDateValue = bookingModel.getBookingDetailsModel().getEndDate().substring(0, 10);
-        LocalDate startDateForCount = dateConverter.convertStringToDate(startDateValue);
-        LocalDate endDateForCount = dateConverter.convertStringToDate(endDateValue);
-        long daysBetween = ChronoUnit.DAYS.between(startDateForCount, endDateForCount) + 1;
+
+        /**
+         * getting the number of days between
+         */
+        long daysBetween = bookingUtils.getDaysBetween(bookingModel);
 
         long numberOfDataRequired = daysBetween * bookingModel.getBookingDetailsModel().getNumberOfRooms();
+
+        String startDateValue = bookingModel.getBookingDetailsModel().getStartDate().substring(0, 10);
+        String endDateValue = bookingModel.getBookingDetailsModel().getEndDate().substring(0, 10);
 
         List<List<Object>> roomAvailabilityResults = roomAvailabilityRepository.getRoomAvailabilityResult(bookingModel.getBookingDetailsModel().getRoomTypeId(), startDateValue, endDateValue, numberOfDataRequired);
 
@@ -95,17 +96,14 @@ public class BookingService implements IBookingService {
         Collection<Long> availabilityIdList = new ArrayList<>();
         List<RoomBookedModel> roomBookedList = new ArrayList<>();
         Map<Long, Boolean> isRoomPresentCheckMap = new HashMap<>();
-        for (List<Object> value : roomAvailabilityResults) {
-            availabilityIdList.add(Long.parseLong(value.get(0).toString()));
-            if (isRoomPresentCheckMap.get(Long.parseLong(value.get(1).toString())) == null) {
-                RoomBookedModel roomBookedModel = RoomBookedModel.builder()
-                        .roomNumber(Long.parseLong(value.get(1).toString()))
-                        .build();
-                roomBookedList.add(roomBookedModel);
-                isRoomPresentCheckMap.put(Long.parseLong(value.get(1).toString()), true);
-            }
-        }
+
+        /**
+         * getting the data of availabilityIdList
+         */
+        bookingUtils.getDataForUpdateAvailabilityTable(availabilityIdList,roomBookedList,isRoomPresentCheckMap,roomAvailabilityResults);
+
         int updatedNumberOfRows = roomAvailabilityRepository.updateBookingIdByAvailabilityIdIn(booking.getBookingId(), availabilityIdList);
+
         if (updatedNumberOfRows != availabilityIdList.size()) {
             throw new RoomsNotFoundException("Oops there are no rooms present for now try again");
         }

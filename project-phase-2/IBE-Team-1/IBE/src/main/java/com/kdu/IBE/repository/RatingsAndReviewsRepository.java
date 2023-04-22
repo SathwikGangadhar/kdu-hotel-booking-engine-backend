@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.List;
 
 @Repository
 public interface RatingsAndReviewsRepository extends JpaRepository<RatingsAndReviews, Long> {
@@ -29,4 +30,13 @@ public interface RatingsAndReviewsRepository extends JpaRepository<RatingsAndRev
 
     @Override
     boolean existsById(Long aLong);
+
+    @Query(value = "select room_type_id as roomTypeId, count(id) as count , avg(ratings) as averageRating from ratings_and_reviews rar where ratings >0 group by room_type_id having rar.room_type_id in ?1",nativeQuery = true)
+    List<Map<String, Object>> getCountAndAverageRatingListByRoomTypeId(List<Long> roomTypeIdList);
+
+    /**
+     * getting the average ratings in list
+     */
+
+
 }
