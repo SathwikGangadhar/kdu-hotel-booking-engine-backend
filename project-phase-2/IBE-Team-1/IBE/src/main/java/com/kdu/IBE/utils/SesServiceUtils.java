@@ -21,13 +21,26 @@ public class SesServiceUtils {
      * @param ratingsAndReviewsId
      * @return
      */
-    public String getBodyHtml(String ratingsAndReviewsId){
+    public String getBodyHtml(String ratingsAndReviewsId,String bookingId){
         String url = "https://d7ohsf89hdgnd.cloudfront.net/feedback?id=" + ratingsAndReviewsId;
         return " <html>\n"+
                 " <head></head>\n"+
                 " <body>\n"+
                 " <h1>Hello!</h1>\n"+
-                " <p>The room that you searched is now available</p>\n"+
+                " <p>Please click on this link to submit the review</p>\n"+
+                " <p><a href=https://d7ohsf89hdgnd.cloudfront.net/feedback?id="+ratingsAndReviewsId+"&bookingId="+bookingId+">https://d7ohsf89hdgnd.cloudfront.net/feedback?id="+ratingsAndReviewsId+"</a></p>\n"+
+                " </body>\n"+
+                "</html>";
+    }
+
+
+    public String availableBookingNotifyBody(String roomTypeId){
+        return " <html>\n"+
+                " <head></head>\n"+
+                " <body>\n"+
+                " <h1>Hello!</h1>\n"+
+                " <p>Rooms are available now</p>\n"+
+                " <p>"+roomTypeId+" room is now available</p>\n"+
                 " </body>\n"+
                 "</html>";
     }

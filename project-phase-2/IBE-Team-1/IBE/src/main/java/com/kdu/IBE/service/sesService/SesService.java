@@ -22,7 +22,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 @Slf4j
 @Service
-public class SesService {
+public class SesService implements ISesService{
     @Value("${aws.profile}")
     private String awsProfileName;
     @Value("${region}")
@@ -38,7 +38,7 @@ public class SesService {
      * @param ratingsAndReviewsId
      * @throws IOException
      */
-    public void sesMessageSender(String sender, String recipient, String ratingsAndReviewsId) throws IOException {
+    public void sesMessageSender(String sender, String recipient, String ratingsAndReviewsId,String bookingId) throws IOException {
 
         final String usage = sesServiceUtils.getUsage();
         String subject = "Please submit this review";
@@ -48,7 +48,7 @@ public class SesService {
         String bodyText = "Hello,\r\n" + "See the list below message. ";
 
         // The HTML body of the email.
-        String bodyHTML = sesServiceUtils.getBodyHtml(ratingsAndReviewsId);
+        String bodyHTML = sesServiceUtils.getBodyHtml(ratingsAndReviewsId,bookingId);
         this.client = SesClient.builder()
                 .region(region)
 //                .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
@@ -73,7 +73,7 @@ public class SesService {
         String bodyText = "Hello,\r\n" + "See the list below message. ";
 
         // The HTML body of the email.
-        String bodyHTML = sesServiceUtils.getBodyHtml(roomTypeId);
+        String bodyHTML = sesServiceUtils.availableBookingNotifyBody(roomTypeId);
         this.client = SesClient.builder()
                 .region(region)
 //                .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))

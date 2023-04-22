@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(EndPointConstants.RATINGS_AND_REVIEWS_MAPPING)
@@ -17,8 +18,8 @@ public class ReviewsAndRatingsController {
     private IRatingsAndReviewsService ratingsAndReviewsService;
 
     @GetMapping(EndPointConstants.SEND_REVIEW_DEALS)
-    public ResponseEntity<String> sendEmail(@RequestParam(name = "receiver_email") String receiverEmail, @RequestParam(name = "room_type_id") String roomTypeId) {
-        return ratingsAndReviewsService.sendEmail(receiverEmail.toString(), roomTypeId);
+    public ResponseEntity<String> sendEmail(@RequestParam(name = "receiver_email") String receiverEmail, @RequestParam(name = "room_type_id") String roomTypeId,@RequestParam(name = "booking_id") String bookingId) {
+        return ratingsAndReviewsService.sendEmail(receiverEmail.toString(), roomTypeId,bookingId);
     }
 
     @GetMapping(EndPointConstants.IS_RATING_VALID)
@@ -37,5 +38,10 @@ public class ReviewsAndRatingsController {
     @GetMapping("/send/mail/to")
     public ResponseEntity<?> sendMailTo(){
         return ratingsAndReviewsService.sendMailCheckedOutGuest();
+    }
+
+    @PostMapping ("/get/ratings-and-review-list")
+    public ResponseEntity<?> getRatingsAndReviewList(@Valid @RequestBody List<Long> roomTypeIdList,BindingResult result){
+        return ratingsAndReviewsService.getRatingAndReviewList(roomTypeIdList);
     }
 }

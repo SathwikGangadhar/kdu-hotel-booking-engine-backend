@@ -51,7 +51,7 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
      * @param roomTypeId
      * @return
      */
-    public ResponseEntity<String> sendEmail(String receiverEmail, String roomTypeId) {
+    public ResponseEntity<String> sendEmail(String receiverEmail, String roomTypeId,String bookingId) {
         /**
          * validating the email
          */
@@ -85,7 +85,7 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
 //        public void sesMessageSender(String sender,String recipient,Long ratingsAndReviewsId) throws IOException {
         String sender = "sathwik.shetty@kickdrumtech.com";
         try {
-            sesService.sesMessageSender(sender, receiverEmail, ratingAndReviewsId.toString());
+            sesService.sesMessageSender(sender, receiverEmail, ratingAndReviewsId.toString(),bookingId);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -149,6 +149,11 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
         return new ResponseEntity<RoomRatingReturnModel>(roomRatingReturnModel, HttpStatus.OK);
     }
 
+    public ResponseEntity<?> getRatingAndReviewList(List<Long> roomTypeIdList){
+        List<Map<String, Object>> roomRatingReturnModelListMap =ratingsAndReviewsRepository.getCountAndAverageRatingListByRoomTypeId(roomTypeIdList);
+        return new ResponseEntity<>(roomRatingReturnModelListMap,HttpStatus.OK);
+    }
+
     @Scheduled(cron = "0 0 12 * * ?") // runs every day at 12pm
     public ResponseEntity<?> sendMailCheckedOutGuest() {
         Map<String, Object> requestBody = new HashMap<>();
@@ -183,7 +188,7 @@ public class RatingsAndReviewsService implements IRatingsAndReviewsService {
             ExecutorService executorService = Executors.newFixedThreadPool(10000);
             for (List<String> reviewInformation : reviewSenderList) {
                 Callable<Void> task = () -> {
-                    this.sendEmail(reviewInformation.get(0), reviewInformation.get(1));
+                    this.sendEmail(reviewInformation.get(0), reviewInformation.get(1),reviewInformation.get(2));
                     return null;
                 };
                 executorService.submit(task);
