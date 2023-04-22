@@ -21,12 +21,11 @@ import javax.validation.Valid;
 public class BookingController {
     @Autowired
     private IBookingService bookingService;
-
     @PostMapping(EndPointConstants.GET_BOOKING)
     ResponseEntity<BookingResponse> getBooking(@Valid @RequestBody BookingModel bookingModel, BindingResult result) {
+        System.out.println("booking model"+bookingModel);
         return bookingService.bookRoom(bookingModel, result);
     }
-
     @GetMapping(EndPointConstants.GET_BOOKING_USER_DETAILS)
     ResponseEntity<BookingUserInfoResponse> getBookingUserDetails(@RequestParam(name = "booking_id") String bookingId) throws BookingIdDoesNotExistException {
         return bookingService.getBookingUserInfo(bookingId);
@@ -41,6 +40,4 @@ public class BookingController {
     ResponseEntity<String> putUserNotify(@Valid @RequestBody NotifyUserRequestDto notifyUserRequestDto,BindingResult result){
         return bookingService.putNotifyUser(notifyUserRequestDto,result);
     }
-
-
 }
