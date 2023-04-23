@@ -20,7 +20,6 @@ public class RepositoryQuery {
             "ORDER BY ra.room_id \n" +
             "LIMIT ?4 \n" +
             "for UPDATE SKIP LOCKED;";
-
 }
 
 

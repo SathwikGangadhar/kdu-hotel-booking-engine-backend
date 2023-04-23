@@ -53,7 +53,12 @@ public class BookingService implements IBookingService {
     @Autowired
     private RoomTypeRepository roomTypeRepository;
 
-    @Transactional
+    /**
+     * @param bookingModel
+     * @param result
+     * @return
+     */
+    @Transactional(timeoutString = "600000")
     public ResponseEntity<BookingResponse> bookRoom(BookingModel bookingModel, BindingResult result) {
         if (result.hasErrors()) {
             throw new ObjectNotFoundException("Request Body passed is invalid", "Invalid");
@@ -75,15 +80,23 @@ public class BookingService implements IBookingService {
         bookingModel.getUserInfoModel().setBookingId(booking.getBookingId());
         String startDateValue = bookingModel.getBookingDetailsModel().getStartDate().substring(0, 10);
         String endDateValue = bookingModel.getBookingDetailsModel().getEndDate().substring(0, 10);
-        LocalDate startDateForCount = dateConverter.convertStringToDate(startDateValue);
-        LocalDate endDateForCount = dateConverter.convertStringToDate(endDateValue);
-        long daysBetween = ChronoUnit.DAYS.between(startDateForCount, endDateForCount) + 1;
 
-        long numberOfDataRequired = daysBetween * bookingModel.getBookingDetailsModel().getNumberOfRooms();
+        long daysBetween = bookingUtils.getDaysBetween(bookingModel);
+
+        int numberOfRooms=bookingModel.getBookingDetailsModel().getNumberOfRooms();
+        long numberOfDataRequired = daysBetween * numberOfRooms;
+
+
+        System.out.println("nuber of required = "+numberOfDataRequired);
 
         List<List<Object>> roomAvailabilityResults = roomAvailabilityRepository.getRoomAvailabilityResult(bookingModel.getBookingDetailsModel().getRoomTypeId(), startDateValue, endDateValue, numberOfDataRequired);
 
         long numberOfDataReceived = roomAvailabilityResults.size();
+
+        System.out.println("nuber of recieved = "+numberOfDataReceived);
+        System.out.println("data recived = "+roomAvailabilityResults);
+
+
 
         /**
          * checking if the number of rooms that were required is present
@@ -92,19 +105,22 @@ public class BookingService implements IBookingService {
             throw new RoomsNotFoundException("Oops there are no rooms present for now try again");
         }
 
+
+
+
+        if(!bookingUtils.validateRoomAvailabilityResults(roomAvailabilityResults,numberOfRooms)){
+            throw new RoomsNotFoundException("Oops there are no rooms present for now try again");
+        }
+
+
         Collection<Long> availabilityIdList = new ArrayList<>();
         List<RoomBookedModel> roomBookedList = new ArrayList<>();
         Map<Long, Boolean> isRoomPresentCheckMap = new HashMap<>();
-        for (List<Object> value : roomAvailabilityResults) {
-            availabilityIdList.add(Long.parseLong(value.get(0).toString()));
-            if (isRoomPresentCheckMap.get(Long.parseLong(value.get(1).toString())) == null) {
-                RoomBookedModel roomBookedModel = RoomBookedModel.builder()
-                        .roomNumber(Long.parseLong(value.get(1).toString()))
-                        .build();
-                roomBookedList.add(roomBookedModel);
-                isRoomPresentCheckMap.put(Long.parseLong(value.get(1).toString()), true);
-            }
-        }
+
+        bookingUtils.getDataForUpdateAvailabilityTable(availabilityIdList,roomBookedList,isRoomPresentCheckMap,roomAvailabilityResults);
+
+
+
         int updatedNumberOfRows = roomAvailabilityRepository.updateBookingIdByAvailabilityIdIn(booking.getBookingId(), availabilityIdList);
         if (updatedNumberOfRows != availabilityIdList.size()) {
             throw new RoomsNotFoundException("Oops there are no rooms present for now try again");

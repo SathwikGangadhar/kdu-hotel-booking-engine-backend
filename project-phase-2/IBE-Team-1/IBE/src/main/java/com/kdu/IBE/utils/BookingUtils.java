@@ -156,4 +156,19 @@ public class BookingUtils {
         }
         return false;
     }
+
+    public boolean validateRoomAvailabilityResults(List<List<Object>> roomAvailabilityResults , int numberOfRooms ){
+        Map<Object,Integer> roomMap=new HashMap<>();
+        int numberOfRoomsInRoomAvailabilityResults=0;
+        for (List<Object> value : roomAvailabilityResults) {
+           if( roomMap.get(value.get(1))==null){
+                numberOfRoomsInRoomAvailabilityResults++;
+                roomMap.put(value.get(1),1);
+            }
+        }
+        if(numberOfRoomsInRoomAvailabilityResults==numberOfRooms){
+            return true;
+        }
+        return false;
+    }
 }

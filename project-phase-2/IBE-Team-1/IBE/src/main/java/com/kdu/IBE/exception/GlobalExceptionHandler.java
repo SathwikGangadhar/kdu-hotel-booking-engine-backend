@@ -2,10 +2,13 @@ package com.kdu.IBE.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.ObjectNotFoundException;
+import org.hibernate.TransactionException;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import software.amazon.awssdk.services.xray.model.Http;
 
 import java.sql.SQLException;
 import java.time.format.DateTimeParseException;
@@ -15,82 +18,108 @@ import java.util.zip.DataFormatException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<String> ObjectNotFoundException(ObjectNotFoundException exception){
+    public ResponseEntity<String> ObjectNotFoundException(ObjectNotFoundException exception) {
         log.error(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.OK);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> Exception(Exception exception){
-        log.error(exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
-    }
+
     @ExceptionHandler(InvalidObjectInput.class)
-    public ResponseEntity<String> invalidInput(InvalidObjectInput exception){
+    public ResponseEntity<String> invalidInput(InvalidObjectInput exception) {
         log.error(exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler(SQLException.class)
-    public ResponseEntity<String> sqlExceptionHandler(SQLException exception){
-        log.error(exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler(DateTimeParseException.class)
-    public ResponseEntity<String> dateTimeParseException(DateTimeParseException exception){
-        log.error(exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler(DataFormatException.class)
-    public ResponseEntity<String> dateFormatException(DataFormatException exception){
-        log.error(exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<String> nullPointerException(NullPointerException exception){
-        exception.printStackTrace();
-        log.error(exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> runTimeError(RuntimeException exception){
+    @ExceptionHandler(SQLException.class)
+    public ResponseEntity<String> sqlExceptionHandler(SQLException exception) {
         log.error(exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    public ResponseEntity<String> dateTimeParseException(DateTimeParseException exception) {
+        log.error(exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataFormatException.class)
+    public ResponseEntity<String> dateFormatException(DataFormatException exception) {
+        log.error(exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<String> nullPointerException(NullPointerException exception) {
+        exception.printStackTrace();
+        log.error(exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(RoomsNotFoundException.class)
-    public ResponseEntity<String> roomsNotFound(RoomsNotFoundException exception){
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> roomsNotFound(RoomsNotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(UnexpectedErrorException.class)
-    public ResponseEntity<String> unexpectedError(UnexpectedErrorException exception){
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.OK);
+    public ResponseEntity<String> unexpectedError(UnexpectedErrorException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.OK);
     }
+
     @ExceptionHandler(BookingIdDoesNotExistException.class)
-    public ResponseEntity<String> bookingIdDoesNotExistException(BookingIdDoesNotExistException exception){
-        return new ResponseEntity<>(exception.getMessage(),HttpStatus.OK);
+    public ResponseEntity<String> bookingIdDoesNotExistException(BookingIdDoesNotExistException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.OK);
     }
+
     @ExceptionHandler(EmailNotSent.class)
-    public ResponseEntity<String> emailNotSent(EmailNotSent exception){
-        return new ResponseEntity<String >(exception.getMessage(),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> emailNotSent(EmailNotSent exception) {
+        return new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(BookingDetailsNotValidException.class)
-    public ResponseEntity<String> bookingDetailsNotValid(BookingDetailsNotValidException bookingDetailsNotValidException){
+    public ResponseEntity<String> bookingDetailsNotValid(BookingDetailsNotValidException bookingDetailsNotValidException) {
         log.error(bookingDetailsNotValidException.getMessage());
         return new ResponseEntity<>(bookingDetailsNotValidException.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @Order(1)
     @ExceptionHandler(RequestTimedException.class)
-    public ResponseEntity<String> RequestTimedException(RequestTimedException requestTimedException){
+    public ResponseEntity<String> RequestTimedException(RequestTimedException requestTimedException) {
         log.error(requestTimedException.getMessage());
-        return new ResponseEntity<>(requestTimedException.getMessage(),HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Request timed out", HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(GraphQlApiException.class)
-    public ResponseEntity<String> graphQlApiException(GraphQlApiException graphQlApiException){
+    public ResponseEntity<String> graphQlApiException(GraphQlApiException graphQlApiException) {
         log.error(graphQlApiException.getMessage());
-        return new ResponseEntity<>(graphQlApiException.getMessage(),HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(graphQlApiException.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(UniqueConstraintException.class)
-    public ResponseEntity<String> uniqueConstraintException(UniqueConstraintException uniqueConstraintException){
+    public ResponseEntity<String> uniqueConstraintException(UniqueConstraintException uniqueConstraintException) {
         log.error(uniqueConstraintException.getMessage());
-        return new ResponseEntity<>(uniqueConstraintException.getMessage(),HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(uniqueConstraintException.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @Order(2)
+    @ExceptionHandler(TransactionException.class)
+    public ResponseEntity<String> transactionException(TransactionException transactionException) {
+        log.error(transactionException.getMessage());
+        return new ResponseEntity<>("Request time out", HttpStatus.BAD_REQUEST);
+    }
+
+    @Order(-1)
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> runTimeError(RuntimeException exception) {
+        log.error(exception.getMessage());
+        return new ResponseEntity<>("Error Occurred", HttpStatus.BAD_REQUEST);
+    }
+
+    @Order(-2)
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> Exception(Exception exception) {
+        log.error(exception.getMessage());
+        return new ResponseEntity<>("Error Occurred", HttpStatus.BAD_REQUEST);
     }
 }
+
+
