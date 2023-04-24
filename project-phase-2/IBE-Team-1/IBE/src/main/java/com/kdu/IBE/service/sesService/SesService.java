@@ -66,7 +66,7 @@ public class SesService implements ISesService{
 
     public void sendRoomAvailabilityNotification(String sender, String recipient, String roomTypeId) throws IOException {
         final String usage = sesServiceUtils.getUsage();
-        String subject = "Please submit this review";
+        String subject = "The Room you were searching is now available";
         Region region = Region.of(this.region);
 
         // The email body for non-HTML email clients.
