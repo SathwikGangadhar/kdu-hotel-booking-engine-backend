@@ -49,12 +49,15 @@ public class SesServiceUtils {
      * @return
      */
     public String getOtpBodyHtml(String otp){
-        String otpMessage = "Your otp is "+otp;
         return " <html>\n"+
                 " <head></head>\n"+
                 " <body>\n"+
-                " <h1>Hello!</h1>\n"+
-                " <p>"+otpMessage+"</p>\n"+
+                " <h1>Dear Customer,</h1>\n"+
+                " <p>We have received a request to cancel your booking. To proceed with cancelling your booking, please enter the following One-Time Password (OTP) on the reset password page:</p>\n"+
+                " <p>"+otp+"</p>\n"+
+                " <p>Please note that this OTP is valid for a limited time only and should be used immediately. If you did not request for cancelling of booking, please disregard this email and contact our support team immediately.\n</p>\n"+
+                " <h3>Best regards,</h3>\n"+
+                " <h3>Team 1</h3>\n"+
                 " </body>\n"+
                 "</html>";
     }
