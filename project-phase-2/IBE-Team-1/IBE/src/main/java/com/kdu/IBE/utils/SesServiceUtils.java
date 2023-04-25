@@ -70,159 +70,763 @@ public class SesServiceUtils {
      * @param endDate
      * @return
      */
-    public String getBookingEmail(String image,String bookingId,String roomType,String startDate,String endDate){
-        return "<!DOCTYPE html>" +
-                "<html>\n" +
-                "  <head>\n" +
-                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n" +
-                "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n" +
-                "    <title>Booking Confirmed</title>\n" +
-                "    <style>\n" +
-                "      /* Main styles */\n" +
-                "      body {\n" +
-                "        background-color: #f2f2f2;\n" +
-                "        font-family: Arial, sans-serif;\n" +
-                "        font-size: 16px;\n" +
-                "        line-height: 1.5;\n" +
-                "        color: #333;\n" +
-                "        margin: 0;\n" +
-                "        padding: 0;\n" +
-                "      }\n" +
-                "      p,\n" +
-                "      h1 {\n" +
-                "        margin: 0;\n" +
-                "      }\n" +
-                "\u200B\n" +
-                "      /* Container */\n" +
-                "      .container {\n" +
-                "        max-width: 600px;\n" +
-                "        margin: 0 auto;\n" +
-                "        padding: 20px;\n" +
-                "        background-color: #ffffff;\n" +
-                "        border-radius: 10px;\n" +
-                "        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);\n" +
-                "        display: flex;\n" +
-                "        flex-flow: column nowrap;\n" +
-                "        background-color: #e5e9eb;\n" +
-                "        gap: 0.5rem;\n" +
-                "      }\n" +
-                "\u200B\n" +
-                "      /* Header */\n" +
-                "      .header {\n" +
-                "        text-align: center;\n" +
-                "        margin-bottom: 20px;\n" +
-                "      }\n" +
-                "      .header h1 {\n" +
-                "        margin-top: 0;\n" +
-                "        font-size: 1.7rem;\n" +
-                "        color: #26266d;\n" +
-                "      }\n" +
-                "      .image-container {\n" +
-                "        border-radius: 5px;\n" +
-                "      }\n" +
-                "      .landing-page-image {\n" +
-                "        width: 100%;\n" +
-                "        box-shadow: 0px 4px 25px #bcbcbd;\n" +
-                "        border-radius: 8px;\n" +
-                "      }\n" +
-                "\u200B\n" +
-                "      /* Content */\n" +
-                "      .content {\n" +
-                "        margin-bottom: 20px;\n" +
-                "        display: flex;\n" +
-                "        flex-flow: column nowrap;\n" +
-                "        gap: 0.5rem;\n" +
-                "      }\n" +
-                "      .content .user-booking-data{\n" +
-                "       margin: 0.2rem auto;\n" +
-                "        display: flex;\n" +
-                "        flex-flow: column nowrap;\n" +
-                "        gap:1rem;\n" +
-                "        background-color: #9aa9b6;\n" +
-                "        border: 2px solid  #7a8691;\n" +
-                "        border-radius: 8px;\n" +
-                "        width: 100%;\n" +
-                "      }\n" +
-                "      .content .user-booking-data .type{\n" +
-                "        display: flex;\n" +
-                "        flex-flow: row nowrap;\n" +
-                "        justify-content: space-between;\n" +
-                "        gap:3rem;\n" +
-                "        color: #ffffff;\n" +
-                "        padding:0.2rem 0.5rem;\n" +
-                "      }\n" +
-                "      .visit-website {\n" +
-                "        background-color: #26266d;\n" +
-                "        padding: 0.5rem;\n" +
-                "        margin: 0 auto;\n" +
-                "        border-radius: 5px;\n" +
-                "      }\n" +
-                "      .visit-website .link {\n" +
-                "        text-decoration: none;\n" +
-                "        color: #ffffff;\n" +
-                "      }\n" +
-                "      /* Footer */\n" +
-                "      .footer {\n" +
-                "        text-align: center;\n" +
-                "        color: #999;\n" +
-                "        font-size: 14px;\n" +
-                "      }\n" +
-                "    </style>\n" +
-                "  </head>\n" +
-                "  <body>\n" +
-                "    <div class=\"container\">\n" +
-                "      <div class=\"header\">\n" +
-                "        <h1 class=\"heading-name\">Thank You for Staying With Us!</h1>\n" +
-                "      </div>\n" +
-                "      <div class=\"image-container\">\n" +
-                "        <img\n" +
-                "          src=\""+image+"\"\n" +
-                "          alt=\"Not Found!\"\n" +
-                "          class=\"landing-page-image\"\n" +
-                "        />\n" +
-                "      </div>\n" +
-                "      <div class=\"content\">\n" +
-                "        <div class=\"info\">\n" +
-                "          We are very happy that you have chosen us to serve you. We feel very\n" +
-                "          happy to provide our services to you. We tried our best in order to\n" +
-                "          make you feel comfortable like home. We hope that you will be\n" +
-                "          satisfied with our services, and choose us for the next time also.\n" +
-                "        </div>\n" +
-                "        <div class=\"user-booking-data\">\n" +
-                "          <div class=\"type\">\n" +
-                "            <p class=\"type-name\">Booking ID</p>\n" +
-                "            <p class=\"type-value\">#"+bookingId+"</p>\n" +
-                "          </div>\n" +
-                "          <div class=\"type\">\n" +
-                "            <p class=\"type-name\">Room Type</p>\n" +
-                "            <p class=\"type-value\">"+roomType+"</p>\n" +
-                "          </div>\n" +
-                "          <div class=\"type\">\n" +
-                "            <p class=\"type-name\">Check In Date</p>\n" +
-                "            <p class=\"type-value\">"+startDate+"</p>\n" +
-                "          </div>\n" +
-                "          <div class=\"type\">\n" +
-                "            <p class=\"type-name\">Check Out Date</p>\n" +
-                "            <p class=\"type-value\">"+endDate+"</p>\n" +
-                "          </div>\n" +
-                "        </div>\n" +
-                "        <button class=\"visit-website\">\n" +
-                "          <a\n" +
-                "            href=\"https://d7ohsf89hdgnd.cloudfront.net\"\n" +
-                "            target=\"_blank\"\n" +
-                "            class=\"link\"\n" +
-                "            >CLICK HERE</a\n" +
-                "          >\n" +
-                "        </button>\n" +
-                "        <p>Best regards,</p>\n" +
-                "        <p>The Team 1</p>\n" +
-                "      </div>\n" +
-                "      <div class=\"footer\">\n" +
-                "        <p>You received this email because you subscribed to our newsletter.</p>\n" +
-                "        <p>Team 1 &bull; #570/571, Kickdrum. &bull; Bengaluru, India 560098</p>\n" +
-                "      </div>\n" +
+    public String getBookingEmail(String image,String bookingId,String recipient,String roomType,String startDate,String endDate){
+        return "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional //EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
+                "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\n" +
+                "<head>\n" +
+                "<!--[if gte mso 9]>\n" +
+                "<xml>\n" +
+                "  <o:OfficeDocumentSettings>\n" +
+                "    <o:AllowPNG/>\n" +
+                "    <o:PixelsPerInch>96</o:PixelsPerInch>\n" +
+                "  </o:OfficeDocumentSettings>\n" +
+                "</xml>\n" +
+                "<![endif]-->\n" +
+                "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
+                "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "  <meta name=\"x-apple-disable-message-reformatting\">\n" +
+                "  <!--[if !mso]><!--><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><!--<![endif]-->\n" +
+                "  <title></title>\n" +
+                "  \n" +
+                "    <style type=\"text/css\">\n" +
+                "      @media only screen and (min-width: 620px) {\n" +
+                "  .u-row {\n" +
+                "    width: 600px !important;\n" +
+                "  }\n" +
+                "  .u-row .u-col {\n" +
+                "    vertical-align: top;\n" +
+                "  }\n" +
+                "\n" +
+                "  .u-row .u-col-50 {\n" +
+                "    width: 300px !important;\n" +
+                "  }\n" +
+                "\n" +
+                "  .u-row .u-col-100 {\n" +
+                "    width: 600px !important;\n" +
+                "  }\n" +
+                "\n" +
+                "}\n" +
+                "\n" +
+                "@media (max-width: 620px) {\n" +
+                "  .u-row-container {\n" +
+                "    max-width: 100% !important;\n" +
+                "    padding-left: 0px !important;\n" +
+                "    padding-right: 0px !important;\n" +
+                "  }\n" +
+                "  .u-row .u-col {\n" +
+                "    min-width: 320px !important;\n" +
+                "    max-width: 100% !important;\n" +
+                "    display: block !important;\n" +
+                "  }\n" +
+                "  .u-row {\n" +
+                "    width: 100% !important;\n" +
+                "  }\n" +
+                "  .u-col {\n" +
+                "    width: 100% !important;\n" +
+                "  }\n" +
+                "  .u-col > div {\n" +
+                "    margin: 0 auto;\n" +
+                "  }\n" +
+                "}\n" +
+                "a[x-apple-data-detectors='true'] {\n" +
+                "  color: inherit !important;\n" +
+                "  text-decoration: none !important;\n" +
+                "}\n" +
+                "\n" +
+                "</style>\n" +
+                "  \n" +
+                "  \n" +
+                "\n" +
+                "<!--[if !mso]><!--><link href=\"https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap\" rel=\"stylesheet\" type=\"text/css\"><!--<![endif]-->\n" +
+                "\n" +
+                "</head>\n" +
+                "\n" +
+                "<body class=\"clean-body u_body\" style=\"margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #333333;color: #000000\">\n" +
+                "  <!--[if IE]><div class=\"ie-container\"><![endif]-->\n" +
+                "  <!--[if mso]><div class=\"mso-container\"><![endif]-->\n" +
+                "  <table style=\"border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #333333;width:100%\" cellpadding=\"0\" cellspacing=\"0\">\n" +
+                "  <tbody>\n" +
+                "  <tr style=\"vertical-align: top\">\n" +
+                "    <td style=\"word-break: break-word;border-collapse: collapse !important;vertical-align: top\">\n" +
+                "    <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td align=\"center\" style=\"background-color: #333333;\"><![endif]-->\n" +
+                "    \n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: #ffffff;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"600\" style=\"width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-100\" style=\"max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:25px 10px 0px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
+                "  <tr>\n" +
+                "    <td style=\"padding-right: 0px;padding-left: 0px;\" align=\"center\">\n" +
+                "      \n" +
+                "<!--      <img align=\"center\" border=\"0\" src=\"https://team04-static-data.s3.ap-south-1.amazonaws.com/team04/header-logo.png\" alt=\"Logo\" title=\"Logo\" style=\"outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 10%;max-width: 10rem;\" height=\"15rem\" width=\"5rem\"/>-->\n" +
+                "      \n" +
+                "    </td>\n" +
+                "  </tr>\n" +
+                "</table>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:10px 10px 0px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "  <div style=\"color: #26266d; line-height: 100%; text-align: center; word-wrap: break-word;\">\n" +
+                "    <p style=\"font-size: 14px; line-height: 100%;\"><span style=\"font-size: 20px; line-height: 20px; font-family: georgia, palatino;\"><strong><span style=\"line-height: 20px; font-size: 20px;\">Team 1</span></strong></span></p>\n" +
+                "  </div>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
                 "    </div>\n" +
-                "  </body>\n" +
-                "</html>";
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: transparent;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"600\" style=\"width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-100\" style=\"max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
+                "  <tr>\n" +
+                "    <td style=\"padding-right: 0px;padding-left: 0px;\" align=\"center\">\n" +
+                "      \n" +
+                "      <img align=\"center\" border=\"0\" src=\"https://team04-static-data.s3.ap-south-1.amazonaws.com/team04/bannerImage.jpg\" alt=\"Hero Image\" title=\"Hero Image\" style=\"outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;\" width=\"600\"/>\n" +
+                "      \n" +
+                "    </td>\n" +
+                "  </tr>\n" +
+                "</table>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: #ffffff;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"600\" style=\"width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-100\" style=\"max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "  <div style=\"color: #212c38; line-height: 100%; text-align: center; word-wrap: break-word;\">\n" +
+                "    <p style=\"font-size: 14px; line-height: 100%;\"><span style=\"font-family: Montserrat, sans-serif; font-size: 18px; line-height: 18px;\">THANK&nbsp; YOU FOR YOUR RESERVATION</span></p>\n" +
+                "  </div>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:0px 10px 10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "  <div style=\"color: #666668; line-height: 100%; text-align: center; word-wrap: break-word;\">\n" +
+                "    <p style=\"font-size: 14px; line-height: 100%;\"><span style=\"font-family: Montserrat, sans-serif; font-size: 18px; line-height: 18px;\">WE ARE LOOKING FORWARD TO SEEING YOU!</span></p>\n" +
+                "  </div>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: transparent;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"600\" style=\"width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-100\" style=\"max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
+                "  <tr>\n" +
+                "    <td style=\"padding-right: 0px;padding-left: 0px;\" align=\"center\">\n" +
+                "      \n" +
+                "      <img align=\"center\" border=\"0\" src=\"https://team04-static-data.s3.ap-south-1.amazonaws.com/team04/image-4.png\" alt=\"Image\" title=\"Image\" style=\"outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;\" width=\"600\"/>\n" +
+                "      \n" +
+                "    </td>\n" +
+                "  </tr>\n" +
+                "</table>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: transparent;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"600\" style=\"width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-100\" style=\"max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:30px 10px 25px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "  <div style=\"color: #ffffff; line-height: 100%; text-align: center; word-wrap: break-word;\">\n" +
+                "    <p style=\"font-size: 14px; line-height: 100%;\"><span style=\"font-size: 28px; line-height: 28px; font-family: 'trebuchet ms', geneva;\"><strong><span style=\"line-height: 28px; font-size: 28px;\">RESERVATION DETAILS</span></strong></span></p>\n" +
+                "  </div>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #444444;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: #444444;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-50\" style=\"max-width: 320px;min-width: 300px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:13px 10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "  <div style=\"color: #ffffff; line-height: 100%; text-align: right; word-wrap: break-word;\">\n" +
+                "    <p style=\"font-size: 14px; line-height: 100%;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: 16px; line-height: 16px;\">Reservation Number:</span></p>\n" +
+                "  </div>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-50\" style=\"max-width: 320px;min-width: 300px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:13px 10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "  <div style=\"color: #ffffff; line-height: 100%; text-align: left; word-wrap: break-word;\">\n" +
+                "    <p style=\"font-size: 14px; line-height: 100%;\"><span style=\"font-family: georgia, palatino; font-size: 16px; line-height: 16px;\">"+bookingId+"</span></p>\n" +
+                "  </div>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #3d3d3d;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: #3d3d3d;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-50\" style=\"max-width: 320px;min-width: 300px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:13px 10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "  <div style=\"color: #ffffff; line-height: 100%; text-align: right; word-wrap: break-word;\">\n" +
+                "    <p style=\"font-size: 14px; line-height: 100%;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: 16px; line-height: 16px;\">Guest Email:</span></p>\n" +
+                "  </div>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-50\" style=\"max-width: 320px;min-width: 300px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:13px 10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "  <div style=\"color: #ffffff; line-height: 100%; text-align: left; word-wrap: break-word;\">\n" +
+                "    <p style=\"font-size: 14px; line-height: 100%;\"><span style=\"font-family: georgia, palatino; font-size: 16px; line-height: 16px;\">"+recipient+"</span></p>\n" +
+                "  </div>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #444444;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: #444444;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-50\" style=\"max-width: 320px;min-width: 300px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:13px 10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "  <div style=\"color: #ffffff; line-height: 100%; text-align: right; word-wrap: break-word;\">\n" +
+                "    <p style=\"font-size: 14px; line-height: 100%;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: 16px; line-height: 16px;\">Check-in Date:</span></p>\n" +
+                "  </div>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-50\" style=\"max-width: 320px;min-width: 300px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:13px 10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "  <div style=\"color: #ffffff; line-height: 100%; text-align: left; word-wrap: break-word;\">\n" +
+                "    <p style=\"font-size: 14px; line-height: 100%;\"><span style=\"font-family: georgia, palatino; font-size: 16px; line-height: 16px;\">"+startDate+"</span></p>\n" +
+                "  </div>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #3d3d3d;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: #3d3d3d;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-50\" style=\"max-width: 320px;min-width: 300px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:13px 10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "  <div style=\"color: #ffffff; line-height: 100%; text-align: right; word-wrap: break-word;\">\n" +
+                "    <p style=\"font-size: 14px; line-height: 100%;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: 16px; line-height: 16px;\">Check-out Date:</span></p>\n" +
+                "  </div>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-50\" style=\"max-width: 320px;min-width: 300px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:13px 10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "  <div style=\"color: #ffffff; line-height: 100%; text-align: left; word-wrap: break-word;\">\n" +
+                "    <p style=\"font-size: 14px; line-height: 100%;\"><span style=\"font-family: georgia, palatino; font-size: 16px; line-height: 16px;\">"+endDate+"</span></p>\n" +
+                "  </div>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #444444;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: #444444;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-50\" style=\"max-width: 320px;min-width: 300px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-50\" style=\"max-width: 320px;min-width: 300px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #3d3d3d;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: #3d3d3d;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-50\" style=\"max-width: 320px;min-width: 300px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-50\" style=\"max-width: 320px;min-width: 300px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px 0px 25px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #444444;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px 0px 25px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: #444444;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"300\" style=\"width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: transparent;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"600\" style=\"width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-100\" style=\"max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
+                "  <tr>\n" +
+                "    <td style=\"padding-right: 0px;padding-left: 0px;\" align=\"center\">\n" +
+                "\n" +
+                "      <img align=\"center\" border=\"0\" src=\"https://team04-static-data.s3.ap-south-1.amazonaws.com/team04/image-5.png\" alt=\"Image\" title=\"Image\" style=\"outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;\" width=\"600\"/>\n" +
+                "\n" +
+                "    </td>\n" +
+                "  </tr>\n" +
+                "</table>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: #ffffff;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"600\" style=\"width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-100\" style=\"max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:10px 80px 10px 25px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "  <div style=\"color: #222222; line-height: 150%; text-align: left; word-wrap: break-word;\">\n" +
+                "    <p style=\"font-size: 14px; line-height: 150%;\"><span style=\"font-size: 16px; line-height: 24px;\">Dear <strong>"+(recipient.split("\\.")[0])+",</strong></span></p>\n" +
+                "<p style=\"font-size: 14px; line-height: 150%;\">&nbsp;</p>\n" +
+                "<p style=\"font-size: 14px; line-height: 150%;\"><span style=\"font-size: 16px; line-height: 24px;\">Thank you for choosing to stay with us at Team 1 Hotel. We are pleased to confirm your booking</span></p>\n" +
+                "\n" +
+                "\n" +
+                "    <p style=\"font-size: 14px; line-height: 150%;\"><span style=\"font-size: 16px; line-height: 24px;\">We hope you will have a comfortable and enjoyable stay with us. To view your booking details, please click on the following link: <a href=\"https://d7ohsf89hdgnd.cloudfront.net/\">Here</a>.</span></p>\n" +
+                "    <p style=\"font-size: 14px; line-height: 150%;\"><span style=\"font-size: 16px; line-height: 24px;\">Please do not hesitate to contact us if you have any further questions or concerns. We look forward to welcoming you soon!</span></p>\n" +
+                "    <p style=\"font-size: 14px; line-height: 150%;\">&nbsp;</p>\n" +
+                "<p style=\"font-size: 14px; line-height: 150%;\"><span style=\"font-size: 16px; line-height: 24px;\">Kind regards,</span></p>\n" +
+                "<p style=\"font-size: 14px; line-height: 150%;\"><span style=\"font-size: 16px; line-height: 24px;\">Team 1</span></p>\n" +
+                "<p style=\"font-size: 14px; line-height: 150%;\">&nbsp;</p>\n" +
+                "  </div>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "<div class=\"u-row-container\" style=\"padding: 0px 0px 60px;background-color: transparent\">\n" +
+                "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;\">\n" +
+                "    <div style=\"border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;\">\n" +
+                "      <!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding: 0px 0px 60px;background-color: transparent;\" align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:600px;\"><tr style=\"background-color: transparent;\"><![endif]-->\n" +
+                "      \n" +
+                "<!--[if (mso)|(IE)]><td align=\"center\" width=\"600\" style=\"width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\" valign=\"top\"><![endif]-->\n" +
+                "<div class=\"u-col u-col-100\" style=\"max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;\">\n" +
+                "  <div style=\"height: 100%;width: 100% !important;\">\n" +
+                "  <!--[if (!mso)&(!IE)]><!--><div style=\"box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;\"><!--<![endif]-->\n" +
+                "  \n" +
+                "<table style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"0\">\n" +
+                "  <tbody>\n" +
+                "    <tr>\n" +
+                "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
+                "        \n" +
+                "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
+                "  <tr>\n" +
+                "    <td style=\"padding-right: 0px;padding-left: 0px;\" align=\"center\">\n" +
+                "      \n" +
+                "      <img align=\"center\" border=\"0\" src=\"https://sathwik-nithesh-hbe-configuration.s3.ap-south-1.amazonaws.com/hotel-images/landing-image.jpg\" alt=\"Image\" title=\"Image\" style=\"outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;\" width=\"600\"/>\n" +
+                "      \n" +
+                "    </td>\n" +
+                "  </tr>\n" +
+                "</table>\n" +
+                "\n" +
+                "      </td>\n" +
+                "    </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "\n" +
+                "  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "<!--[if (mso)|(IE)]></td><![endif]-->\n" +
+                "      <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "    <!--[if (mso)|(IE)]></td></tr></table><![endif]-->\n" +
+                "    </td>\n" +
+                "  </tr>\n" +
+                "  </tbody>\n" +
+                "  </table>\n" +
+                "  <!--[if mso]></div><![endif]-->\n" +
+                "  <!--[if IE]></div><![endif]-->\n" +
+                "</body>\n" +
+                "\n" +
+                "</html>\n";
     }
 }

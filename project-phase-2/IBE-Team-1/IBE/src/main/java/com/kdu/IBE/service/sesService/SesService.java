@@ -1,7 +1,10 @@
 package com.kdu.IBE.service.sesService;
 
 
+import com.kdu.IBE.entity.BookingUserDetails;
 import com.kdu.IBE.exception.EmailNotSent;
+import com.kdu.IBE.repository.BookingRepository;
+import com.kdu.IBE.repository.BookingUserInfoRepository;
 import com.kdu.IBE.utils.SesServiceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,10 @@ import javax.mail.internet.MimeMessage;
 @Slf4j
 @Service
 public class SesService implements ISesService{
+    @Autowired
+    private BookingUserInfoRepository bookingUserInfoRepository;
+    @Autowired
+    private BookingRepository bookingRepository;
     @Value("${aws.profile}")
     private String awsProfileName;
     @Value("${region}")
@@ -127,9 +134,8 @@ public class SesService implements ISesService{
 
             // The email body for non-HTML email clients.
             String bodyText = "Hello,\r\n" + "See the list below message. ";
-
             // The HTML body of the email.
-            String bodyHTML = sesServiceUtils.getBookingEmail(image,bookingId,roomType,startDate,endDate);
+            String bodyHTML = sesServiceUtils.getBookingEmail(image,bookingId,recipient,roomType,startDate,endDate);
             this.client = SesClient.builder()
                     .region(region)
 //                    .credentialsProvider(ProfileCredentialsProvider.create(this.awsProfileName))
