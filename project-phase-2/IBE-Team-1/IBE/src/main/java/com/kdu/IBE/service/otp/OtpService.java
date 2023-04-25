@@ -4,6 +4,7 @@ import com.kdu.IBE.constants.SenderEmail;
 import com.kdu.IBE.entity.BookingDetails;
 import com.kdu.IBE.entity.BookingUserDetails;
 import com.kdu.IBE.entity.Otp;
+import com.kdu.IBE.exception.EmailDidNotMatchException;
 import com.kdu.IBE.repository.*;
 import com.kdu.IBE.service.sesService.SesService;
 import com.kdu.IBE.utils.DateConverter;
@@ -89,7 +90,13 @@ public class OtpService implements IOtpService {
      * @param bookingId
      * @return
      */
-    public ResponseEntity<String> putOtpForLoggedInUser(String bookingId) {
+    public ResponseEntity<String> putOtpForLoggedInUser(String bookingId, String userEmail) {
+        BookingUserDetails bookingUserDetails = bookingUserInfoRepository.findByBookingIdEquals(Long.parseLong(bookingId));
+        System.out.println("user_email = "+userEmail);
+        System.out.println("email in booking = "+bookingUserDetails.getBillingEmail());
+        if (!userEmail.equals(bookingUserDetails.getBillingEmail())) {
+            throw new EmailDidNotMatchException("The email received did not match");
+        }
         long bookingIdValue = Long.parseLong(bookingId);
         deleteBooking(bookingIdValue);
         return new ResponseEntity<String>("Booking canceled successfully", HttpStatus.OK);
@@ -112,7 +119,8 @@ public class OtpService implements IOtpService {
         executorService.submit(task);
         executorService.shutdown();
         roomAvailabilityRepository.updateBookingIdByBookingIdEquals(0l, bookingIdValue);
-        bookingRepository.updateIsActiveByBookingId(false,bookingIdValue);    }
+        bookingRepository.updateIsActiveByBookingId(false, bookingIdValue);
+    }
 
     /**
      * @param startDate
@@ -131,7 +139,7 @@ public class OtpService implements IOtpService {
             ExecutorService executorService = Executors.newFixedThreadPool(10000);
             if (email != userEmail) {
                 Callable<Void> task = () -> {
-                    notifyUserRepository.deleteByUserEmailAndRoomTypeId(email,roomTypeId);
+                    notifyUserRepository.deleteByUserEmailAndRoomTypeId(email, roomTypeId);
                     sesService.sendRoomAvailabilityNotification(senderEmail, email, roomTypeId.toString());
                     return null;
                 };

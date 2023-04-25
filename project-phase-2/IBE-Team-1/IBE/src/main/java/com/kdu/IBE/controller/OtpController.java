@@ -24,10 +24,9 @@ public class OtpController {
         return otpService.putOtp(otp,bookingId);
     }
     @PostMapping(EndPointConstants.PUT_OTP_FOR_LOGGED_USER)
-    ResponseEntity<String> putOtpForLoggedInUser(@RequestParam(name = "booking_id") String bookingId){
-        return otpService.putOtpForLoggedInUser(bookingId);
+    ResponseEntity<String> putOtpForLoggedInUser(@RequestParam(name = "booking_id") String bookingId, @RequestParam(name = "user_email") String userEmail){
+        return otpService.putOtpForLoggedInUser(bookingId,userEmail);
     }
-
 //    @GetMapping("/notify/email")
 //    ResponseEntity<List<String>> geNotifyEmail(@RequestParam(name = "room_type_id") Long roomTypeId, @RequestParam(name = "start_date") String startDate,@RequestParam(name = "end_date") String endDate) throws IOException {
 //        return otpService.notifyUser(startDate,endDate,roomTypeId);
