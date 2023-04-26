@@ -86,16 +86,9 @@ public class BookingService implements IBookingService {
         int numberOfRooms=bookingModel.getBookingDetailsModel().getNumberOfRooms();
         long numberOfDataRequired = daysBetween * numberOfRooms;
 
-
-        System.out.println("nuber of required = "+numberOfDataRequired);
-
         List<List<Object>> roomAvailabilityResults = roomAvailabilityRepository.getRoomAvailabilityResult(bookingModel.getBookingDetailsModel().getRoomTypeId(), startDateValue, endDateValue, numberOfDataRequired);
 
         long numberOfDataReceived = roomAvailabilityResults.size();
-
-        System.out.println("nuber of recieved = "+numberOfDataReceived);
-        System.out.println("data recived = "+roomAvailabilityResults);
-
 
 
         /**
